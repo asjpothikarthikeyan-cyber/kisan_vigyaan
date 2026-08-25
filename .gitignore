@@ -1,29 +1,28 @@
 # Dependencies
 node_modules/
 */node_modules/
-.pnp
-.pnp.js
 
-# Production Build
+# Production builds
 dist/
-build/
 */dist/
+build/
 
-# Python Cache & Envs
+# Large image dataset dumps
+crop_health_ml/data/raw/
+crop_health_ml/data/train/
+crop_health_ml/data/test/
+crop_health_ml/data/validation/
+crop_health_ml/data/processed/
+
+# Python cache & environments
 __pycache__/
 */__pycache__/
 *.py[cod]
-*$py.class
-.env
-.venv
-env/
+.venv/
 venv/
-ENV/
+env/
 
-# Logs & Temp
+# Logs & temp
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 .DS_Store
 Thumbs.db
