@@ -2,18 +2,19 @@
 
 @layer base {
   :root {
-    --bg-light: #F7F9F7;
-    --bg-card: #FFFFFF;
-    --bg-card-muted: #F8FAF8;
-    --border-light: #E2E8F0;
-    --primary: #1B5E20;
-    --primary-hover: #154D1A;
-    --primary-light: #E8F5E9;
-    --accent-green: #15803D;
-    --accent-amber: #B45309;
-    --accent-red: #B91C1C;
-    --text-main: #1E293B;
-    --text-muted: #64748B;
+    --bg-dark: #070c18;
+    --bg-surface: #0b1326;
+    --bg-card: #0f1930;
+    --border-subtle: #18263f;
+    --border-strong: #233758;
+    --primary: #10b981;
+    --primary-hover: #059669;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
   }
 }
 
@@ -21,91 +22,108 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #F7F9F7;
-  color: #1E293B;
+  background-color: #070c18;
+  color: #f1f5f9;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Subtle clean scrollbar */
+/* Precision enterprise scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #070c18;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 4px;
+  background: #1e293b;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #334155;
 }
 
-/* Clean government background */
-.gov-bg {
-  background-color: #F7F9F7;
+/* Crisp mission-control background with micro grid */
+.enterprise-bg {
+  background-color: #070c18;
   background-image: 
-    radial-gradient(circle at 10% 10%, rgba(27, 94, 32, 0.02) 0%, transparent 40%),
-    radial-gradient(circle at 90% 90%, rgba(27, 94, 32, 0.02) 0%, transparent 40%);
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-/* Indian Government Tricolor Accent Strip */
+/* Tricolor accent strip at top */
 .tricolor-strip {
   height: 3px;
   width: 100%;
   background: linear-gradient(to right, #FF9933 0%, #FF9933 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #138808 66.66%, #138808 100%);
 }
 
-/* Flat hairline card borders */
+/* Sharpened card styling (max 6px radius, no neon blur) */
 .card-normal {
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  background-color: #FFFFFF;
+  border: 1px solid #1a273f;
+  background-color: #0c1527;
+  border-radius: 6px;
 }
 .card-normal:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-color: #24395b;
 }
 
 .card-critical {
-  border: 1px solid #FECACA;
-  box-shadow: 0 1px 3px rgba(185, 28, 28, 0.06);
-  background-color: #FFFFFF;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background-color: #140d1a;
+  border-radius: 6px;
 }
 .card-critical:hover {
-  border-color: #F87171;
-  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.1);
+  border-color: rgba(244, 63, 94, 0.65);
 }
 
 .card-warning {
-  border: 1px solid #FDE68A;
-  box-shadow: 0 1px 3px rgba(180, 83, 9, 0.06);
-  background-color: #FFFFFF;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  background-color: #141117;
+  border-radius: 6px;
 }
 .card-warning:hover {
-  border-color: #FBBF24;
-  box-shadow: 0 2px 6px rgba(180, 83, 9, 0.1);
+  border-color: rgba(245, 158, 11, 0.65);
 }
 
-/* Leaflet clean light theme */
+/* Sliding Toggle Switch Style */
+.switch-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.switch-thumb {
+  position: absolute;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  background: #ffffff;
+  transition: transform 0.2s ease;
+}
+.switch-on .switch-thumb {
+  transform: translateX(14px);
+}
+
+/* Leaflet dark styling */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 0.75rem;
-  background-color: #F1F5F9 !important;
+  border-radius: 6px;
+  background-color: #0b1329 !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: #FFFFFF !important;
-  color: #1E293B !important;
-  border: 1px solid #E2E8F0 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-}
-
-.leaflet-popup-tip {
-  background: #FFFFFF !important;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 6px !important;
 }
