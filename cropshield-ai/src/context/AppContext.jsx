@@ -111,6 +111,15 @@ export const AppProvider = ({ children }) => {
   }, [lang]);
 
   useEffect(() => {
+    localStorage.setItem('cs_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  useEffect(() => {
     localStorage.setItem('cs_reports', JSON.stringify(reports));
   }, [reports]);
 

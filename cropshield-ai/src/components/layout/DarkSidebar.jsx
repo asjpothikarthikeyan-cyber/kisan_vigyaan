@@ -20,8 +20,9 @@ import {
 } from 'lucide-react';
 
 export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) => {
-  const { lang, t, cart } = useApp();
+  const { lang, t, cart, theme } = useApp();
   const [collapsed, setCollapsed] = useState(false);
+  const isDark = theme === 'dark';
   const cartCount = (cart || []).reduce((sum, item) => sum + item.quantity, 0);
 
   const navigationItems = [
@@ -45,19 +46,22 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
       {isOpen && (
         <div 
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden"
         />
       )}
 
       <aside className={`
         fixed top-0 bottom-0 left-0 z-50 flex flex-col justify-between transition-all duration-200 ease-in-out lg:static lg:translate-x-0
-        bg-white border-r border-slate-200 text-slate-700 select-none shadow-[1px_0_3px_rgba(0,0,0,0.02)]
+        border-r select-none
+        ${isDark ? 'bg-[#090f1d] border-[#16233b] text-slate-300' : 'bg-white border-slate-200 text-slate-700 shadow-xs'}
         ${collapsed ? 'w-16' : 'w-60'}
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div>
           {/* Brand Header */}
-          <div className="px-3.5 py-3 border-b border-slate-100 flex items-center justify-between">
+          <div className={`px-3.5 py-3 border-b flex items-center justify-between ${
+            isDark ? 'border-[#16233b]' : 'border-slate-100'
+          }`}>
             <div 
               className="flex items-center space-x-2.5 cursor-pointer overflow-hidden" 
               onClick={() => setActiveView('dashboard')}
@@ -67,11 +71,15 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
               </div>
               {!collapsed && (
                 <div className="truncate leading-tight">
-                  <h1 className="font-bold text-[14px] text-slate-900 tracking-tight flex items-center gap-1">
-                    CropShield AI
+                  <h1 className={`font-bold text-[14px] tracking-tight flex items-center gap-1 ${
+                    isDark ? 'text-slate-100' : 'text-slate-900'
+                  }`}>
+                    {t('appName') || 'CropShield AI'}
                   </h1>
-                  <p className="text-[10px] text-slate-500 font-medium tracking-wide">
-                    Farm Surveillance Portal
+                  <p className={`text-[10px] font-medium tracking-wide ${
+                    isDark ? 'text-slate-400' : 'text-slate-500'
+                  }`}>
+                    {lang === 'mr' ? 'महा कृषी देखरेख पोर्टल' : 'Maharashtra Agri-Surveillance'}
                   </p>
                 </div>
               )}
@@ -79,7 +87,7 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
 
             <button 
               onClick={() => setIsOpen(false)}
-              className="lg:hidden text-slate-400 hover:text-slate-700 p-1 rounded"
+              className={`lg:hidden p-1 rounded ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-400 hover:text-slate-700'}`}
               aria-label="Close Sidebar"
             >
               <X className="w-4 h-4" />
@@ -102,13 +110,17 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
                   title={collapsed ? item.label : undefined}
                   className={`w-full flex items-center justify-between px-2.5 py-2 rounded-[5px] text-[13px] transition-colors cursor-pointer group ${
                     isActive
-                      ? 'border-l-[3px] border-[#1B5E20] bg-emerald-50 text-[#1B5E20] font-semibold pl-[7px]'
-                      : 'border-l-[3px] border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'
+                      ? isDark 
+                        ? 'border-l-[3px] border-emerald-500 bg-[#121d33] text-emerald-300 font-semibold pl-[7px]'
+                        : 'border-l-[3px] border-[#1B5E20] bg-emerald-50 text-[#1B5E20] font-semibold pl-[7px]'
+                      : isDark
+                        ? 'border-l-[3px] border-transparent text-slate-400 hover:bg-[#0f172a] hover:text-slate-200'
+                        : 'border-l-[3px] border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'
                   }`}
                 >
                   <div className="flex items-center truncate">
                     <Icon className={`w-4 h-4 mr-2.5 shrink-0 transition-colors ${
-                      isActive ? 'text-[#1B5E20]' : 'text-slate-400 group-hover:text-slate-600'
+                      isActive ? (isDark ? 'text-emerald-400' : 'text-[#1B5E20]') : (isDark ? 'text-slate-400 group-hover:text-slate-200' : 'text-slate-400 group-hover:text-slate-600')
                     }`} />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </div>
@@ -116,10 +128,10 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
                   {!collapsed && item.badge && (
                     <span className={`px-1.5 py-0.2 text-[10px] font-mono rounded-[3px] tracking-wider uppercase ${
                       item.badge === '3' 
-                        ? 'bg-rose-50 text-rose-700 border border-rose-200 font-bold' 
+                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold' 
                         : item.badge === 'Beta'
-                        ? 'bg-slate-100 text-slate-600 border border-slate-200 text-[9px]'
-                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold'
+                        ? (isDark ? 'bg-slate-800 text-slate-400 border border-slate-700 text-[9px]' : 'bg-slate-100 text-slate-600 border border-slate-200 text-[9px]')
+                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold'
                     }`}>
                       {item.badge}
                     </span>
@@ -131,28 +143,36 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
         </div>
 
         {/* Footer: User Profile + Collapse Toggle */}
-        <div className="p-2 border-t border-slate-100 bg-slate-50/70 space-y-1.5">
-          <div className="flex items-center justify-between p-1.5 rounded-[5px] bg-white border border-slate-200">
+        <div className={`p-2 border-t space-y-1.5 ${isDark ? 'border-[#16233b] bg-[#070c18]' : 'border-slate-100 bg-slate-50/70'}`}>
+          <div className={`flex items-center justify-between p-1.5 rounded-[5px] border ${
+            isDark ? 'bg-[#0d1629] border-[#16233b]' : 'bg-white border-slate-200'
+          }`}>
             <div className="flex items-center space-x-2 truncate">
               <div className="w-6 h-6 rounded-[4px] bg-[#1B5E20] text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-xs">
                 RP
               </div>
               {!collapsed && (
                 <div className="truncate leading-tight text-left">
-                  <p className="font-semibold text-slate-800 text-[12px] truncate">Ramesh Patil</p>
-                  <span className="text-[10px] text-slate-500 font-mono">Sangli • Zone 4</span>
+                  <p className={`font-semibold text-[12px] truncate ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                    {lang === 'mr' ? 'रमेश पाटील' : 'Ramesh Patil'}
+                  </p>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    {lang === 'mr' ? 'सांगली • विभाग ४' : 'Sangli • Zone 4'}
+                  </span>
                 </div>
               )}
             </div>
-            {!collapsed && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0"></span>}
+            {!collapsed && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>}
           </div>
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex items-center justify-between w-full px-2 py-1 text-[11px] text-slate-500 hover:text-slate-800 rounded-[4px] hover:bg-slate-100 transition-colors cursor-pointer"
+            className={`hidden lg:flex items-center justify-between w-full px-2 py-1 text-[11px] rounded-[4px] transition-colors cursor-pointer ${
+              isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
+            }`}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {!collapsed && <span>Collapse Sidebar</span>}
+            {!collapsed && <span>{lang === 'mr' ? 'साइडबार बंद करा' : 'Collapse Sidebar'}</span>}
             {collapsed ? <ChevronRight className="w-3.5 h-3.5 mx-auto" /> : <ChevronLeft className="w-3.5 h-3.5" />}
           </button>
         </div>
