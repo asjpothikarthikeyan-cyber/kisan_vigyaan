@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { 
   LayoutDashboard, 
-  Layers, 
   Scan, 
   BarChart3, 
   Bell, 
@@ -17,8 +16,7 @@ import {
   ShoppingBag, 
   Lightbulb,
   ChevronLeft,
-  ChevronRight,
-  ShieldCheck
+  ChevronRight
 } from 'lucide-react';
 
 export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) => {
@@ -26,19 +24,18 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
   const [collapsed, setCollapsed] = useState(false);
   const cartCount = (cart || []).reduce((sum, item) => sum + item.quantity, 0);
 
-  // Navigation Items with Beta tag and alert count 3
   const navigationItems = [
-    { id: 'dashboard', label: t('dashboard') || 'Dashboard', icon: LayoutDashboard, badge: null },
+    { id: 'dashboard', label: t('dashboard') || 'Surveillance Dashboard', icon: LayoutDashboard, badge: null },
     { id: 'marketplace', label: t('farmerMarketplace') || 'Farmer Marketplace', icon: ShoppingBag, badge: cartCount > 0 ? `${cartCount}` : null },
     { id: 'proTips', label: t('proTips') || 'Pro Agronomy Tips', icon: Lightbulb, badge: null },
-    { id: 'smartScanner', label: t('smartScanner') || 'Smart AI Scanner', icon: Scan, badge: 'Beta' },
-    { id: 'statistics', label: t('statistics') || 'Statistics', icon: BarChart3, badge: null },
+    { id: 'smartScanner', label: t('smartScanner') || 'Smart AI Leaf Scanner', icon: Scan, badge: 'Beta' },
+    { id: 'statistics', label: t('statistics') || 'Statistics & Trends', icon: BarChart3, badge: null },
     { id: 'alertCenter', label: t('alertCenter') || 'Alert Center', icon: Bell, badge: '3' },
-    { id: 'disasterPrediction', label: t('disasterPrediction') || 'Disaster Prediction', icon: AlertTriangle, badge: null },
-    { id: 'satelliteMapping', label: t('satelliteMapping') || 'Satellite Mapping', icon: Satellite, badge: null },
+    { id: 'disasterPrediction', label: t('disasterPrediction') || 'Disaster Forecast', icon: AlertTriangle, badge: null },
+    { id: 'satelliteMapping', label: t('satelliteMapping') || 'Satellite GIS Mapping', icon: Satellite, badge: null },
     { id: 'farmerCommunity', label: t('farmerCommunity') || 'Farmer Community', icon: Users, badge: null },
-    { id: 'govtSchemes', label: t('govtSchemes') || 'Govt. Schemes & Benefits', icon: Landmark, badge: null },
-    { id: 'deviceManagement', label: t('deviceManagement') || 'Device & Trap Sensors', icon: Radio, badge: null },
+    { id: 'govtSchemes', label: t('govtSchemes') || 'Govt. Schemes & DBT', icon: Landmark, badge: null },
+    { id: 'deviceManagement', label: t('deviceManagement') || 'IoT Device & Sensors', icon: Radio, badge: null },
     { id: 'reports', label: t('reports') || 'Reports & History', icon: FileText, badge: null },
   ];
 
@@ -48,33 +45,33 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
       {isOpen && (
         <div 
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 lg:hidden"
         />
       )}
 
       <aside className={`
         fixed top-0 bottom-0 left-0 z-50 flex flex-col justify-between transition-all duration-200 ease-in-out lg:static lg:translate-x-0
-        bg-[#090f1d] border-r border-[#16233b] text-slate-300 select-none
+        bg-white border-r border-slate-200 text-slate-700 select-none shadow-[1px_0_3px_rgba(0,0,0,0.02)]
         ${collapsed ? 'w-16' : 'w-60'}
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div>
           {/* Brand Header */}
-          <div className="px-3.5 py-3.5 border-b border-[#16233b] flex items-center justify-between">
+          <div className="px-3.5 py-3 border-b border-slate-100 flex items-center justify-between">
             <div 
               className="flex items-center space-x-2.5 cursor-pointer overflow-hidden" 
               onClick={() => setActiveView('dashboard')}
             >
-              <div className="w-8 h-8 rounded-[5px] bg-[#1B5E20] text-white flex items-center justify-center shrink-0 shadow-xs border border-emerald-500/30">
-                <Wheat className="w-4 h-4 text-emerald-300" />
+              <div className="w-8 h-8 rounded-[6px] bg-[#1B5E20] text-white flex items-center justify-center shrink-0 shadow-xs">
+                <Wheat className="w-4 h-4 text-emerald-200" />
               </div>
               {!collapsed && (
                 <div className="truncate leading-tight">
-                  <h1 className="font-semibold text-[14px] text-slate-100 tracking-tight flex items-center gap-1.5">
+                  <h1 className="font-bold text-[14px] text-slate-900 tracking-tight flex items-center gap-1">
                     CropShield AI
                   </h1>
-                  <p className="text-[10px] text-slate-400 font-medium tracking-wide">
-                    Enterprise Surveillance
+                  <p className="text-[10px] text-slate-500 font-medium tracking-wide">
+                    Farm Surveillance Portal
                   </p>
                 </div>
               )}
@@ -82,15 +79,15 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
 
             <button 
               onClick={() => setIsOpen(false)}
-              className="lg:hidden text-slate-400 hover:text-slate-200 p-1 rounded"
+              className="lg:hidden text-slate-400 hover:text-slate-700 p-1 rounded"
               aria-label="Close Sidebar"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Navigation Items with 2-3px left-border accent on active item */}
-          <nav className="p-2 space-y-0.5 overflow-y-auto max-h-[calc(100vh-140px)] text-[13px]">
+          {/* Navigation Items */}
+          <nav className="p-2 space-y-0.5 overflow-y-auto max-h-[calc(100vh-130px)] text-[13px]">
             {navigationItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
@@ -103,15 +100,15 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
                     setIsOpen(false);
                   }}
                   title={collapsed ? item.label : undefined}
-                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded-[4px] text-[13px] transition-colors cursor-pointer group ${
+                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded-[5px] text-[13px] transition-colors cursor-pointer group ${
                     isActive
-                      ? 'border-l-[3px] border-emerald-500 bg-[#121d33] text-slate-100 font-medium pl-[7px]'
-                      : 'border-l-[3px] border-transparent text-slate-400 hover:bg-[#0f172a] hover:text-slate-200'
+                      ? 'border-l-[3px] border-[#1B5E20] bg-emerald-50 text-[#1B5E20] font-semibold pl-[7px]'
+                      : 'border-l-[3px] border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'
                   }`}
                 >
                   <div className="flex items-center truncate">
                     <Icon className={`w-4 h-4 mr-2.5 shrink-0 transition-colors ${
-                      isActive ? 'text-emerald-400' : 'text-slate-400 group-hover:text-slate-300'
+                      isActive ? 'text-[#1B5E20]' : 'text-slate-400 group-hover:text-slate-600'
                     }`} />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </div>
@@ -119,10 +116,10 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
                   {!collapsed && item.badge && (
                     <span className={`px-1.5 py-0.2 text-[10px] font-mono rounded-[3px] tracking-wider uppercase ${
                       item.badge === '3' 
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold' 
+                        ? 'bg-rose-50 text-rose-700 border border-rose-200 font-bold' 
                         : item.badge === 'Beta'
-                        ? 'bg-slate-800 text-slate-400 border border-slate-700 text-[9px]'
-                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                        ? 'bg-slate-100 text-slate-600 border border-slate-200 text-[9px]'
+                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold'
                     }`}>
                       {item.badge}
                     </span>
@@ -133,28 +130,26 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
           </nav>
         </div>
 
-        {/* Footer: User Profile + Collapse Toggle Affordance */}
-        <div className="p-2 border-t border-[#16233b] bg-[#070c18]/90 space-y-1.5">
-          {/* User profile */}
-          <div className="flex items-center justify-between p-1.5 rounded-[4px] bg-[#0d1629] border border-[#16233b]">
+        {/* Footer: User Profile + Collapse Toggle */}
+        <div className="p-2 border-t border-slate-100 bg-slate-50/70 space-y-1.5">
+          <div className="flex items-center justify-between p-1.5 rounded-[5px] bg-white border border-slate-200">
             <div className="flex items-center space-x-2 truncate">
-              <div className="w-6 h-6 rounded-[3px] bg-[#1B5E20] text-white flex items-center justify-center font-bold text-[10px] shrink-0">
+              <div className="w-6 h-6 rounded-[4px] bg-[#1B5E20] text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-xs">
                 RP
               </div>
               {!collapsed && (
                 <div className="truncate leading-tight text-left">
-                  <p className="font-semibold text-slate-200 text-[12px] truncate">Ramesh Patil</p>
+                  <p className="font-semibold text-slate-800 text-[12px] truncate">Ramesh Patil</p>
                   <span className="text-[10px] text-slate-500 font-mono">Sangli • Zone 4</span>
                 </div>
               )}
             </div>
-            {!collapsed && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>}
+            {!collapsed && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0"></span>}
           </div>
 
-          {/* Expand/Collapse Toggle Button for Desktop */}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex items-center justify-between w-full px-2 py-1 text-[11px] text-slate-500 hover:text-slate-300 rounded-[4px] hover:bg-slate-800/40 transition-colors"
+            className="hidden lg:flex items-center justify-between w-full px-2 py-1 text-[11px] text-slate-500 hover:text-slate-800 rounded-[4px] hover:bg-slate-100 transition-colors cursor-pointer"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {!collapsed && <span>Collapse Sidebar</span>}

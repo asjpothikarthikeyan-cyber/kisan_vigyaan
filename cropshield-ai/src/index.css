@@ -2,19 +2,20 @@
 
 @layer base {
   :root {
-    --bg-dark: #070c18;
-    --bg-surface: #0b1326;
-    --bg-card: #0f1930;
-    --border-subtle: #18263f;
-    --border-strong: #233758;
-    --primary: #10b981;
-    --primary-hover: #059669;
-    --accent-emerald: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-rose: #f43f5e;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --bg-body: #F4F6F4;
+    --bg-card: #FFFFFF;
+    --bg-card-subtle: #F8FAF8;
+    --border-light: #E2E8F0;
+    --border-medium: #CBD5E1;
+    --primary: #1B5E20;
+    --primary-hover: #154D1A;
+    --primary-light: #E8F5E9;
+    --accent-emerald: #16A34A;
+    --accent-amber: #D97706;
+    --accent-rose: #DC2626;
+    --text-main: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
   }
 }
 
@@ -22,71 +23,64 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #070c18;
-  color: #f1f5f9;
+  background-color: #F4F6F4;
+  color: #0F172A;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Precision enterprise scrollbar */
+/* Precision clean scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #070c18;
+  background: #F1F5F9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 3px;
+  background: #CBD5E1;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #94A3B8;
 }
 
-/* Crisp mission-control background with micro grid */
-.enterprise-bg {
-  background-color: #070c18;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-/* Tricolor accent strip at top */
+/* Indian Government Tricolor Accent Strip */
 .tricolor-strip {
   height: 3px;
   width: 100%;
   background: linear-gradient(to right, #FF9933 0%, #FF9933 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #138808 66.66%, #138808 100%);
 }
 
-/* Sharpened card styling (max 6px radius, no neon blur) */
+/* Clean Flat Cards with subtle 1px border */
 .card-normal {
-  border: 1px solid #1a273f;
-  background-color: #0c1527;
+  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
   border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 .card-normal:hover {
-  border-color: #24395b;
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .card-critical {
-  border: 1px solid rgba(244, 63, 94, 0.4);
-  background-color: #140d1a;
+  border: 1px solid #FECACA;
+  background-color: #FEF2F2;
   border-radius: 6px;
 }
 .card-critical:hover {
-  border-color: rgba(244, 63, 94, 0.65);
+  border-color: #F87171;
 }
 
 .card-warning {
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  background-color: #141117;
+  border: 1px solid #FDE68A;
+  background-color: #FFFBEB;
   border-radius: 6px;
 }
 .card-warning:hover {
-  border-color: rgba(245, 158, 11, 0.65);
+  border-color: #FBBF24;
 }
 
 /* Sliding Toggle Switch Style */
@@ -106,24 +100,26 @@ body {
   width: 14px;
   height: 14px;
   border-radius: 7px;
-  background: #ffffff;
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease;
 }
 .switch-on .switch-thumb {
   transform: translateX(14px);
 }
 
-/* Leaflet dark styling */
+/* Leaflet Container Styling */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 6px;
-  background-color: #0b1329 !important;
+  border-radius: 0px;
+  background-color: #0E1626 !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: #0f172a !important;
-  color: #f1f5f9 !important;
-  border: 1px solid #334155 !important;
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1px solid #E2E8F0 !important;
   border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Polygon, Tooltip, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Polygon, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useApp } from '../../context/AppContext';
 import { 
@@ -11,7 +11,6 @@ import {
   TrendingDown, 
   Scan, 
   Layers, 
-  Calendar, 
   Clock, 
   ChevronRight, 
   ChevronDown, 
@@ -21,33 +20,29 @@ import {
   Thermometer, 
   Activity, 
   Sun, 
-  CloudRain, 
   Search, 
-  Filter, 
-  Maximize2, 
-  Navigation, 
-  Info, 
   Sprout, 
   Wheat, 
   Radio, 
-  Bell, 
-  Compass, 
   RotateCcw,
-  Sparkles,
-  HelpCircle,
-  Play,
-  Pause,
-  Sliders
+  HelpCircle
 } from 'lucide-react';
 
-// Component to dynamically pan/zoom to selected plot
-function MapController({ center, zoom }) {
+// Dynamic Map Controller to auto-fit farm bounds or fly to selected plot
+function MapController({ selectedPlot, farmBounds }) {
   const map = useMap();
   useEffect(() => {
-    if (center) {
-      map.flyTo(center, zoom || 16, { duration: 1.2 });
+    if (farmBounds) {
+      map.fitBounds(farmBounds, { padding: [35, 35], maxZoom: 17 });
     }
-  }, [center, zoom, map]);
+  }, [map]);
+
+  useEffect(() => {
+    if (selectedPlot?.center) {
+      map.flyTo(selectedPlot.center, 16.5, { duration: 0.8 });
+    }
+  }, [selectedPlot, map]);
+
   return null;
 }
 
@@ -55,10 +50,11 @@ function MapController({ center, zoom }) {
 const geospatialPlots = [
   {
     id: 'plot-1',
+    labelCode: 'P1',
     name: 'Plot 1 - Rice Field',
     block: 'Block A',
     crop: 'Rice (Paddy)',
-    variety: 'MTU 1010 (Cottondora Sannalu)',
+    variety: 'MTU 1010',
     acreage: '2.5 Acres',
     sowingDate: '2026-06-15',
     growthStage: 'Tillering & Vegetative',
@@ -77,18 +73,14 @@ const geospatialPlots = [
     ],
     telemetry: {
       canopyTemp: 27.8,
-      ambientTemp: 29.2,
       humidity: 78,
       soilVWC: 42.5,
-      solarRadiation: 780,
       leafWetness: 2.1,
       ndvirating: 0.88,
-      nitrogenIndex: 'Adequate (320 kg/ha)',
       lastSync: 'Synced 1 min ago'
     },
     sparkline: [88, 89, 91, 92, 93, 94, 94],
     delta: '+3.2%',
-    pestDetected: false,
     diseaseName: 'None Detected',
     actionRequired: null,
     actuators: { dripOn: true, mistingOn: false, fertigationOn: false },
@@ -96,6 +88,7 @@ const geospatialPlots = [
   },
   {
     id: 'plot-2',
+    labelCode: 'P2',
     name: 'Plot 2 - Cotton Field',
     block: 'Block B',
     crop: 'Cotton (Bt Hybrid)',
@@ -118,29 +111,26 @@ const geospatialPlots = [
     ],
     telemetry: {
       canopyTemp: 33.4,
-      ambientTemp: 30.1,
       humidity: 86,
       soilVWC: 21.0,
-      solarRadiation: 840,
       leafWetness: 6.8,
       ndvirating: 0.41,
-      nitrogenIndex: 'Stressed (Deficient)',
       lastSync: 'Synced 2 min ago'
     },
     sparkline: [78, 66, 58, 45, 40, 35, 32],
     delta: '-18.4%',
-    pestDetected: true,
     diseaseName: 'Bacterial Blight (Xanthomonas malvacearum)',
-    actionRequired: 'URGENT: Spray Streptocycline (0.5g/L) + Copper Oxychloride (2.5g/L) within 24h to arrest necrotic spread.',
+    actionRequired: 'URGENT: Spray Streptocycline (0.5g/L) + Copper Oxychloride (2.5g/L) within 24h to arrest spread.',
     actuators: { dripOn: false, mistingOn: false, fertigationOn: false },
     harvestEta: '62 Days'
   },
   {
     id: 'plot-3',
+    labelCode: 'P3',
     name: 'Plot 3 - Sugarcane',
     block: 'Block A',
     crop: 'Sugarcane',
-    variety: 'Co 86032 (Nira)',
+    variety: 'Co 86032',
     acreage: '2.8 Acres',
     sowingDate: '2026-02-10',
     growthStage: 'Grand Growth Phase',
@@ -159,18 +149,14 @@ const geospatialPlots = [
     ],
     telemetry: {
       canopyTemp: 28.5,
-      ambientTemp: 29.5,
       humidity: 70,
       soilVWC: 38.0,
-      solarRadiation: 790,
       leafWetness: 1.8,
       ndvirating: 0.82,
-      nitrogenIndex: 'Optimal',
       lastSync: 'Synced 3 min ago'
     },
     sparkline: [84, 85, 86, 87, 88, 88, 88],
     delta: '+1.5%',
-    pestDetected: false,
     diseaseName: 'None Detected',
     actionRequired: null,
     actuators: { dripOn: true, mistingOn: false, fertigationOn: true },
@@ -178,10 +164,11 @@ const geospatialPlots = [
   },
   {
     id: 'plot-4',
+    labelCode: 'P4',
     name: 'Plot 4 - Tomato Field',
     block: 'Block B',
     crop: 'Tomato',
-    variety: 'Syngenta Abhinav F1',
+    variety: 'Abhinav F1',
     acreage: '1.8 Acres',
     sowingDate: '2026-06-01',
     growthStage: 'Fruit Development',
@@ -200,29 +187,26 @@ const geospatialPlots = [
     ],
     telemetry: {
       canopyTemp: 31.0,
-      ambientTemp: 29.8,
       humidity: 72,
       soilVWC: 33.5,
-      solarRadiation: 810,
       leafWetness: 4.2,
       ndvirating: 0.62,
-      nitrogenIndex: 'Moderate',
       lastSync: 'Synced 2 min ago'
     },
     sparkline: [85, 80, 74, 68, 64, 60, 58],
     delta: '-7.0%',
-    pestDetected: true,
     diseaseName: 'Early Blight (Alternaria solani)',
-    actionRequired: 'ADVISORY: Foliar spray of Mancozeb 75% WP (2.0g/L) or Azoxystrobin (1.0ml/L) recommended within 48h.',
+    actionRequired: 'ADVISORY: Foliar spray of Mancozeb 75% WP (2.0g/L) suggested within 48h.',
     actuators: { dripOn: true, mistingOn: true, fertigationOn: false },
     harvestEta: '28 Days'
   },
   {
     id: 'plot-5',
+    labelCode: 'P5',
     name: 'Plot 5 - Soybean',
     block: 'Block B',
     crop: 'Soybean',
-    variety: 'JS 335 (Jawahar)',
+    variety: 'JS 335',
     acreage: '2.2 Acres',
     sowingDate: '2026-06-25',
     growthStage: 'Pod Initiation',
@@ -241,18 +225,14 @@ const geospatialPlots = [
     ],
     telemetry: {
       canopyTemp: 29.1,
-      ambientTemp: 29.3,
       humidity: 68,
       soilVWC: 36.2,
-      solarRadiation: 770,
       leafWetness: 2.0,
       ndvirating: 0.79,
-      nitrogenIndex: 'Adequate',
       lastSync: 'Synced 4 min ago'
     },
     sparkline: [80, 81, 82, 83, 84, 84, 84],
     delta: '+2.1%',
-    pestDetected: false,
     diseaseName: 'None Detected',
     actionRequired: null,
     actuators: { dripOn: false, mistingOn: false, fertigationOn: false },
@@ -260,10 +240,11 @@ const geospatialPlots = [
   },
   {
     id: 'plot-6',
+    labelCode: 'P6',
     name: 'Plot 6 - Pulses / Gram',
     block: 'Block A',
     crop: 'Chickpea / Gram',
-    variety: 'Vijay (Phule G-81-1-1)',
+    variety: 'Vijay Phule',
     acreage: '2.2 Acres',
     sowingDate: '2026-06-20',
     growthStage: 'Vegetative Branching',
@@ -282,18 +263,14 @@ const geospatialPlots = [
     ],
     telemetry: {
       canopyTemp: 26.5,
-      ambientTemp: 29.0,
       humidity: 62,
       soilVWC: 30.0,
-      solarRadiation: 800,
       leafWetness: 1.5,
       ndvirating: 0.86,
-      nitrogenIndex: 'High (N-Fixation Active)',
       lastSync: 'Synced 1 min ago'
     },
     sparkline: [86, 88, 89, 90, 90, 91, 91],
     delta: '+3.5%',
-    pestDetected: false,
     diseaseName: 'None Detected',
     actionRequired: null,
     actuators: { dripOn: true, mistingOn: false, fertigationOn: false },
@@ -301,41 +278,38 @@ const geospatialPlots = [
   }
 ];
 
-// Historical Outbreak Events for 7-Day Timeline Scrubber
 const timelineEvents = [
-  { day: 'Day -6', date: '20 Aug', title: 'Baseline Surveillance', alertCount: 0, criticalPlots: [], log: 'All 6 plots showing normal vegetative vigor (NDVI avg: 0.84).' },
-  { day: 'Day -5', date: '21 Aug', title: 'High Humidity Inflow', alertCount: 1, criticalPlots: [], log: 'Relative humidity rose to 82%. Micro-climate advisory issued for Block B.' },
-  { day: 'Day -4', date: '22 Aug', title: 'Bacterial Inoculum Spike', alertCount: 2, criticalPlots: ['plot-2'], log: 'Plot 2 (Cotton) detected with initial angular leaf lesions (Xanthomonas).' },
-  { day: 'Day -3', date: '23 Aug', title: 'Early Blight Symptoms', alertCount: 2, criticalPlots: ['plot-2', 'plot-4'], log: 'Plot 4 (Tomato) developed concentric target-spot early blight lesions.' },
-  { day: 'Day -2', date: '24 Aug', title: 'Localized Outbreak Confirmed', alertCount: 3, criticalPlots: ['plot-2', 'plot-4'], log: 'Dr. Suhas More (KVK) verified Bacterial Blight escalation in Plot 2.' },
-  { day: 'Day -1', date: '25 Aug', title: 'Containment Protocols Initiated', alertCount: 3, criticalPlots: ['plot-2', 'plot-4'], log: 'Antibiotic foliar spray pre-booked; irrigation paused in infected quadrants.' },
-  { day: 'Today', date: '26 Aug (Live)', title: 'Real-Time Telemetry', alertCount: 3, criticalPlots: ['plot-2'], log: 'Live satellite and IoT telemetry actively streaming. Immediate action required on Plot 2.' }
+  { day: 'Day -6', date: '20 Aug', title: 'Baseline State', alertCount: 0, criticalPlots: [], log: 'All 6 plots showing normal vegetative vigor (NDVI avg: 0.84).' },
+  { day: 'Day -5', date: '21 Aug', title: 'Humidity Inflow', alertCount: 1, criticalPlots: [], log: 'Relative humidity rose to 82%. Micro-climate advisory issued for Block B.' },
+  { day: 'Day -4', date: '22 Aug', title: 'Bacterial Spike', alertCount: 2, criticalPlots: ['plot-2'], log: 'Plot 2 (Cotton) detected with initial angular leaf lesions (Xanthomonas).' },
+  { day: 'Day -3', date: '23 Aug', title: 'Early Blight Spots', alertCount: 2, criticalPlots: ['plot-2', 'plot-4'], log: 'Plot 4 (Tomato) developed concentric target-spot early blight lesions.' },
+  { day: 'Day -2', date: '24 Aug', title: 'Outbreak Escalation', alertCount: 3, criticalPlots: ['plot-2', 'plot-4'], log: 'KVK Sangli verified Bacterial Blight spread across Plot 2 quadrant.' },
+  { day: 'Day -1', date: '25 Aug', title: 'Spray Pre-booking', alertCount: 3, criticalPlots: ['plot-2', 'plot-4'], log: 'Antibiotic foliar spray ordered; drip irrigation paused in infected block.' },
+  { day: 'Today', date: '26 Aug (Live)', title: 'Active Command', alertCount: 3, criticalPlots: ['plot-2'], log: 'Live satellite & IoT telemetry actively streaming. Immediate spray advised for Plot 2.' }
 ];
 
 export const OverviewDashboard = ({ onNavigate }) => {
   const { lang, t } = useApp();
   
-  // Selected Plot State (Primary Source of Truth)
   const [selectedPlotId, setSelectedPlotId] = useState('plot-2');
   const [selectedPlot, setSelectedPlot] = useState(() => geospatialPlots.find(p => p.id === 'plot-2'));
   const [plotsData, setPlotsData] = useState(geospatialPlots);
 
-  // Map Layer & View Modes
-  const [mapLayer, setMapLayer] = useState('satellite'); // 'satellite' | 'ndvi' | 'terrain'
-  const [showSensorsOverlay, setShowSensorsOverlay] = useState(true);
-
-  // Left Sidebar Hierarchy Search & Filter
+  const [mapLayer, setMapLayer] = useState('satellite');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [leftNavCollapsed, setLeftNavCollapsed] = useState(false);
   const [blockAOpen, setBlockAOpen] = useState(true);
   const [blockBOpen, setBlockBOpen] = useState(true);
 
-  // Bottom Timeline Scrubber State
   const [timelineOpen, setTimelineOpen] = useState(true);
   const [selectedTimelineIndex, setSelectedTimelineIndex] = useState(6);
 
-  // Actuators local state
+  const farmBounds = [
+    [16.8570, 74.6010],
+    [16.8675, 74.6120]
+  ];
+
   const handleToggleActuator = (plotId, actuatorKey) => {
     setPlotsData(prev => prev.map(p => {
       if (p.id === plotId) {
@@ -370,31 +344,25 @@ export const OverviewDashboard = ({ onNavigate }) => {
     terrain: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
   };
 
-  const farmCenter = [16.8622, 74.6065];
-
   const getPolygonStyle = (plot) => {
     const isSelected = selectedPlotId === plot.id;
-    let fillColor = '#16a34a';
-    let borderColor = '#15803d';
+    let fillColor = '#16A34A';
+    let borderColor = '#15803D';
 
     if (plot.statusType === 'critical') {
-      fillColor = '#dc2626';
-      borderColor = '#b91c1c';
+      fillColor = '#DC2626';
+      borderColor = '#B91C1C';
     } else if (plot.statusType === 'warning') {
-      fillColor = '#d97706';
-      borderColor = '#b45309';
-    }
-
-    if (mapLayer === 'ndvi') {
-      fillColor = plot.healthScore > 85 ? '#15803d' : plot.healthScore > 50 ? '#ca8a04' : '#b91c1c';
+      fillColor = '#D97706';
+      borderColor = '#B45309';
     }
 
     return {
       fillColor: fillColor,
-      fillOpacity: isSelected ? 0.65 : 0.45,
-      color: isSelected ? '#ffffff' : borderColor,
+      fillOpacity: isSelected ? 0.65 : 0.40,
+      color: isSelected ? '#FFFFFF' : borderColor,
       weight: isSelected ? 3.5 : 2,
-      dashArray: isSelected ? '' : '3, 4',
+      dashArray: isSelected ? '' : '2, 3',
       lineCap: 'round',
       lineJoin: 'round'
     };
@@ -409,7 +377,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
             <div className="w-6 h-6 rounded-[4px] bg-[#1B5E20] text-white flex items-center justify-center font-bold text-[11px] shadow-xs">
               <Wheat className="w-3.5 h-3.5" />
             </div>
-            <div className="flex items-center gap-1.5 text-slate-700 font-semibold text-[13px]">
+            <div className="flex items-center gap-1.5 text-slate-800 font-semibold text-[13px]">
               <span>Sangli Central Farm</span>
               <span className="text-slate-400">/</span>
               <span className="text-[#1B5E20] font-bold">Gat No. 114 (14.5 Acres)</span>
@@ -419,6 +387,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
             </span>
           </div>
 
+          {/* Thin Inline Stat Blocks */}
           <div className="flex items-center divide-x divide-slate-200 text-xs">
             <div className="px-3 py-0.5">
               <span className="text-[10px] uppercase font-semibold text-slate-500 block">Avg. Health</span>
@@ -449,7 +418,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => onNavigate('smartScanner')}
-              className="px-3 py-1 bg-[#1B5E20] hover:bg-[#154D1A] text-white font-semibold text-[11px] rounded-[5px] shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3 py-1.5 bg-[#1B5E20] hover:bg-[#154D1A] text-white font-semibold text-[11px] rounded-[5px] shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <Scan className="w-3.5 h-3.5" />
               <span>Smart Leaf Scan</span>
@@ -469,7 +438,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
             <div className="flex-1 flex flex-col min-h-0">
               <div className="p-3 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center space-x-1.5 font-bold text-xs text-slate-800">
-                  <Compass className="w-4 h-4 text-[#1B5E20]" />
+                  <Wheat className="w-4 h-4 text-[#1B5E20]" />
                   <span>Farm Hierarchy Navigator</span>
                 </div>
                 <button
@@ -481,7 +450,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
                 </button>
               </div>
 
-              <div className="p-2.5 space-y-2 border-b border-slate-100 bg-slate-50/60">
+              <div className="p-2.5 space-y-2 border-b border-slate-100 bg-slate-50/70">
                 <div className="relative">
                   <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" />
                   <input
@@ -489,7 +458,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
                     placeholder="Search plot, crop, hybrid..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-8 pr-2 py-1 bg-white border border-slate-200 rounded-[4px] text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1B5E20]"
+                    className="w-full pl-8 pr-2 py-1 bg-white border border-slate-200 rounded-[5px] text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1B5E20]"
                   />
                 </div>
 
@@ -503,7 +472,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
                     <button
                       key={f.id}
                       onClick={() => setStatusFilter(f.id)}
-                      className={`px-2 py-0.5 rounded-[3px] transition-colors cursor-pointer ${
+                      className={`px-2 py-0.5 rounded-[4px] transition-colors cursor-pointer ${
                         statusFilter === f.id
                           ? 'bg-[#1B5E20] text-white'
                           : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
@@ -517,16 +486,16 @@ export const OverviewDashboard = ({ onNavigate }) => {
 
               <div className="flex-1 overflow-y-auto p-2 space-y-2 text-xs">
                 {/* BLOCK A */}
-                <div className="border border-slate-200 rounded-[4px] overflow-hidden bg-white">
+                <div className="border border-slate-200 rounded-[5px] overflow-hidden bg-white shadow-xs">
                   <button
                     onClick={() => setBlockAOpen(!blockAOpen)}
-                    className="w-full flex items-center justify-between p-2 bg-slate-50 hover:bg-slate-100 text-left font-bold text-slate-800"
+                    className="w-full flex items-center justify-between p-2 bg-slate-50 hover:bg-slate-100 text-left font-bold text-slate-800 transition-colors"
                   >
                     <div className="flex items-center space-x-1.5">
                       <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${blockAOpen ? '' : '-rotate-90'}`} />
                       <span>Block A: Cereals & Pulses (7.5 Ac)</span>
                     </div>
-                    <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                    <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200 font-bold">
                       3 Healthy
                     </span>
                   </button>
@@ -547,7 +516,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
                           >
                             <div>
                               <div className="flex items-center space-x-1.5">
-                                <span className={`w-2 h-2 rounded-full ${plot.statusType === 'critical' ? 'bg-red-600' : plot.statusType === 'warning' ? 'bg-amber-500' : 'bg-emerald-600'}`}></span>
+                                <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
                                 <h4 className={`font-bold text-[12px] ${isSel ? 'text-[#1B5E20]' : 'text-slate-800'}`}>
                                   {plot.name}
                                 </h4>
@@ -569,16 +538,16 @@ export const OverviewDashboard = ({ onNavigate }) => {
                 </div>
 
                 {/* BLOCK B */}
-                <div className="border border-slate-200 rounded-[4px] overflow-hidden bg-white">
+                <div className="border border-slate-200 rounded-[5px] overflow-hidden bg-white shadow-xs">
                   <button
                     onClick={() => setBlockBOpen(!blockBOpen)}
-                    className="w-full flex items-center justify-between p-2 bg-slate-50 hover:bg-slate-100 text-left font-bold text-slate-800"
+                    className="w-full flex items-center justify-between p-2 bg-slate-50 hover:bg-slate-100 text-left font-bold text-slate-800 transition-colors"
                   >
                     <div className="flex items-center space-x-1.5">
                       <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${blockBOpen ? '' : '-rotate-90'}`} />
                       <span>Block B: Cash Crops & Veg (7.0 Ac)</span>
                     </div>
-                    <span className="text-[10px] font-mono text-rose-700 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200">
+                    <span className="text-[10px] font-mono text-rose-700 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200 font-bold">
                       1 Critical • 1 Warn
                     </span>
                   </button>
@@ -633,7 +602,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
                   <span className="flex items-center gap-1">
                     <Sun className="w-3.5 h-3.5 text-amber-500" /> Sangli Met Station
                   </span>
-                  <span className="font-mono text-emerald-700">29.4°C</span>
+                  <span className="font-mono text-emerald-700 font-bold">29.4°C</span>
                 </div>
                 <div className="flex items-center justify-between text-[10px] text-slate-500">
                   <span>Humidity: 65% • Wind: 12 km/h</span>
@@ -663,7 +632,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
                         : 'bg-slate-100 text-slate-700 border-slate-200'
                     }`}
                   >
-                    {p.id.split('-')[1]}
+                    {p.labelCode}
                   </button>
                 ))}
               </div>
@@ -673,20 +642,20 @@ export const OverviewDashboard = ({ onNavigate }) => {
         </div>
 
         {/* PANE B: Full-Bleed Geospatial Map Center Canvas (~50% width) */}
-        <div className="flex-1 flex flex-col min-w-0 relative bg-slate-900">
-          <div className="absolute top-3 left-3 z-[400] flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1 rounded-[5px] border border-slate-200 shadow-md text-xs">
-            <span className="text-[10px] font-bold text-slate-500 uppercase px-2">Layer:</span>
+        <div className="flex-1 flex flex-col min-w-0 relative bg-slate-950">
+          <div className="absolute top-3 left-3 z-[400] flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-[6px] border border-slate-200 shadow-md text-xs">
+            <span className="text-[10px] font-bold text-slate-500 uppercase px-1.5">Layer:</span>
             {[
-              { id: 'satellite', label: 'Satellite (RGB)' },
-              { id: 'ndvi', label: 'NDVI Chlorophyll' },
+              { id: 'satellite', label: 'Satellite' },
+              { id: 'ndvi', label: 'NDVI Vegetation' },
               { id: 'terrain', label: 'Topographic' }
             ].map(l => (
               <button
                 key={l.id}
                 onClick={() => setMapLayer(l.id)}
-                className={`px-2.5 py-1 rounded-[3px] text-[11px] font-semibold transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[4px] text-[11px] font-semibold transition-colors cursor-pointer ${
                   mapLayer === l.id 
-                    ? 'bg-[#1B5E20] text-white' 
+                    ? 'bg-[#1B5E20] text-white shadow-xs' 
                     : 'bg-transparent text-slate-700 hover:bg-slate-100'
                 }`}
               >
@@ -695,35 +664,26 @@ export const OverviewDashboard = ({ onNavigate }) => {
             ))}
           </div>
 
-          <div className="absolute top-3 right-3 z-[400] flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1 rounded-[5px] border border-slate-200 shadow-md text-xs">
-            <button
-              onClick={() => setShowSensorsOverlay(!showSensorsOverlay)}
-              className={`px-2 py-1 rounded-[3px] text-[11px] font-semibold flex items-center gap-1 transition-colors ${
-                showSensorsOverlay ? 'bg-emerald-50 text-[#1B5E20] border border-emerald-200' : 'text-slate-500'
-              }`}
-            >
-              <Radio className="w-3 h-3" />
-              <span>Sensors</span>
-            </button>
-
+          <div className="absolute top-3 right-3 z-[400] flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1 rounded-[6px] border border-slate-200 shadow-md text-xs">
             <button
               onClick={() => handleSelectPlot(selectedPlot)}
-              className="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded"
-              title="Center on Selected Plot"
+              className="px-2 py-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-[4px] flex items-center gap-1 font-semibold text-[11px]"
+              title="Recenter Map"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3 h-3 text-[#1B5E20]" />
+              <span>Center</span>
             </button>
           </div>
 
           <div className="flex-1 w-full h-full relative">
             <MapContainer
-              center={farmCenter}
+              center={[16.8622, 74.6065]}
               zoom={16}
               scrollWheelZoom={true}
               className="w-full h-full"
-              style={{ background: '#0b1329' }}
+              style={{ background: '#0e1626' }}
             >
-              <MapController center={selectedPlot?.center} zoom={16} />
+              <MapController selectedPlot={selectedPlot} farmBounds={farmBounds} />
 
               <TileLayer
                 attribution='&copy; <a href="https://www.esri.com/">Esri</a>, ISRO Bhuvan'
@@ -737,63 +697,33 @@ export const OverviewDashboard = ({ onNavigate }) => {
                 const isWarning = plot.statusType === 'warning';
 
                 return (
-                  <React.Fragment key={plot.id}>
-                    <Polygon
-                      positions={plot.polygon}
-                      pathOptions={getPolygonStyle(plot)}
-                      eventHandlers={{
-                        click: () => handleSelectPlot(plot)
-                      }}
-                    >
-                      <Tooltip direction="top" offset={[0, -10]} opacity={0.95} sticky>
-                        <div className="p-1 text-slate-900 font-sans text-xs min-w-36">
-                          <div className="flex items-center justify-between border-b pb-1 mb-1 border-slate-200">
-                            <strong className="text-[12px]">{plot.name}</strong>
-                            <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold font-mono text-white ${
-                              isCritical ? 'bg-red-600' : isWarning ? 'bg-amber-600' : 'bg-emerald-600'
-                            }`}>
-                              {plot.healthScore}%
-                            </span>
-                          </div>
-                          <div className="text-[10px] text-slate-600 space-y-0.5">
-                            <div>Crop: <strong>{plot.crop}</strong> ({plot.variety})</div>
-                            <div>Canopy Temp: <strong>{plot.telemetry.canopyTemp}°C</strong></div>
-                            <div>Soil VWC: <strong>{plot.telemetry.soilVWC}%</strong></div>
-                            {isCritical && (
-                              <div className="text-red-700 font-bold mt-1">⚠️ {plot.diseaseName}</div>
-                            )}
-                          </div>
+                  <Polygon
+                    key={plot.id}
+                    positions={plot.polygon}
+                    pathOptions={getPolygonStyle(plot)}
+                    eventHandlers={{
+                      click: () => handleSelectPlot(plot)
+                    }}
+                  >
+                    <Tooltip direction="top" offset={[0, -5]} opacity={0.98} permanent={true} sticky>
+                      <div className="p-0.5 text-slate-900 font-sans text-xs min-w-32 text-center">
+                        <div className="font-bold text-[11px] flex items-center justify-center gap-1">
+                          <span className={`w-2 h-2 rounded-full ${isCritical ? 'bg-red-600' : isWarning ? 'bg-amber-500' : 'bg-emerald-600'}`}></span>
+                          <span>{plot.name}</span>
                         </div>
-                      </Tooltip>
-                    </Polygon>
-
-                    {showSensorsOverlay && (
-                      <Marker 
-                        position={plot.center}
-                        eventHandlers={{ click: () => handleSelectPlot(plot) }}
-                      >
-                        <Popup>
-                          <div className="p-1 text-xs">
-                            <div className="font-bold">{plot.name} - IoT Node</div>
-                            <div className="text-slate-600">NDVI: {plot.telemetry.ndvirating}</div>
-                            <button
-                              onClick={() => handleSelectPlot(plot)}
-                              className="mt-1.5 px-2 py-0.5 bg-[#1B5E20] text-white rounded text-[10px] font-semibold w-full"
-                            >
-                              Inspect Telemetry
-                            </button>
-                          </div>
-                        </Popup>
-                      </Marker>
-                    )}
-                  </React.Fragment>
+                        <div className="text-[10px] text-slate-600 mt-0.5 font-mono">
+                          {plot.crop} • <strong className={isCritical ? 'text-red-600 font-bold' : isWarning ? 'text-amber-600 font-bold' : 'text-emerald-700 font-bold'}>{plot.healthScore}%</strong>
+                        </div>
+                      </div>
+                    </Tooltip>
+                  </Polygon>
                 );
               })}
             </MapContainer>
 
             {/* Health Color Legend */}
-            <div className="absolute bottom-3 left-3 z-[400] bg-white/95 backdrop-blur-md p-2.5 rounded-[5px] border border-slate-200 shadow-md text-xs space-y-1.5">
-              <span className="text-[10px] font-bold uppercase text-slate-500 block">Health Index Legend</span>
+            <div className="absolute bottom-3 left-3 z-[400] bg-white/95 backdrop-blur-md p-2.5 rounded-[6px] border border-slate-200 shadow-md text-xs space-y-1.5">
+              <span className="text-[10px] font-bold uppercase text-slate-500 block">Health Index Status</span>
               <div className="flex flex-col gap-1 text-[11px] font-medium text-slate-700">
                 <div className="flex items-center space-x-2">
                   <span className="w-3 h-3 rounded-[2px] bg-emerald-600"></span>
@@ -819,13 +749,13 @@ export const OverviewDashboard = ({ onNavigate }) => {
                 <span className="font-bold text-xs text-slate-800">
                   7-Day Outbreak Progression & Telemetry Timeline
                 </span>
-                <span className="text-[10px] font-mono px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded">
+                <span className="text-[10px] font-mono px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded font-semibold">
                   {timelineEvents[selectedTimelineIndex].date}
                 </span>
               </div>
 
               <div className="flex items-center space-x-2">
-                <span className="text-[11px] text-slate-500">
+                <span className="text-[11px] text-slate-500 font-medium">
                   {timelineEvents[selectedTimelineIndex].title}
                 </span>
                 <button
@@ -866,7 +796,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
                   })}
                 </div>
 
-                <div className="p-1.5 bg-slate-50 border border-slate-200 rounded-[3px] text-[11px] text-slate-700 flex items-center justify-between">
+                <div className="p-1.5 bg-slate-50 border border-slate-200 rounded-[4px] text-[11px] text-slate-700 flex items-center justify-between">
                   <span className="truncate">
                     <strong>Event Log:</strong> {timelineEvents[selectedTimelineIndex].log}
                   </span>
@@ -882,8 +812,9 @@ export const OverviewDashboard = ({ onNavigate }) => {
         {/* PANE C: Right-Side Live Telemetry & Micro-Actuators Slide-Out Panel (~28-30% width) */}
         <div className="w-80 lg:w-96 border-l border-slate-200 bg-white flex flex-col justify-between overflow-y-auto shrink-0 z-10 p-3.5 space-y-3.5 shadow-sm">
           {selectedPlot ? (
-            <div className="space-y-3.5">
-              <div className="border-b border-slate-100 pb-3">
+            <div className="space-y-3">
+              {/* Header */}
+              <div className="border-b border-slate-100 pb-2.5">
                 <div className="flex items-start justify-between">
                   <div>
                     <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 border border-slate-200 uppercase">
@@ -908,14 +839,15 @@ export const OverviewDashboard = ({ onNavigate }) => {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-100">
+                <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5 pt-1.5 border-t border-slate-100">
                   <span>Sown: {selectedPlot.sowingDate}</span>
                   <span className="font-mono text-slate-400">{selectedPlot.telemetry.lastSync}</span>
                 </div>
               </div>
 
+              {/* Action Alert Banner */}
               {selectedPlot.actionRequired && (
-                <div className={`p-2.5 rounded-[4px] border text-xs leading-relaxed ${
+                <div className={`p-2.5 rounded-[5px] border text-xs leading-relaxed ${
                   selectedPlot.statusType === 'critical'
                     ? 'bg-red-50 text-red-900 border-red-300'
                     : 'bg-amber-50 text-amber-900 border-amber-300'
@@ -928,7 +860,8 @@ export const OverviewDashboard = ({ onNavigate }) => {
                 </div>
               )}
 
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-[4px] space-y-2">
+              {/* Crop Health Index + Sparkline */}
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-[5px] space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase text-slate-500 block">
@@ -956,7 +889,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
                     <svg viewBox="0 0 120 40" className="w-20 h-6 overflow-visible">
                       <polyline
                         fill="none"
-                        stroke={selectedPlot.statusType === 'critical' ? '#dc2626' : selectedPlot.statusType === 'warning' ? '#d97706' : '#16a34a'}
+                        stroke={selectedPlot.statusType === 'critical' ? '#DC2626' : selectedPlot.statusType === 'warning' ? '#D97706' : '#16A34A'}
                         strokeWidth="2.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -968,7 +901,8 @@ export const OverviewDashboard = ({ onNavigate }) => {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
+              {/* Live Micro-Telemetry Sensors Grid */}
+              <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">
                   Live Micro-Telemetry Sensors
                 </span>
@@ -1004,7 +938,8 @@ export const OverviewDashboard = ({ onNavigate }) => {
                 </div>
               </div>
 
-              <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-[4px] text-xs space-y-1.5">
+              {/* Yield Forecast */}
+              <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-[5px] text-xs space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] text-slate-600 font-medium">Harvest ETA: <strong>{selectedPlot.harvestEta}</strong></span>
                   <span className="text-[11px] font-bold text-[#1B5E20] font-mono">{selectedPlot.yieldEst}</span>
@@ -1017,12 +952,13 @@ export const OverviewDashboard = ({ onNavigate }) => {
                 </div>
               </div>
 
-              <div className="space-y-2 pt-1 border-t border-slate-100">
+              {/* Actuators */}
+              <div className="space-y-1.5 pt-1 border-t border-slate-100">
                 <span className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">
                   Field Actuators & Irrigation
                 </span>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <div className="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-[4px] text-xs">
                     <span className="font-semibold text-slate-700 flex items-center gap-1.5">
                       <Droplets className="w-3.5 h-3.5 text-blue-600" />
@@ -1048,22 +984,10 @@ export const OverviewDashboard = ({ onNavigate }) => {
                       <div className="switch-thumb"></div>
                     </div>
                   </div>
-
-                  <div className="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-[4px] text-xs">
-                    <span className="font-semibold text-slate-700 flex items-center gap-1.5">
-                      <Sprout className="w-3.5 h-3.5 text-emerald-600" />
-                      Fertigation Solenoid
-                    </span>
-                    <div
-                      onClick={() => handleToggleActuator(selectedPlot.id, 'fertigationOn')}
-                      className={`switch-track ${selectedPlot.actuators.fertigationOn ? 'bg-[#1B5E20] switch-on' : 'bg-slate-300'}`}
-                    >
-                      <div className="switch-thumb"></div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
+              {/* Action Button */}
               <button
                 onClick={() => onNavigate('smartScanner')}
                 className="w-full py-2.5 bg-[#1B5E20] hover:bg-[#154D1A] text-white font-bold text-xs rounded-[5px] shadow-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
@@ -1074,7 +998,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
             </div>
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400">
-              <Compass className="w-8 h-8 text-slate-300 mb-2" />
+              <Wheat className="w-8 h-8 text-slate-300 mb-2" />
               <p className="text-xs font-semibold text-slate-600">Select any plot polygon on the map to inspect live micro-telemetry</p>
             </div>
           )}

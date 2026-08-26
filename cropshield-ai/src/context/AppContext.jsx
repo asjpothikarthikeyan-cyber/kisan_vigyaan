@@ -23,7 +23,7 @@ export const AppProvider = ({ children }) => {
   const [lang, setLang] = useState(() => localStorage.getItem('cs_lang') || 'en');
   
   // Theme mode: 'dark' (default) | 'light'
-  const [theme, setTheme] = useState(() => localStorage.getItem('cs_theme') || 'dark');
+  const [theme, setTheme] = useState(() => localStorage.getItem('cs_theme') || 'light');
 
   // View mode: 'mobile' | 'desktop'
   const [viewMode, setViewMode] = useState('mobile');
