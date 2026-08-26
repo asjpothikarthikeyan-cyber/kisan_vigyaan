@@ -22,6 +22,9 @@ export const AppProvider = ({ children }) => {
   // Current language: 'en' | 'mr' | 'hi'
   const [lang, setLang] = useState(() => localStorage.getItem('cs_lang') || 'en');
   
+  // Theme mode: 'light' (default) | 'dark'
+  const [theme, setTheme] = useState(() => localStorage.getItem('cs_theme') || 'light');
+
   // View mode: 'mobile' | 'desktop'
   const [viewMode, setViewMode] = useState('mobile');
 
@@ -395,6 +398,9 @@ export const AppProvider = ({ children }) => {
   };
 
   const value = {
+    theme,
+    setTheme,
+    toggleTheme: () => setTheme(prev => prev === 'light' ? 'dark' : 'light'),
     cart,
     addToCart,
     removeFromCart,

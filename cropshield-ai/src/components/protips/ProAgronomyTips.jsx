@@ -172,53 +172,53 @@ export const ProAgronomyTips = () => {
   };
 
   return (
-    <div className="space-y-6 select-none pb-14">
-      {/* Top Banner Navigation */}
-      <div className="bg-[#0b1528] border border-[#1e2f4d] rounded-2xl p-5 shadow-xl">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-[#18263f] pb-5">
+    <div className="space-y-5 select-none pb-12">
+      {/* Top Banner Navigation - Government Clean Theme */}
+      <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-xs">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-100 pb-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.25)]">
-              <Lightbulb className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-lg bg-[#1B5E20] text-white flex items-center justify-center shadow-xs">
+              <Lightbulb className="w-5 h-5 text-amber-300" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-extrabold text-white tracking-tight">
-                  {lang === 'mr' ? 'तज्ज्ञ कृषी सल्ला, अचूक औषध घटक व नजीकची दुकाने (KM)' : 'Pro Agronomy Tips & Chemical Compositions'}
+                <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                  {lang === 'mr' ? 'तज्ज्ञ कृषी सल्ला, अचूक औषध घटक व नजीकची दुकाने (KM)' : 'Pro Agronomy Tips & Chemical Matrix'}
                 </h1>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                  Verified Formulations
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-50 text-[#1B5E20] border border-emerald-200">
+                  Scientific Advisory
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 {lang === 'mr' 
-                  ? 'कीटकनाशके, बुरशीनाशके, तणनाशके यांचे रासायनिक घटक, मित्रकीटकांची सुरक्षा व नजीकची अधिकृत दुकाने व मंडी (KM अंतरासह)'
-                  : 'Exact Active Compositions, Target Pests, Beneficial Predator Safety Index & Nearby Vendors Directory with KM Specifications'}
+                  ? 'कीटकनाशके, बुरशीनाशके, तणनाशके यांचे रासायनिक घटक, मित्रकीटकांची सुरक्षा व नजीकची अधिकृत दुकाने व मंडी'
+                  : 'Exact Active Compositions, Target Pests, Beneficial Predator Safety Index & Verified Nearby Outlets'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <button
               onClick={handlePrintHandbook}
-              className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition-all flex items-center gap-2"
+              className="px-4 py-2 bg-[#1B5E20] hover:bg-[#154D1A] text-white font-semibold text-xs rounded-lg shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-3.5 h-3.5" />
               <span>{lang === 'mr' ? 'मार्गदर्शिका डाउनलोड करा (PDF)' : 'Download Handbook (PDF)'}</span>
             </button>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="mt-4 pt-2 flex items-center flex-wrap gap-2 text-xs">
+        <div className="mt-3.5 pt-1 flex items-center flex-wrap gap-1.5 text-xs">
           {[
-            { id: 'chemicals', label: lang === 'mr' ? '१. औषध घटक व प्रमाण (Chemicals)' : '1. Chemical Compositions Matrix', icon: FlaskConical, color: 'text-cyan-400' },
-            { id: 'vendors', label: lang === 'mr' ? '२. नजीकची दुकाने व मंडी (KM)' : '2. Nearby Vendors & Mandi (KM)', icon: Store, color: 'text-emerald-400' },
-            { id: 'crops', label: lang === 'mr' ? '३. हंगामनिहाय पिके (Seasons)' : '3. Seasonal Crops Guide', icon: Calendar, color: 'text-amber-400' },
-            { id: 'fertilizers', label: lang === 'mr' ? '४. खते व पोषण (Fertilizers)' : '4. Fertilizer Stewardship', icon: Sprout, color: 'text-emerald-400' },
-            { id: 'pesticides', label: lang === 'mr' ? '५. फवारणी सुरक्षा (Safety)' : '5. Safe Spray Protocols', icon: ShieldAlert, color: 'text-rose-400' },
-            { id: 'irrigation', label: lang === 'mr' ? '६. आधुनिक सिंचन (Irrigation)' : '6. Irrigation & Maintenance', icon: Droplets, color: 'text-cyan-400' },
-            { id: 'diseases', label: lang === 'mr' ? '७. रोग प्रतिबंध (Diseases)' : '7. Disease & Pest Forecast', icon: Bug, color: 'text-purple-400' },
-            { id: 'calculator', label: lang === 'mr' ? '८. पंप डोस गणकयंत्र (Calculator)' : '8. Sprayer Tank Calculator', icon: Calculator, color: 'text-amber-400' }
+            { id: 'chemicals', label: lang === 'mr' ? '१. औषध घटक (Chemicals)' : '1. Chemical Matrix', icon: FlaskConical },
+            { id: 'vendors', label: lang === 'mr' ? '२. दुकाने व मंडी (KM)' : '2. Nearby Vendors (KM)', icon: Store },
+            { id: 'crops', label: lang === 'mr' ? '३. हंगामनिहाय पिके' : '3. Seasonal Crops', icon: Calendar },
+            { id: 'fertilizers', label: lang === 'mr' ? '४. खते व पोषण' : '4. Fertilizers', icon: Sprout },
+            { id: 'pesticides', label: lang === 'mr' ? '५. फवारणी सुरक्षा' : '5. Spray Protocols', icon: ShieldAlert },
+            { id: 'irrigation', label: lang === 'mr' ? '६. सिंचन' : '6. Irrigation', icon: Droplets },
+            { id: 'diseases', label: lang === 'mr' ? '७. रोग प्रतिबंध' : '7. Disease Forecast', icon: Bug },
+            { id: 'calculator', label: lang === 'mr' ? '८. डोस गणक' : '8. Sprayer Calculator', icon: Calculator }
           ].map(tab => {
             const Icon = tab.icon;
             const isSel = activeTab === tab.id;
@@ -226,13 +226,13 @@ export const ProAgronomyTips = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={'flex items-center space-x-2 px-3.5 py-2 rounded-xl font-bold transition-all ' + (
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   isSel
-                    ? 'bg-amber-500 text-slate-950 shadow-[0_0_14px_rgba(245,158,11,0.35)]'
-                    : 'bg-[#0f1d38] text-slate-300 hover:text-white border border-[#203254]'
-                )}
+                    ? 'bg-[#1B5E20] text-white shadow-xs'
+                    : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200'
+                }`}
               >
-                <Icon className={'w-4 h-4 ' + (isSel ? 'text-slate-950' : tab.color)} />
+                <Icon className="w-3.5 h-3.5" />
                 <span>{tab.label}</span>
               </button>
             );

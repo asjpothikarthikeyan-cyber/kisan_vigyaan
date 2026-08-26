@@ -2,99 +2,110 @@
 
 @layer base {
   :root {
-    --bg-dark: #070c18;
-    --bg-card: #0b1329;
-    --bg-card-hover: #0f1d3a;
-    --border-dark: #1e293b;
-    --primary: #06b6d4;
-    --accent-green: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-red: #ef4444;
+    --bg-light: #F7F9F7;
+    --bg-card: #FFFFFF;
+    --bg-card-muted: #F8FAF8;
+    --border-light: #E2E8F0;
+    --primary: #1B5E20;
+    --primary-hover: #154D1A;
+    --primary-light: #E8F5E9;
+    --accent-green: #15803D;
+    --accent-amber: #B45309;
+    --accent-red: #B91C1C;
+    --text-main: #1E293B;
+    --text-muted: #64748B;
   }
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #070c18;
-  color: #f1f5f9;
+  font-family: 'Inter', 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #F7F9F7;
+  color: #1E293B;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Custom glowing cyber-agri scrollbar */
+/* Subtle clean scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #070c18;
+  background: #F1F5F9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #CBD5E1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #06b6d4;
+  background: #94A3B8;
 }
 
-/* Subtle particle/grid constellation effect in background */
-.cyber-bg {
-  background-color: #070c18;
+/* Clean government background */
+.gov-bg {
+  background-color: #F7F9F7;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 85% 25%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 50% 85%, rgba(239, 68, 68, 0.04) 0%, transparent 50%),
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    radial-gradient(circle at 10% 10%, rgba(27, 94, 32, 0.02) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(27, 94, 32, 0.02) 0%, transparent 40%);
 }
 
-/* Glowing card borders matching reference image */
+/* Indian Government Tricolor Accent Strip */
+.tricolor-strip {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(to right, #FF9933 0%, #FF9933 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #138808 66.66%, #138808 100%);
+}
+
+/* Flat hairline card borders */
 .card-normal {
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.08), inset 0 0 15px rgba(16, 185, 129, 0.03);
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background-color: #FFFFFF;
 }
 .card-normal:hover {
-  border-color: rgba(16, 185, 129, 0.6);
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .card-critical {
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.12), inset 0 0 15px rgba(239, 68, 68, 0.04);
+  border: 1px solid #FECACA;
+  box-shadow: 0 1px 3px rgba(185, 28, 28, 0.06);
+  background-color: #FFFFFF;
 }
 .card-critical:hover {
-  border-color: rgba(239, 68, 68, 0.7);
-  box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
+  border-color: #F87171;
+  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.1);
 }
 
 .card-warning {
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.1), inset 0 0 15px rgba(245, 158, 11, 0.03);
+  border: 1px solid #FDE68A;
+  box-shadow: 0 1px 3px rgba(180, 83, 9, 0.06);
+  background-color: #FFFFFF;
 }
 .card-warning:hover {
-  border-color: rgba(245, 158, 11, 0.7);
-  box-shadow: 0 0 22px rgba(245, 158, 11, 0.2);
+  border-color: #FBBF24;
+  box-shadow: 0 2px 6px rgba(180, 83, 9, 0.1);
 }
 
-/* Leaflet dark theme fix */
+/* Leaflet clean light theme */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 1rem;
-  background-color: #0b1329 !important;
+  border-radius: 0.75rem;
+  background-color: #F1F5F9 !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: #0f172a !important;
-  color: #f1f5f9 !important;
-  border: 1px solid #334155 !important;
-  border-radius: 12px !important;
+  background: #FFFFFF !important;
+  color: #1E293B !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
 .leaflet-popup-tip {
-  background: #0f172a !important;
+  background: #FFFFFF !important;
 }
