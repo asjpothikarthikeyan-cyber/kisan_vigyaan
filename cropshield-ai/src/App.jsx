@@ -47,9 +47,9 @@ function MainAppShell() {
             onNavigate={setActiveView}
           />
 
-          {/* Scrollable Viewport Area */}
-          <main className={`flex-1 overflow-y-auto p-3 sm:p-5 lg:p-6 ${isDark ? 'bg-[#070c18]' : 'bg-[#F7F9F7]'}`}>
-            <div className="max-w-7xl mx-auto">
+          {/* Scrollable Viewport Area - Full bleed for map command center */}
+          <main className={`flex-1 min-h-0 overflow-y-auto ${activeView === 'dashboard' ? 'p-0 overflow-hidden' : 'p-3 sm:p-5 lg:p-6'} ${isDark ? 'bg-[#070c18]' : 'bg-[#F4F6F4]'}`}>
+            <div className={activeView === 'dashboard' ? 'h-full w-full' : 'max-w-7xl mx-auto'}>
               {activeView === 'dashboard' && <OverviewDashboard onNavigate={setActiveView} />}
               {activeView === 'marketplace' && <AgriMarketplace />}
               {activeView === 'proTips' && <ProAgronomyTips />}
