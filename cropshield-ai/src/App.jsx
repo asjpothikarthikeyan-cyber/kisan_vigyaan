@@ -1,71 +1,76 @@
 import React, { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
-import { DarkSidebar } from './components/layout/DarkSidebar';
-import { TopHeader } from './components/layout/TopHeader';
-import { OverviewDashboard } from './components/dashboard/OverviewDashboard';
-import { SmartVisionScanner } from './components/scanner/SmartVisionScanner';
+import { MobileTopHeader } from './components/mobile/MobileTopHeader';
+import { MobileBottomNav } from './components/mobile/MobileBottomNav';
+import { FarmerHomeScreen } from './components/mobile/FarmerHomeScreen';
+import { FarmerCameraScanner } from './components/mobile/FarmerCameraScanner';
+import { FarmerAlertsFeed } from './components/mobile/FarmerAlertsFeed';
+import { FarmerMarketDecisions } from './components/mobile/FarmerMarketDecisions';
+import { FarmerMoreMenu } from './components/mobile/FarmerMoreMenu';
+
+// Sub-modules accessible via More Menu
+import { ProAgronomyTips } from './components/protips/ProAgronomyTips';
+import { GovtSchemes } from './components/schemes/GovtSchemes';
 import { StatisticsTrends } from './components/statistics/StatisticsTrends';
 import { SatelliteMapping } from './components/satellite/SatelliteMapping';
-import { DisasterPrediction } from './components/disaster/DisasterPrediction';
-import { GovtSchemes } from './components/schemes/GovtSchemes';
 import { FarmerCommunity } from './components/community/FarmerCommunity';
-import { PestTrapMonitor } from './components/sensors/PestTrapMonitor';
 import { MyReports } from './components/farmer/MyReports';
-import { AlertCenter } from './components/alerts/AlertCenter';
-import { AgriMarketplace } from './components/marketplace/AgriMarketplace';
-import { ProAgronomyTips } from './components/protips/ProAgronomyTips';
+import { PestTrapMonitor } from './components/sensors/PestTrapMonitor';
+import { ArrowLeft } from 'lucide-react';
 
 function MainAppShell() {
-  const { theme } = useApp();
-  const [activeView, setActiveView] = useState('dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const { theme, lang } = useApp();
+  const [activeTab, setActiveTab] = useState('home');
   const isDark = theme === 'dark';
 
+  const isSubView = ['proTips', 'govtSchemes', 'statistics', 'satelliteMapping', 'farmerCommunity', 'reports', 'deviceManagement'].includes(activeTab);
+
   return (
-    <div className={`flex flex-col h-screen font-sans overflow-hidden transition-colors ${
-      isDark ? 'bg-[#070c18] text-slate-100' : 'bg-[#F7F9F7] text-slate-800'
+    <div className={`flex flex-col min-h-screen font-sans transition-colors ${
+      isDark ? 'bg-[#070c18] text-slate-100' : 'bg-[#F4F6F4] text-slate-900'
     }`}>
-      {/* 1. Indian Government Tricolor Accent Strip (Saffron / White / Green, 3px height) */}
+      {/* 1. Indian National Tricolor Accent Strip */}
       <div className="tricolor-strip shrink-0" role="presentation" />
 
-      <div className="flex flex-1 min-h-0 overflow-hidden">
-        {/* 2. Left Sidebar Navigation */}
-        <DarkSidebar 
-          activeView={activeView} 
-          setActiveView={setActiveView} 
-          isOpen={sidebarOpen} 
-          setIsOpen={setSidebarOpen} 
-        />
+      {/* 2. Phone-First Top Bar */}
+      <MobileTopHeader onNavigate={setActiveTab} />
 
-        {/* 3. Main Content Workspace */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          {/* Top Control Bar with Time, Search, Language, Theme, Alerts, User Avatar */}
-          <TopHeader 
-            activeView={activeView} 
-            onOpenSidebar={() => setSidebarOpen(true)} 
-            onNavigate={setActiveView}
-          />
-
-          {/* Scrollable Viewport Area - Full bleed for map command center */}
-          <main className={`flex-1 min-h-0 overflow-y-auto ${activeView === 'dashboard' ? 'p-0 overflow-hidden' : 'p-3 sm:p-5 lg:p-6'} ${isDark ? 'bg-[#070c18]' : 'bg-[#F4F6F4]'}`}>
-            <div className={activeView === 'dashboard' ? 'h-full w-full' : 'max-w-7xl mx-auto'}>
-              {activeView === 'dashboard' && <OverviewDashboard onNavigate={setActiveView} />}
-              {activeView === 'marketplace' && <AgriMarketplace />}
-              {activeView === 'proTips' && <ProAgronomyTips />}
-              {activeView === 'smartScanner' && <SmartVisionScanner />}
-              {activeView === 'statistics' && <StatisticsTrends />}
-              {activeView === 'satelliteMapping' && <SatelliteMapping />}
-              {activeView === 'disasterPrediction' && <DisasterPrediction />}
-              {activeView === 'govtSchemes' && <GovtSchemes />}
-              {activeView === 'farmerCommunity' && <FarmerCommunity />}
-              {activeView === 'alertCenter' && <AlertCenter onNavigate={setActiveView} />}
-              {activeView === 'deviceManagement' && <PestTrapMonitor />}
-              {activeView === 'reports' && <MyReports />}
-            </div>
-          </main>
+      {/* 3. Sub-View Back Navigation Bar (if in a reference screen from More menu) */}
+      {isSubView && (
+        <div className={`px-4 py-2 border-b flex items-center justify-between max-w-lg mx-auto w-full ${
+          isDark ? 'bg-[#090f1d] border-[#16233b]' : 'bg-white border-slate-200'
+        }`}>
+          <button
+            onClick={() => setActiveTab('more')}
+            className="flex items-center gap-1.5 text-xs font-bold text-[#1B5E20] hover:text-[#154D1A] cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>{lang === 'mr' ? 'मागे जा (अधिक मेनू)' : 'Back to More Menu'}</span>
+          </button>
         </div>
-      </div>
+      )}
+
+      {/* 4. Main Scrollable Viewport (One Clear Decision Per Screen) */}
+      <main className="flex-1 w-full max-w-lg mx-auto">
+        {/* Core 5 Mobile Tabs */}
+        {activeTab === 'home' && <FarmerHomeScreen onNavigate={setActiveTab} />}
+        {activeTab === 'scan' && <FarmerCameraScanner onNavigate={setActiveTab} />}
+        {activeTab === 'alerts' && <FarmerAlertsFeed onNavigate={setActiveTab} />}
+        {activeTab === 'market' && <FarmerMarketDecisions onNavigate={setActiveTab} />}
+        {activeTab === 'more' && <FarmerMoreMenu onNavigate={setActiveTab} />}
+
+        {/* Reference Views from More Menu */}
+        {activeTab === 'proTips' && <div className="p-3"><ProAgronomyTips /></div>}
+        {activeTab === 'govtSchemes' && <div className="p-3"><GovtSchemes /></div>}
+        {activeTab === 'statistics' && <div className="p-3"><StatisticsTrends /></div>}
+        {activeTab === 'satelliteMapping' && <div className="p-3"><SatelliteMapping /></div>}
+        {activeTab === 'farmerCommunity' && <div className="p-3"><FarmerCommunity /></div>}
+        {activeTab === 'reports' && <div className="p-3"><MyReports /></div>}
+        {activeTab === 'deviceManagement' && <div className="p-3"><PestTrapMonitor /></div>}
+      </main>
+
+      {/* 5. Phone-First Bottom Navigation Bar (5 Icons Max) */}
+      <MobileBottomNav activeTab={isSubView ? 'more' : activeTab} onTabChange={setActiveTab} />
     </div>
   );
 }
