@@ -1,0 +1,405 @@
+/**
+ * CropShield AI — Whisper Transcription & Audio Recording Service
+ * 
+ * Records microphone audio via MediaRecorder API, sends to Groq Whisper API
+ * for transcription + automatic language detection. Falls back to Web Speech API
+ * if no API key is configured.
+ */
+
+// ─── ISO 639-1 → our internal lang codes ───
+const WHISPER_LANG_MAP = {
+  en: 'en', english: 'en',
+  hi: 'hi', hindi: 'hi',
+  mr: 'mr', marathi: 'mr',
+  ta: 'ta', tamil: 'ta',
+  te: 'te', telugu: 'te',
+  kn: 'kn', kannada: 'kn',
+  gu: 'gu', gujarati: 'gu',
+  bn: 'bn', bengali: 'bn',
+  pa: 'pa', punjabi: 'pa',
+  ml: 'ml', malayalam: 'ml'
+};
+
+const SUPPORTED_LANG_CODES = new Set(['en', 'hi', 'mr', 'ta', 'te', 'kn', 'gu', 'bn', 'pa', 'ml']);
+
+/**
+ * Get the configured Groq API key from environment.
+ * Returns null if not configured or placeholder.
+ */
+export function getGroqApiKey() {
+  const key = import.meta.env.VITE_GROQ_API_KEY;
+  if (!key || key === 'gsk_your_groq_api_key_here' || key.length < 10) return null;
+  return key;
+}
+
+/**
+ * Check if Whisper transcription is available (API key configured).
+ */
+export function isWhisperAvailable() {
+  return !!getGroqApiKey();
+}
+
+// ─── Audio Recorder Class ───
+
+export class WhisperAudioRecorder {
+  constructor() {
+    this.mediaRecorder = null;
+    this.audioChunks = [];
+    this.stream = null;
+    this.isRecording = false;
+    this.startTime = null;
+    this.audioContext = null;
+  }
+
+  /**
+   * Start recording from the microphone.
+   * @param {Function} [onSilence] - Callback triggered when silence is detected after speaking
+   * @returns {Promise<boolean>} true if recording started successfully
+   */
+  async startRecording(onSilence) {
+    try {
+      this.audioChunks = [];
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          channelCount: 1,
+          sampleRate: 16000,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
+
+      // Voice Activity Detection (Silence Detection)
+      if (onSilence) {
+        try {
+          this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const source = this.audioContext.createMediaStreamSource(this.stream);
+          const analyser = this.audioContext.createAnalyser();
+          analyser.minDecibels = -70; // Increased sensitivity for quiet speech
+          analyser.smoothingTimeConstant = 0.2;
+          source.connect(analyser);
+
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+          let silenceStart = null;
+          let hasSpoken = false;
+
+          const checkSilence = () => {
+            if (!this.isRecording) return;
+            
+            analyser.getByteFrequencyData(dataArray);
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+            const avg = sum / dataArray.length;
+
+            if (avg > 8) { // Lowered threshold so quiet speech is detected
+              hasSpoken = true;
+              silenceStart = null;
+            } else if (hasSpoken) { // Silence after speaking
+              if (!silenceStart) silenceStart = Date.now();
+              else if (Date.now() - silenceStart > 2500) { // Increased to 2.5s to allow for thinking pauses
+                onSilence();
+                return;
+              }
+            } else { // Silence before speaking
+              if (!silenceStart) silenceStart = Date.now();
+              else if (Date.now() - silenceStart > 10000) { // Increased to 10s timeout if no speech
+                onSilence();
+                return;
+              }
+            }
+            
+            requestAnimationFrame(checkSilence);
+          };
+          
+          checkSilence();
+        } catch (e) {
+          console.warn('VAD setup failed, fallback to manual stop', e);
+        }
+      }
+
+      // Prefer webm/opus, fallback to whatever is available
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        ? 'audio/webm;codecs=opus'
+        : MediaRecorder.isTypeSupported('audio/webm')
+          ? 'audio/webm'
+          : 'audio/mp4';
+
+      this.mediaRecorder = new MediaRecorder(this.stream, {
+        mimeType,
+        audioBitsPerSecond: 64000
+      });
+
+      this.mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          this.audioChunks.push(event.data);
+        }
+      };
+
+      this.mediaRecorder.start(250); // Collect chunks every 250ms
+      this.isRecording = true;
+      this.startTime = Date.now();
+      return true;
+    } catch (err) {
+      console.error('Microphone access error:', err);
+      this.isRecording = false;
+      return false;
+    }
+  }
+
+  /**
+   * Stop recording and return the audio blob.
+   * @returns {Promise<{blob: Blob, duration: number}>}
+   */
+  stopRecording() {
+    return new Promise((resolve) => {
+      if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') {
+        resolve({ blob: null, duration: 0 });
+        return;
+      }
+
+      this.mediaRecorder.onstop = () => {
+        const duration = (Date.now() - (this.startTime || Date.now())) / 1000;
+        const mimeType = this.mediaRecorder.mimeType || 'audio/webm';
+        const blob = new Blob(this.audioChunks, { type: mimeType });
+        this.audioChunks = [];
+        this.isRecording = false;
+
+        if (this.audioContext) {
+          this.audioContext.close().catch(() => {});
+          this.audioContext = null;
+        }
+
+        if (this.stream) {
+          this.stream.getTracks().forEach(track => track.stop());
+          this.stream = null;
+        }
+
+        resolve({ blob, duration });
+      };
+
+      this.mediaRecorder.stop();
+    });
+  }
+
+  /**
+   * Cancel recording without returning audio.
+   */
+  cancelRecording() {
+    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+      this.mediaRecorder.stop();
+    }
+    this.audioChunks = [];
+    this.isRecording = false;
+    
+    if (this.audioContext) {
+      this.audioContext.close().catch(() => {});
+      this.audioContext = null;
+    }
+
+    if (this.stream) {
+      this.stream.getTracks().forEach(track => track.stop());
+      this.stream = null;
+    }
+  }
+}
+
+// ─── Whisper Transcription ───
+
+/**
+ * Transcribe an audio blob using Groq's Whisper API.
+ * 
+ * @param {Blob} audioBlob - The recorded audio blob
+ * @param {string} apiKey - Groq API key
+ * @param {string|null} forcedLang - Optional ISO 639-1 language code to force transcription in that language
+ * @returns {Promise<{text: string, detectedLang: string, confidence: number, duration: number, isSupported: boolean, rawLanguage: string}>}
+ */
+export async function transcribeWithWhisper(audioBlob, apiKey, forcedLang = null) {
+  if (!audioBlob || audioBlob.size < 1000) {
+    return {
+      text: '',
+      detectedLang: forcedLang || 'en',
+      confidence: 0,
+      duration: 0,
+      isSupported: true,
+      rawLanguage: '',
+      error: 'no_audio'
+    };
+  }
+
+  const formData = new FormData();
+
+  // Determine file extension from MIME type
+  const ext = audioBlob.type.includes('mp4') ? 'mp4' : 'webm';
+  formData.append('file', audioBlob, `recording.${ext}`);
+  
+  // Use the full large-v3 model instead of turbo for better multilingual and accent accuracy
+  formData.append('model', 'whisper-large-v3');
+  
+  // Provide agricultural context to improve transcription of domain-specific words
+  formData.append('prompt', 'Agriculture, farming, crops, weather, diseases, seeds, fertilizer, pesticides, urea, NPK, mandi, yield, harvest, soil, monsoon.');
+  
+  formData.append('response_format', 'verbose_json');
+  
+  if (forcedLang) {
+    formData.append('language', forcedLang);
+  }
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Whisper API error:', response.status, errorData);
+      return {
+        text: '',
+        detectedLang: 'en',
+        confidence: 0,
+        duration: 0,
+        isSupported: true,
+        rawLanguage: '',
+        error: response.status === 429 ? 'rate_limit' : 'api_error'
+      };
+    }
+
+    const data = await response.json();
+
+    // Extract language from Whisper response
+    const rawLang = (data.language || '').toLowerCase();
+    const mappedLang = WHISPER_LANG_MAP[rawLang] || rawLang;
+    const isSupported = SUPPORTED_LANG_CODES.has(mappedLang);
+    const detectedLang = isSupported ? mappedLang : 'en';
+
+    // Calculate average confidence from segments
+    let confidence = 0.85; // Default when segments not available
+    if (data.segments && data.segments.length > 0) {
+      const avgLogprob = data.segments.reduce((sum, seg) => sum + (seg.avg_logprob || -0.3), 0) / data.segments.length;
+      // Convert log probability to 0-1 confidence scale
+      // avg_logprob typically ranges from -1.0 (low) to 0.0 (perfect)
+      confidence = Math.max(0, Math.min(1, 1 + avgLogprob));
+
+      // Also check no_speech_prob
+      const avgNoSpeech = data.segments.reduce((sum, seg) => sum + (seg.no_speech_prob || 0), 0) / data.segments.length;
+      if (avgNoSpeech > 0.7) {
+        confidence = Math.min(confidence, 0.2);
+      }
+    }
+
+    const text = (data.text || '').trim();
+
+    return {
+      text,
+      detectedLang,
+      confidence: Math.round(confidence * 100) / 100,
+      duration: data.duration || 0,
+      isSupported,
+      rawLanguage: rawLang,
+      error: text ? null : 'no_speech'
+    };
+  } catch (err) {
+    console.error('Whisper transcription network error:', err);
+    return {
+      text: '',
+      detectedLang: 'en',
+      confidence: 0,
+      duration: 0,
+      isSupported: true,
+      rawLanguage: '',
+      error: 'network_error'
+    };
+  }
+}
+
+// ─── LLM Translation Service (for non-template languages) ───
+
+const translationCache = new Map();
+
+/**
+ * Translate text to a target language using Groq LLM.
+ * Used when we have a response in English but need it in te/kn/gu/bn/pa/ml.
+ * 
+ * @param {string} text - English response text to translate
+ * @param {string} targetLang - Target language code (e.g., 'te', 'kn')
+ * @param {string} apiKey - Groq API key
+ * @returns {Promise<string>} Translated text
+ */
+export async function translateWithLLM(text, targetLang, apiKey) {
+  if (!text || !apiKey || targetLang === 'en') return text;
+
+  const cacheKey = `${targetLang}:${text.slice(0, 100)}`;
+  if (translationCache.has(cacheKey)) {
+    return translationCache.get(cacheKey);
+  }
+
+  const langNames = {
+    te: 'Telugu', kn: 'Kannada', gu: 'Gujarati',
+    bn: 'Bengali', pa: 'Punjabi', ml: 'Malayalam',
+    ta: 'Tamil', hi: 'Hindi', mr: 'Marathi'
+  };
+
+  const targetName = langNames[targetLang] || 'English';
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          {
+            role: 'system',
+            content: `You are an expert agricultural AI assistant for Indian farmers. Respond ONLY in ${targetName} (${targetLang}).
+Rules:
+1. MANDATORY: You MUST write the ENTIRE response in native ${targetName} script. Do NOT respond in English or any other language.
+2. USER LANGUAGE = ASSISTANT RESPONSE LANGUAGE. The user asked in ${targetName}, so reply completely in ${targetName}.
+3. Keep crop names, chemical names, pesticide names, disease scientific names, and dosage numbers accurate — do not translate technical brand names literally.
+4. Use natural, conversational ${targetName} that a farmer would understand easily.
+5. Preserve formatting (bullet points, bold markers **, numbers, emoji).
+6. Output ONLY the response in native ${targetName} script, nothing else.`
+          },
+          {
+            role: 'user',
+            content: text
+          }
+        ],
+        temperature: 0.3,
+        max_tokens: 2048
+      })
+    });
+
+    if (!response.ok) {
+      console.warn('LLM translation API error:', response.status);
+      return text; // Return original on failure
+    }
+
+    const data = await response.json();
+    const translated = data.choices?.[0]?.message?.content?.trim();
+
+    if (translated) {
+      translationCache.set(cacheKey, translated);
+      // Keep cache size bounded
+      if (translationCache.size > 200) {
+        const firstKey = translationCache.keys().next().value;
+        translationCache.delete(firstKey);
+      }
+      return translated;
+    }
+
+    return text;
+  } catch (err) {
+    console.error('LLM translation error:', err);
+    return text; // Return original on failure
+  }
+}
+
+// ─── Singleton Recorder Instance ───
+
+export const whisperRecorder = new WhisperAudioRecorder();

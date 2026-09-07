@@ -62,7 +62,9 @@ export const SmartVisionScanner = () => {
     setTimeout(() => {
       // If user uploaded a custom image, inspect color distribution
       const img = new Image();
-      img.crossOrigin = "Anonymous";
+      if (!imageSrc.startsWith('data:')) {
+        img.crossOrigin = "Anonymous";
+      }
       img.onload = () => {
         const canvas = document.createElement('canvas');
         canvas.width = 100;
@@ -71,22 +73,29 @@ export const SmartVisionScanner = () => {
         ctx.drawImage(img, 0, 0, 100, 100);
         const data = ctx.getImageData(0, 0, 100, 100).data;
 
-        let greenPixels = 0;
+        let plantPixels = 0;
         let totalPixels = 10000;
 
         for (let i = 0; i < data.length; i += 4) {
           const r = data[i];
           const g = data[i+1];
           const b = data[i+2];
-          // Botanical green chlorophyll heuristic
-          if (g > r * 1.05 && g > b * 1.05 && g > 40) {
-            greenPixels++;
+          
+          // Botanical heuristic: detect green chlorophyll, yellow/brown necrotic tissue, and general plant matter
+          // Expanded to catch diseased/brown leaves, not just bright green ones
+          const isGreenish = (g > r * 0.8 && g > b * 0.8 && g > 30);
+          const isBrownish = (r > g * 0.9 && r > b * 1.2 && g > b * 0.8 && r > 40 && r < 200); 
+          const isYellowish = (r > b * 1.3 && g > b * 1.3 && r > 60 && g > 60);
+
+          if (isGreenish || isBrownish || isYellowish) {
+            plantPixels++;
           }
         }
 
-        const greenRatio = greenPixels / totalPixels;
+        const plantRatio = plantPixels / totalPixels;
 
-        if (greenRatio < 0.08) {
+        // Lowered threshold because diseased leaves often have lots of necrotic (dead/non-green) tissue
+        if (plantRatio < 0.04) {
           // Flagged as Non-Plant!
           setAnalyzedResult({
             id: `non-plant-${Date.now()}`,
@@ -159,7 +168,7 @@ export const SmartVisionScanner = () => {
   const currentImage = uploadedImageSrc || selectedSample.image;
 
   return (
-    <div className="space-y-6 pb-12 select-none">
+    <div className="space-y-6 pb-12">
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0b162b] border border-cyan-500/30 rounded-2xl p-4 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
         <div>

@@ -52,7 +52,7 @@ export const DarkSidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) =>
 
       <aside className={`
         fixed top-0 bottom-0 left-0 z-50 flex flex-col justify-between transition-all duration-200 ease-in-out lg:static lg:translate-x-0
-        border-r select-none
+        border-r
         ${isDark ? 'bg-[#090f1d] border-[#16233b] text-slate-300' : 'bg-white border-slate-200 text-slate-700 shadow-xs'}
         ${collapsed ? 'w-16' : 'w-60'}
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}

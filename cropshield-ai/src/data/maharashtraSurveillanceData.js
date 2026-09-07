@@ -22,7 +22,7 @@ export const maharashtraDistricts = [
     cropMr: 'ऊस, द्राक्षे, हळद, भात',
     cropHi: 'गन्ना, अंगूर, हल्दी, धान',
     primaryCrop: 'Sugarcane & Rice',
-    coordinates: [16.8524, 74.5815],
+    coordinates: [16.8620, 74.5380],
     healthScore: 71,
     statusType: 'critical', // critical due to Plot 2 bacterial blight
     statusEn: 'Outbreak Warning',

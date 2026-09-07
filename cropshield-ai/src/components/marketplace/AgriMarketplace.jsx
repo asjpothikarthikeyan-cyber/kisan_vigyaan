@@ -60,7 +60,9 @@ export const AgriMarketplace = () => {
     orders, 
     placeOrder, 
     farmerCropListings, 
-    addCropListing 
+    addCropListing,
+    openDirectCheckout,
+    setIsCartModalOpen
   } = useApp();
 
   // Active Main Tab: 'fertilizers' | 'seeds' | 'sell' | 'shops' | 'orders' | 'wishlist'
@@ -108,14 +110,12 @@ export const AgriMarketplace = () => {
   };
 
   const handleInstantBuy = (product) => {
-    addToCart(product, 1);
-    setDirectCheckoutItem(product);
-    setCheckoutModalOpen(true);
+    openDirectCheckout(product);
   };
 
   const handleAddToCartWithToast = (product, qty = 1) => {
     addToCart(product, qty);
-    showToast('✓ Added ' + (product.name.slice(0, 22)) + '... to Cart!');
+    setIsCartModalOpen(true);
     confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
   };
 
@@ -131,8 +131,8 @@ export const AgriMarketplace = () => {
     });
   };
 
-  const cartCount = (cart || []).reduce((sum, item) => sum + item.quantity, 0);
-  const cartPrice = (cart || []).reduce((sum, item) => sum + ((item.product.price || item.product.subsidizedPrice) * item.quantity), 0);
+  const cartCount = (cart || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const cartPrice = (cart || []).reduce((sum, item) => sum + ((item.price || item.product?.price || 0) * (item.quantity || 1)), 0);
 
   // Filtered Fertilizers List (Combines marketplaceData & extendedMockData)
   const allFertilizers = [
@@ -294,7 +294,7 @@ export const AgriMarketplace = () => {
   };
 
   return (
-    <div className="space-y-6 select-none relative pb-16">
+    <div className="space-y-6 relative pb-16">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-5 z-50 bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 animate-bounce">
@@ -378,7 +378,7 @@ export const AgriMarketplace = () => {
             </button>
 
             <button
-              onClick={() => { setDirectCheckoutItem(null); setCheckoutModalOpen(true); }}
+              onClick={() => { setDirectCheckoutItem(null); setIsCartModalOpen(true); }}
               className="relative flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-[#0f1d38] hover:bg-cyan-500 text-cyan-300 hover:text-slate-950 border border-cyan-500/40 shadow-xs"
             >
               <ShoppingCart className="w-4 h-4" />
@@ -1377,7 +1377,7 @@ export const AgriMarketplace = () => {
         <div className="fixed bottom-5 right-5 z-40">
           <button
             type="button"
-            onClick={() => { setDirectCheckoutItem(null); setCheckoutModalOpen(true); }}
+            onClick={() => { setDirectCheckoutItem(null); setIsCartModalOpen(true); }}
             className="px-5 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black text-xs rounded-2xl shadow-2xl flex items-center gap-3 border border-white/20 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
           >
             <div className="relative">
@@ -1461,12 +1461,6 @@ export const AgriMarketplace = () => {
         </div>
       )}
 
-      {/* Global Interactive Multi-Payment Checkout Modal */}
-      <CheckoutModal
-        isOpen={checkoutModalOpen}
-        onClose={() => setCheckoutModalOpen(false)}
-        directItem={directCheckoutItem}
-      />
     </div>
   );
 };

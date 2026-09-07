@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 export const MobileTopHeader = ({ onNavigate }) => {
-  const { lang, setLang, t, theme, toggleTheme, cart } = useApp();
+  const { lang, setLang, t, theme, toggleTheme, cart, setIsCartModalOpen } = useApp();
   const isDark = theme === 'dark';
   const cartCount = (cart || []).reduce((sum, item) => sum + item.quantity, 0);
 
@@ -26,7 +26,7 @@ export const MobileTopHeader = ({ onNavigate }) => {
   };
 
   return (
-    <header className={`px-3 py-2.5 border-b sticky top-0 z-30 select-none shadow-xs transition-colors ${
+    <header className={`px-3 py-2.5 border-b sticky top-0 z-30 shadow-xs transition-colors ${
       isDark ? 'bg-[#090f1d] border-[#16233b] text-slate-100' : 'bg-white border-slate-200 text-slate-900'
     }`}>
       <div className="flex items-center justify-between gap-2 max-w-lg mx-auto">
@@ -49,10 +49,25 @@ export const MobileTopHeader = ({ onNavigate }) => {
         </div>
 
         {/* Right Controls: Audio Speaker, Language Picker, Theme, Profile */}
-        <div className="flex items-center space-x-1.5">
-          {/* Read Aloud Button */}
-          <button
-            onClick={handleVoiceHelp}
+        <div className="flex items-center gap-2">
+            
+            {/* Cart Button */}
+            <button 
+              onClick={() => setIsCartModalOpen(true)}
+              className="relative p-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-[#1B5E20] border border-emerald-200 transition-colors shadow-xs"
+              title="Open Cart"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-[#1B5E20] text-white text-[9px] font-bold rounded-full">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* Read Aloud Button */}
+            <button
+              onClick={handleVoiceHelp}
             className="p-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-[#1B5E20] border border-emerald-200 transition-colors shadow-xs"
             title="Read Aloud in Your Language"
             aria-label="Audio Reader"

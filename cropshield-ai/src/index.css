@@ -1,20 +1,25 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
-    --bg-body: #F4F6F4;
-    --bg-card: #FFFFFF;
-    --bg-card-subtle: #F8FAF8;
-    --border-light: #E2E8F0;
-    --border-medium: #CBD5E1;
-    --primary: #1B5E20;
-    --primary-hover: #154D1A;
-    --primary-light: #E8F5E9;
-    --accent-emerald: #16A34A;
+    --bg-body: #063B2A;
+    --bg-content: #EEF9F1;
+    --bg-card: #F5FCF7;
+    --bg-card-subtle: #E8F7EC;
+    --border-light: #D2EBD7;
+    --border-medium: #BCE2C5;
+    --primary: #047857;
+    --primary-hover: #065F46;
+    --primary-light: #DCFCE7;
+    --accent-emerald: #059669;
+    --accent-teal: #0D9488;
     --accent-amber: #D97706;
-    --accent-rose: #DC2626;
+    --accent-rose: #E11D48;
+    --accent-indigo: #4F46E5;
     --text-main: #0F172A;
-    --text-secondary: #475569;
+    --text-secondary: #334155;
     --text-muted: #64748B;
   }
 }
@@ -22,12 +27,20 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #F4F6F4;
+  font-family: 'Plus Jakarta Sans', 'Inter', 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #063B2A;
   color: #0F172A;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  letter-spacing: -0.012em;
+}
+
+html.dark body,
+body.dark {
+  background-color: #080D1A;
+  background-image: none;
+  color: #F8FAFC;
 }
 
 /* Precision clean scrollbar */
@@ -36,76 +49,63 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #042E21;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0B1426;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #0F5E45;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1E2E4A;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #167A5A;
 }
 
-/* Indian Government Tricolor Accent Strip */
+/* Layered Glassmorphic Card Classes */
+.glass-panel {
+  background: rgba(245, 252, 247, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(210, 235, 215, 0.95);
+}
+
+.dark .glass-panel {
+  background: rgba(11, 20, 38, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(26, 46, 78, 0.85);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 25px -4px rgba(5, 150, 105, 0.28);
+}
+
+.dark .glow-emerald {
+  box-shadow: 0 0 30px -4px rgba(16, 185, 129, 0.35);
+}
+
+.glow-indigo {
+  box-shadow: 0 0 25px -4px rgba(79, 70, 229, 0.25);
+}
+
+.card-hover-lift {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Indian National Tricolor Accent Bar */
 .tricolor-strip {
   height: 3px;
   width: 100%;
   background: linear-gradient(to right, #FF9933 0%, #FF9933 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #138808 66.66%, #138808 100%);
-}
-
-/* Clean Flat Cards with subtle 1px border */
-.card-normal {
-  border: 1px solid #E2E8F0;
-  background-color: #FFFFFF;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-}
-.card-normal:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-}
-
-.card-critical {
-  border: 1px solid #FECACA;
-  background-color: #FEF2F2;
-  border-radius: 6px;
-}
-.card-critical:hover {
-  border-color: #F87171;
-}
-
-.card-warning {
-  border: 1px solid #FDE68A;
-  background-color: #FFFBEB;
-  border-radius: 6px;
-}
-.card-warning:hover {
-  border-color: #FBBF24;
-}
-
-/* Sliding Toggle Switch Style */
-.switch-track {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  width: 32px;
-  height: 18px;
-  border-radius: 9px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-.switch-thumb {
-  position: absolute;
-  left: 2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 7px;
-  background: #FFFFFF;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
-}
-.switch-on .switch-thumb {
-  transform: translateX(14px);
 }
 
 /* Leaflet Container Styling */
@@ -114,12 +114,114 @@ body {
   height: 100%;
   border-radius: 0px;
   background-color: #0E1626 !important;
+  font-family: inherit !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: #FFFFFF !important;
+  background: #F5FCF7 !important;
   color: #0F172A !important;
-  border: 1px solid #E2E8F0 !important;
-  border-radius: 6px !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+  border: 1px solid #D2EBD7 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.12) !important;
+}
+
+.dark .leaflet-popup-content-wrapper {
+  background: #0F172A !important;
+  color: #F8FAFC !important;
+  border: 1px solid #1E293B !important;
+}
+
+.leaflet-popup-tip {
+  background: #F5FCF7 !important;
+}
+
+.dark .leaflet-popup-tip {
+  background: #0F172A !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes scanBeam {
+  0% { transform: translateY(0%); }
+  50% { transform: translateY(100%); }
+  100% { transform: translateY(0%); }
+}
+
+/* Kisan Living Background Drift Keyframes */
+@keyframes kisanFloat1 {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(4deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes kisanFloat2 {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-24px) rotate(-6deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes kisanFloat3 {
+  0% { transform: translateY(0px) scale(0.95); opacity: 0.3; }
+  50% { transform: translateY(-12px) scale(1.05); opacity: 0.7; }
+  100% { transform: translateY(0px) scale(0.95); opacity: 0.3; }
+}
+
+@keyframes kisanContourPulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slideLeft {
+  animation: slideLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.animate-scanBeam {
+  animation: scanBeam 2.5s ease-in-out infinite;
+}
+
+.animate-kisanFloat1 {
+  animation: kisanFloat1 8s ease-in-out infinite;
+}
+
+.animate-kisanFloat2 {
+  animation: kisanFloat2 11s ease-in-out infinite;
+}
+
+.animate-kisanFloat3 {
+  animation: kisanFloat3 6s ease-in-out infinite;
+}
+
+.animate-kisanContour {
+  animation: kisanContourPulse 7s ease-in-out infinite;
 }

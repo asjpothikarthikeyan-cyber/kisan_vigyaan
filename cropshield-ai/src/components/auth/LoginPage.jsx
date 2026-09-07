@@ -12,229 +12,447 @@ import {
   Check, 
   ArrowRight, 
   Globe, 
-  Sparkles,
-  Users
+  Sparkles, 
+  Users, 
+  AlertCircle, 
+  X, 
+  Landmark,
+  Mail,
+  CreditCard,
+  Building2,
+  FileCheck2,
+  Handshake,
+  HeartHandshake
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export const LoginPage = ({ onLoginSuccess }) => {
+export const LoginPage = () => {
   const { 
     t, 
     lang, 
     setLang, 
-    setRole, 
-    setFarmerProfile,
-    setOfficerProfile 
+    accounts, 
+    switchAccount, 
+    login, 
+    signup, 
+    isLoginModalOpen, 
+    setIsLoginModalOpen, 
+    theme 
   } = useApp();
 
-  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
-  const [selectedRole, setSelectedRole] = useState('farmer'); // 'farmer' | 'officer'
-  const [phone, setPhone] = useState('+91 98224 55120');
-  const [otp, setOtp] = useState('123456');
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('Sangli, Maharashtra');
-  const [crop, setCrop] = useState('Tomato');
-  const [acreage, setAcreage] = useState('2.5 Acres');
+  const isDark = theme === 'dark';
+  const [activeTab, setActiveTab] = useState('officers'); // 'officers' | 'ngos' | 'farmers' | 'manual'
+  const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup'
+  const [role, setRole] = useState('farmer');
 
-  const handleDemoLogin = (roleType) => {
-    setSelectedRole(roleType);
-    setRole(roleType);
-    confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
-    if (onLoginSuccess) onLoginSuccess();
+  // Form State
+  const [name, setName] = useState('');
+  const [phoneOrEmail, setPhoneOrEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [location, setLocation] = useState('Sangli, Maharashtra');
+  const [crop, setCrop] = useState('Cotton');
+  const [acreage, setAcreage] = useState('5.0 Acres');
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  if (!isLoginModalOpen) return null;
+
+  const officerAccounts = accounts.filter(a => a.role === 'officer');
+  const ngoAccounts = accounts.filter(a => a.role === 'ngo');
+  const farmerAccounts = accounts.filter(a => a.role === 'farmer');
+
+  const handleFastLogin = (accId) => {
+    switchAccount(accId);
+    confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+    setIsLoginModalOpen(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    setRole(selectedRole);
+    setErrorMsg(null);
 
-    if (authMode === 'register' && selectedRole === 'farmer') {
-      setFarmerProfile(prev => ({
-        ...prev,
-        name: name || prev.name,
-        phone: phone || prev.phone,
-        location: location || prev.location,
-        crop: crop || prev.crop,
-        acreage: acreage || prev.acreage
-      }));
+    if (authMode === 'signup') {
+      const res = signup({
+        name,
+        phoneOrEmail,
+        password,
+        role,
+        location,
+        crop,
+        acreage
+      });
+
+      if (!res.success) {
+        setErrorMsg(t(res.error) || res.error);
+        return;
+      }
+
+      confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+    } else {
+      const res = login(phoneOrEmail, password);
+      if (!res.success) {
+        setErrorMsg(t(res.error) || res.error);
+        return;
+      }
+      confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
     }
-
-    confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
-    if (onLoginSuccess) onLoginSuccess();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-[#124930] to-emerald-900 flex flex-col justify-center items-center p-4 select-none">
-      {/* Top Language Bar */}
-      <div className="absolute top-4 right-4 flex items-center space-x-2 bg-emerald-900/80 px-3 py-1.5 rounded-full border border-emerald-700/60 text-white text-xs">
-        <Globe className="w-3.5 h-3.5 text-emerald-300" />
-        <select
-          value={lang}
-          onChange={(e) => setLang(e.target.value)}
-          className="bg-transparent text-emerald-100 font-medium focus:outline-none cursor-pointer"
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-5 animate-fadeIn font-sans">
+      {/* Backdrop */}
+      <div 
+        onClick={() => setIsLoginModalOpen(false)}
+        className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs transition-opacity"
+      />
+
+      {/* Main Container */}
+      <div className={`relative w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl border transition-all my-6 max-h-[90vh] overflow-y-auto custom-scrollbar ${
+        isDark ? 'bg-[#0a1324] border-[#182a4a] text-white' : 'bg-[#F5FCF7] border-[#D2EBD7] text-slate-900'
+      }`}>
+        
+        {/* Close Button */}
+        <button
+          onClick={() => setIsLoginModalOpen(false)}
+          className="absolute top-5 right-5 p-2 rounded-2xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer z-10"
         >
-          <option value="en" className="bg-emerald-900 text-white">English</option>
-          <option value="mr" className="bg-emerald-900 text-white">मराठी (Marathi)</option>
-          <option value="hi" className="bg-emerald-900 text-white">हिन्दी (Hindi)</option>
-        </select>
-      </div>
+          <X className="w-5 h-5" />
+        </button>
 
-      {/* Main Login Card */}
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-emerald-700/30">
-        {/* Card Header */}
-        <div className="p-6 bg-[#165a3c] text-white text-center relative">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center mx-auto mb-3 text-emerald-300 shadow-inner">
-            <Leaf className="w-9 h-9" />
+        {/* Header Branding */}
+        <div className="text-center space-y-1.5 pb-4 border-b border-slate-200/70 dark:border-slate-800">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#047857] to-[#065F46] text-white flex items-center justify-center mx-auto shadow-md">
+            <Landmark className="w-7 h-7" />
           </div>
-          <h1 className="text-2xl font-black tracking-tight">{t('appName')}</h1>
-          <p className="text-xs text-emerald-200/90 font-medium mt-0.5">{t('tagline')}</p>
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+            CropShield AI • Unified Access Portal
+          </h2>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+            Authorized portal for Government Officials, Agricultural Organisations & NGOs, and Farmers
+          </p>
         </div>
 
-        {/* Role Switcher Tabs */}
-        <div className="p-2 bg-slate-100 border-b border-gray-200 grid grid-cols-2 gap-2 text-xs">
+        {/* Portal Role Tabs (4 Modes) */}
+        <div className="mt-5 p-1 rounded-2xl bg-slate-200/60 dark:bg-slate-900 border border-slate-300/60 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-1 text-xs font-black">
           <button
-            onClick={() => setSelectedRole('farmer')}
-            className={`py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 ${
-              selectedRole === 'farmer'
-                ? 'bg-white text-emerald-900 shadow-sm border border-gray-200'
-                : 'text-gray-600 hover:text-gray-900'
+            type="button"
+            onClick={() => { setActiveTab('officers'); setErrorMsg(null); }}
+            className={`py-2.5 px-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              activeTab === 'officers'
+                ? 'bg-[#047857] text-white shadow-md'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <span>👨‍🌾</span>
-            <span>{t('roleFarmer')} Portal</span>
+            <Landmark className="w-3.5 h-3.5" />
+            <span className="truncate">🏛️ Govt. Officials</span>
           </button>
 
           <button
-            onClick={() => setSelectedRole('officer')}
-            className={`py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 ${
-              selectedRole === 'officer'
-                ? 'bg-white text-emerald-900 shadow-sm border border-gray-200'
-                : 'text-gray-600 hover:text-gray-900'
+            type="button"
+            onClick={() => { setActiveTab('ngos'); setErrorMsg(null); }}
+            className={`py-2.5 px-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              activeTab === 'ngos'
+                ? 'bg-[#047857] text-white shadow-md'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <span>🧑‍🔬</span>
-            <span>{t('roleOfficer')} Dashboard</span>
+            <HeartHandshake className="w-3.5 h-3.5" />
+            <span className="truncate">🤝 Orgs & NGOs</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => { setActiveTab('farmers'); setErrorMsg(null); }}
+            className={`py-2.5 px-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              activeTab === 'farmers'
+                ? 'bg-[#047857] text-white shadow-md'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <Sprout className="w-3.5 h-3.5" />
+            <span className="truncate">🌾 Farmers</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => { setActiveTab('manual'); setErrorMsg(null); }}
+            className={`py-2.5 px-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              activeTab === 'manual'
+                ? 'bg-[#047857] text-white shadow-md'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span className="truncate">🔑 Manual Login</span>
           </button>
         </div>
 
-        {/* Form Body */}
-        <div className="p-6 space-y-4 text-xs">
-          {/* Quick 1-Click Demo Buttons for Fast Exploration */}
-          <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-2">
-            <span className="text-[11px] font-bold text-emerald-900 uppercase tracking-wider block flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Quick 1-Click Demo Access
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('farmer')}
-                className="py-2 px-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-xs text-center transition-transform active:scale-95"
-              >
-                Login as Farmer (Sangli)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('officer')}
-                className="py-2 px-3 bg-emerald-900 hover:bg-emerald-950 text-white font-bold rounded-xl shadow-xs text-center transition-transform active:scale-95"
-              >
-                Login as Agri Officer
-              </button>
-            </div>
+        {/* Error Alert */}
+        {errorMsg && (
+          <div className="mt-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs font-bold flex items-center gap-2 animate-shake">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+            <span>{errorMsg}</span>
           </div>
+        )}
 
-          <div className="relative flex py-1 items-center">
-            <div className="flex-grow border-t border-gray-200"></div>
-            <span className="flex-shrink mx-3 text-gray-400 font-semibold text-[10px] uppercase">OR Mobile OTP Login</span>
-            <div className="flex-grow border-t border-gray-200"></div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-3">
-            {authMode === 'register' && (
-              <>
-                <div>
-                  <label className="font-bold text-gray-700 block mb-1">Farmer Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Ramesh Patil"
-                    className="w-full p-2.5 bg-slate-50 border border-gray-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="font-bold text-gray-700 block mb-1">Crop</label>
-                    <input
-                      type="text"
-                      value={crop}
-                      onChange={(e) => setCrop(e.target.value)}
-                      placeholder="Tomato"
-                      className="w-full p-2.5 bg-slate-50 border border-gray-200 rounded-xl font-medium"
-                    />
-                  </div>
-                  <div>
-                    <label className="font-bold text-gray-700 block mb-1">Acreage</label>
-                    <input
-                      type="text"
-                      value={acreage}
-                      onChange={(e) => setAcreage(e.target.value)}
-                      placeholder="2.5 Acres"
-                      className="w-full p-2.5 bg-slate-50 border border-gray-200 rounded-xl font-medium"
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            <div>
-              <label className="font-bold text-gray-700 block mb-1">Mobile Number</label>
-              <div className="relative">
-                <Phone className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
+        {/* TAB 1: GOVERNMENT OFFICIALS DIRECTORY LOGIN */}
+        {activeTab === 'officers' && (
+          <div className="mt-5 space-y-3.5">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-400 font-mono flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5" />
+                <span>Verified Area Officers ({officerAccounts.length} Districts / Tehsils)</span>
+              </span>
+              <span className="text-[10px] text-slate-500 font-mono">1-Click Direct Access</span>
             </div>
 
+            <div className="space-y-3">
+              {officerAccounts.map((officer) => (
+                <div
+                  key={officer.id}
+                  className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group hover:border-emerald-500 shadow-xs ${
+                    isDark ? 'bg-slate-900/90 border-[#182a4a]' : 'bg-white border-[#D2EBD7]'
+                  }`}
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#047857] to-[#065F46] text-white flex items-center justify-center text-2xl shadow-xs shrink-0">
+                      {officer.avatar || '🧑‍🔬'}
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <strong className="text-sm font-black text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                          {officer.name}
+                        </strong>
+                        <span className="px-2 py-0.2 rounded-full text-[9px] font-black uppercase font-mono bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                          {officer.govtId}
+                        </span>
+                      </div>
+
+                      <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        {officer.designation}
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                          <strong className="text-slate-800 dark:text-slate-200">{officer.jurisdictionArea}</strong>
+                        </span>
+                      </div>
+
+                      {/* Official Identifiers: Contract No, Mail ID, Aadhaar */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 pt-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center gap-1">
+                          <Phone className="w-2.5 h-2.5 text-emerald-600" />
+                          <span>{officer.phone}</span>
+                        </div>
+                        <div className="flex items-center gap-1 truncate">
+                          <Mail className="w-2.5 h-2.5 text-emerald-600" />
+                          <span className="truncate">{officer.email}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <CreditCard className="w-2.5 h-2.5 text-emerald-600" />
+                          <span>Aadhaar: <strong>{officer.aadharNumber || officer.aadharMasked}</strong></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleFastLogin(officer.id)}
+                    className="py-2.5 px-4 rounded-xl font-black text-xs bg-[#047857] hover:bg-[#065F46] text-white shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 shrink-0 self-end sm:self-center"
+                  >
+                    <span>Login as Officer</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: AGRICULTURAL ORGANISATIONS & NGOS DIRECTORY LOGIN */}
+        {activeTab === 'ngos' && (
+          <div className="mt-5 space-y-3.5">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-400 font-mono flex items-center gap-1.5">
+                <HeartHandshake className="w-3.5 h-3.5" />
+                <span>Agricultural Organisations & NGOs ({ngoAccounts.length} Clusters)</span>
+              </span>
+              <span className="text-[10px] text-slate-500 font-mono">1-Click Direct Access</span>
+            </div>
+
+            <div className="space-y-3">
+              {ngoAccounts.map((ngo) => (
+                <div
+                  key={ngo.id}
+                  className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group hover:border-emerald-500 shadow-xs ${
+                    isDark ? 'bg-slate-900/90 border-[#182a4a]' : 'bg-white border-[#D2EBD7]'
+                  }`}
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-600 to-emerald-700 text-white flex items-center justify-center text-2xl shadow-xs shrink-0">
+                      {ngo.avatar || '🤝'}
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <strong className="text-sm font-black text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                          {ngo.name}
+                        </strong>
+                        <span className="px-2 py-0.2 rounded-full text-[9px] font-black uppercase font-mono bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300">
+                          {ngo.govtId}
+                        </span>
+                        <span className="px-2 py-0.2 rounded-full text-[9px] font-mono text-slate-500 bg-slate-100 dark:bg-slate-800">
+                          Reg: {ngo.orgRegId}
+                        </span>
+                      </div>
+
+                      <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        {ngo.designation} • Authorized Signatory: <strong className="text-slate-900 dark:text-white">{ngo.authorizedPerson}</strong>
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                          <strong className="text-slate-800 dark:text-slate-200">{ngo.jurisdictionArea}</strong>
+                        </span>
+                      </div>
+
+                      {/* Official Identifiers: Contract No, Mail ID, Aadhaar */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 pt-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center gap-1">
+                          <Phone className="w-2.5 h-2.5 text-emerald-600" />
+                          <span>{ngo.phone} {ngo.officePhone ? `(${ngo.officePhone})` : ''}</span>
+                        </div>
+                        <div className="flex items-center gap-1 truncate">
+                          <Mail className="w-2.5 h-2.5 text-emerald-600" />
+                          <span className="truncate">{ngo.email}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <CreditCard className="w-2.5 h-2.5 text-emerald-600" />
+                          <span>Aadhaar: <strong>{ngo.aadharNumber || ngo.aadharMasked}</strong></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleFastLogin(ngo.id)}
+                    className="py-2.5 px-4 rounded-xl font-black text-xs bg-[#047857] hover:bg-[#065F46] text-white shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 shrink-0 self-end sm:self-center"
+                  >
+                    <span>Login as NGO/Org</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: FARMER ACCOUNTS LOGIN */}
+        {activeTab === 'farmers' && (
+          <div className="mt-5 space-y-3.5">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-400 font-mono flex items-center gap-1.5">
+                <Sprout className="w-3.5 h-3.5" />
+                <span>Registered Farmer Profiles ({farmerAccounts.length})</span>
+              </span>
+              <span className="text-[10px] text-slate-500 font-mono">1-Click Direct Access</span>
+            </div>
+
+            <div className="space-y-3">
+              {farmerAccounts.map((farmer) => (
+                <div
+                  key={farmer.id}
+                  className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group hover:border-emerald-500 shadow-xs ${
+                    isDark ? 'bg-slate-900/90 border-[#182a4a]' : 'bg-white border-[#D2EBD7]'
+                  }`}
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white flex items-center justify-center text-2xl shadow-xs shrink-0">
+                      {farmer.avatar || '👨‍🌾'}
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <strong className="text-sm font-black text-slate-900 dark:text-white">
+                          {farmer.name}
+                        </strong>
+                        <span className="px-2 py-0.2 rounded-full text-[9px] font-black uppercase font-mono bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                          {farmer.kisanCardNumber || 'PM-KISAN'}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                        {farmer.village} • {farmer.crop} ({farmer.acreage})
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-slate-500 pt-1">
+                        <span>📞 {farmer.phone}</span>
+                        <span>✉️ {farmer.email}</span>
+                        <span>💳 Aadhaar: <strong>{farmer.aadharNumber || farmer.aadharMasked}</strong></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleFastLogin(farmer.id)}
+                    className="py-2.5 px-4 rounded-xl font-black text-xs bg-[#047857] hover:bg-[#065F46] text-white shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 shrink-0 self-end sm:self-center"
+                  >
+                    <span>Login as Farmer</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: MANUAL CREDENTIALS LOGIN */}
+        {activeTab === 'manual' && (
+          <form onSubmit={handleFormSubmit} className="mt-5 space-y-3.5 text-xs">
             <div>
-              <label className="font-bold text-gray-700 block mb-1">One-Time Password (OTP)</label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
-                <input
-                  type="password"
-                  required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="Enter 6-digit OTP"
-                  className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
+              <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
+                Govt/Org ID, Reg Code, Email, Phone, or Aadhaar Number
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. FPO-MH-SGL-01 / contact@sangliorganicfpo.in / 7742 8819 3341"
+                value={phoneOrEmail}
+                onChange={(e) => setPhoneOrEmail(e.target.value)}
+                className={`w-full p-3 rounded-xl border font-bold focus:border-emerald-500 focus:outline-none ${
+                  isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-[#D2EBD7] text-slate-900'
+                }`}
+              />
+            </div>
+
+            <div>
+              <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                required
+                placeholder="•••••••• (e.g. officer@123 or ngo@123)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`w-full p-3 rounded-xl border font-bold focus:border-emerald-500 focus:outline-none ${
+                  isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-[#D2EBD7] text-slate-900'
+                }`}
+              />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3.5 bg-[#165a3c] hover:bg-[#124930] text-white font-bold rounded-xl shadow-lg shadow-emerald-900/20 flex items-center justify-center space-x-2 transition-all active:scale-[0.98] mt-2"
+              className="w-full py-3.5 bg-[#047857] hover:bg-[#065F46] text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98 mt-2"
             >
-              <span>{authMode === 'login' ? 'Sign In to CropShield AI' : 'Register Farm Profile'}</span>
+              <span>Authenticate & Login</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
+        )}
 
-          <div className="text-center pt-2">
-            <button
-              type="button"
-              onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
-              className="text-emerald-800 hover:text-emerald-950 font-bold underline text-xs"
-            >
-              {authMode === 'login' ? "New Farmer? Register your farm profile →" : "Already registered? Sign in here →"}
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

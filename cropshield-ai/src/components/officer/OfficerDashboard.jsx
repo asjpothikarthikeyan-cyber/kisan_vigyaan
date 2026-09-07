@@ -7,7 +7,6 @@ import {
   Users, 
   Bell, 
   Settings, 
-  LogOut, 
   TrendingUp, 
   AlertOctagon, 
   ShieldAlert, 
@@ -23,8 +22,15 @@ import {
   Send,
   Sparkles,
   ArrowUpRight,
-  Menu,
-  X
+  ShieldCheck,
+  MapPin,
+  Sprout,
+  BarChart3,
+  Percent,
+  Timer,
+  Zap,
+  Globe,
+  Layers
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -35,389 +41,512 @@ import {
   Tooltip, 
   Legend, 
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell
+  BarChart,
+  Bar,
+  AreaChart,
+  Area
 } from 'recharts';
-import { RiskMapLeaflet } from './RiskMapLeaflet';
 import { ReportsReviewQueue } from './ReportsReviewQueue';
 import { AdvisoryBroadcaster } from './AdvisoryBroadcaster';
 import { FarmerDirectory } from './FarmerDirectory';
+import { RiskMapLeaflet } from './RiskMapLeaflet';
 
 export const OfficerDashboard = () => {
   const { 
-    t, 
-    lang, 
     officerTab, 
     setOfficerTab, 
-    setRole, 
     officerProfile,
-    surveillanceStats,
-    diseaseTrendData,
-    topDiseasesDistribution,
-    reports,
-    hotspots
+    fieldReviewQueue,
+    modelAccuracy,
+    theme,
+    lang,
+    t
   } = useApp();
 
-  const [dateRange, setDateRange] = useState('20 May - 27 May 2024');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isDark = theme === 'dark';
 
-  const pendingReportsCount = reports.filter(r => r.status.includes('Review') || r.status.includes('Under')).length;
+  // Filters State
+  const [selectedRegion, setSelectedRegion] = useState('all'); // 'all' | 'miraj' | 'kupwad' | 'tasgaon' | 'walwa' | 'jath'
+  const [selectedCrop, setSelectedCrop] = useState('all'); // 'all' | 'cotton' | 'tomato' | 'rice' | 'sugarcane' | 'soybean'
+  const [dateRange, setDateRange] = useState('Current Season (Aug 2026)');
 
-  const sidebarLinks = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'reportsQueue', label: 'Reports', icon: FileSpreadsheet, badge: pendingReportsCount },
-    { id: 'riskMap', label: 'Risk Map', icon: MapIcon },
-    { id: 'farmers', label: 'Farmers', icon: Users },
-    { id: 'advisories', label: 'Alerts', icon: Bell },
-    { id: 'settings', label: 'Settings', icon: Settings },
+  const pendingCount = fieldReviewQueue.filter(s => s.status === 'pending').length;
+
+  // 1. Earlier Detection Trend Data (Lag in Days vs Traditional Scouting)
+  const timeToDetectionData = [
+    { week: 'W1 (Jul)', manualDays: 7.5, cropshieldDays: 2.1, timeSavedHours: 129 },
+    { week: 'W2 (Jul)', manualDays: 8.0, cropshieldDays: 1.8, timeSavedHours: 148 },
+    { week: 'W3 (Aug)', manualDays: 7.2, cropshieldDays: 1.5, timeSavedHours: 136 },
+    { week: 'W4 (Aug)', manualDays: 6.8, cropshieldDays: 1.2, timeSavedHours: 134 }
+  ];
+
+  // 2. Crop Loss Avoided & Salvaged Hectares
+  const cropLossAvoidedData = [
+    { month: 'May', lossAvoidedLakhs: 8.2, hectaresProtected: 65 },
+    { month: 'Jun', lossAvoidedLakhs: 14.5, hectaresProtected: 112 },
+    { month: 'Jul', lossAvoidedLakhs: 19.8, hectaresProtected: 148 },
+    { month: 'Aug', lossAvoidedLakhs: 24.8, hectaresProtected: 184 }
+  ];
+
+  // 3. Targeted Chemical Use Reductions (by Crop)
+  const pesticideReductionData = [
+    { crop: 'Cotton', standardSprayKg: 12.4, targetedSprayKg: 7.8, reductionPct: 37 },
+    { crop: 'Tomato', standardSprayKg: 9.8, targetedSprayKg: 6.2, reductionPct: 36 },
+    { crop: 'Rice', standardSprayKg: 6.5, targetedSprayKg: 4.8, reductionPct: 26 },
+    { crop: 'Sugarcane', standardSprayKg: 14.0, targetedSprayKg: 9.5, reductionPct: 32 },
+    { crop: 'Soybean', standardSprayKg: 8.2, targetedSprayKg: 5.1, reductionPct: 38 }
+  ];
+
+  // 4. Extension Response SLA Tracking Data (Hours to Resolution)
+  const slaResponseData = [
+    { day: 'Mon', avgResponseHours: 2.4, slaTarget: 4.0, compliancePct: 92 },
+    { day: 'Tue', avgResponseHours: 1.9, slaTarget: 4.0, compliancePct: 96 },
+    { day: 'Wed', avgResponseHours: 1.8, slaTarget: 4.0, compliancePct: 95 },
+    { day: 'Thu', avgResponseHours: 1.5, slaTarget: 4.0, compliancePct: 98 },
+    { day: 'Fri', avgResponseHours: 1.7, slaTarget: 4.0, compliancePct: 94 }
+  ];
+
+  // 5. Surveillance Coverage by Tehsil Block
+  const coverageData = [
+    { block: 'Kupwad Shivar', coveragePct: 92, scannedPlots: 340, totalPlots: 370 },
+    { block: 'Miraj North', coveragePct: 88, scannedPlots: 410, totalPlots: 465 },
+    { block: 'Tasgaon South', coveragePct: 74, scannedPlots: 260, totalPlots: 350 },
+    { block: 'Walwa Block', coveragePct: 81, scannedPlots: 310, totalPlots: 380 },
+    { block: 'Jath Sector', coveragePct: 62, scannedPlots: 195, totalPlots: 315 }
+  ];
+
+  // 6. 7-Day Preventive Risk Matrix by Region
+  const preventiveRiskMatrix = [
+    { region: 'Miraj Block', crop: 'Cotton', vectorRisk: 'High (Spore Spread)', humidity: '85%', forecast: 'Early Blight Outbreak Likely', action: 'Broadcast Streptocycline advisory' },
+    { region: 'Kupwad Shivar', crop: 'Tomato', vectorRisk: 'Moderate (Canker)', humidity: '72%', forecast: 'Alternaria Ring Stage', action: 'Recommend Mancozeb foliar spray' },
+    { region: 'Tasgaon', crop: 'Grapes', vectorRisk: 'Low (Downy Mildew)', humidity: '58%', forecast: 'Normal vegetative phase', action: 'Standard micro-drip schedule' },
+    { region: 'Walwa', crop: 'Sugarcane', vectorRisk: 'Low (Early Shoot Borer)', humidity: '64%', forecast: 'Optimal chlorophyll index', action: 'Soil moisture top-up' }
   ];
 
   return (
-    <div className="flex h-[calc(100vh-58px)] bg-slate-100 overflow-hidden font-sans select-none">
-      {/* Sidebar Navigation matching Mockup (Forest Green #124930) */}
-      <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-[#124930] text-white flex flex-col justify-between transition-transform duration-300 ease-in-out md:static md:translate-x-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-0 max-md:-translate-x-full'}
-      `}>
-        <div>
-          {/* Sidebar Brand */}
-          <div className="p-5 flex items-center justify-between border-b border-emerald-800/80">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-black">
-                CS
-              </div>
-              <span className="font-extrabold text-base tracking-tight">CropShield AI</span>
-            </div>
-            <button 
-              onClick={() => setSidebarOpen(false)}
-              className="md:hidden text-emerald-300 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
+    <div className="space-y-6 animate-fadeIn pb-12">
+      
+      {/* Top Officer Header & Official Credentials */}
+      <div className={`p-6 rounded-3xl border shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-5 ${
+        isDark ? 'bg-[#0a1324] border-[#182a4a] text-white' : 'bg-[#F5FCF7] border-[#D2EBD7] text-slate-900'
+      }`}>
+        <div className="flex items-start space-x-4">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#047857] to-[#065F46] text-white flex items-center justify-center text-3xl shadow-md shrink-0 border border-emerald-300/40">
+            {officerProfile.avatar || '🧑‍🔬'}
           </div>
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+                {officerProfile.name}
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 font-mono">
+                {officerProfile.govtId || 'GOV-MH-OFFICER'}
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border border-blue-300 dark:border-blue-700 font-mono">
+                {officerProfile.badge || 'Verified Class-I'}
+              </span>
+            </div>
+            
+            <p className="text-xs text-slate-700 dark:text-slate-300 font-bold">
+              {officerProfile.designation || 'District Agriculture Extension Officer'} • {officerProfile.department || 'Govt of Maharashtra'}
+            </p>
 
-          {/* Navigation Links */}
-          <nav className="p-3 space-y-1 mt-2">
-            {sidebarLinks.map((item) => {
-              const Icon = item.icon;
-              const isActive = officerTab === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setOfficerTab(item.id);
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
-                    isActive
-                      ? 'bg-emerald-600/90 text-white shadow-md'
-                      : 'text-emerald-100/80 hover:bg-emerald-800/50 hover:text-white'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </div>
-
-                  {item.badge > 0 && (
-                    <span className="px-2 py-0.5 text-[10px] bg-red-500 text-white rounded-full font-extrabold">
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Officer Profile & Logout */}
-        <div className="p-4 border-t border-emerald-800/80 space-y-3">
-          <div className="p-3 bg-emerald-950/60 rounded-xl border border-emerald-800/50 flex items-center space-x-3">
-            <div className="text-2xl">{officerProfile.avatar}</div>
-            <div className="text-left overflow-hidden">
-              <p className="font-bold text-xs truncate">{officerProfile.name}</p>
-              <p className="text-[10px] text-emerald-300 truncate">Sangli Agri Extension Dept</p>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-600 dark:text-slate-400 font-mono pt-1">
+              <span>📍 <strong>{officerProfile.jurisdictionArea || 'Sangli HQ'}</strong></span>
+              <span>•</span>
+              <span>📞 {officerProfile.phone} {officerProfile.officePhone ? `(${officerProfile.officePhone})` : ''}</span>
+              <span>•</span>
+              <span>✉️ {officerProfile.email}</span>
+              <span>•</span>
+              <span>💳 Aadhaar: <strong className="text-emerald-700 dark:text-emerald-400">{officerProfile.aadharNumber || officerProfile.aadharMasked || 'XXXX-XXXX-4891'}</strong></span>
             </div>
           </div>
-
-          <button
-            onClick={() => setRole('farmer')}
-            className="w-full flex items-center space-x-2 px-3 py-2 text-xs font-semibold text-emerald-200 hover:text-white hover:bg-emerald-800/50 rounded-xl transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Switch to Farmer View</span>
-          </button>
         </div>
-      </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        {/* Top Bar matching mockup */}
-        <header className="bg-white border-b border-gray-200 px-5 py-3.5 flex items-center justify-between shadow-xs sticky top-0 z-20">
-          <div className="flex items-center space-x-3">
-            <button 
-              onClick={() => setSidebarOpen(true)}
-              className="md:hidden p-1.5 -ml-1 text-gray-700 hover:bg-gray-100 rounded-lg"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
-            <h1 className="text-lg font-extrabold text-gray-900 tracking-tight">
-              {officerTab === 'dashboard' && t('adminDashboard')}
-              {officerTab === 'reportsQueue' && 'Farmer Field Reports Queue & Validation'}
-              {officerTab === 'riskMap' && 'Geospatial Hotspots & Spore Dispersal Map'}
-              {officerTab === 'farmers' && 'Sangli District Farmer Registry'}
-              {officerTab === 'advisories' && 'Emergency Advisory Broadcaster'}
-              {officerTab === 'settings' && 'Surveillance Settings'}
-            </h1>
-          </div>
+        {/* Tab Switcher Pills */}
+        <div className={`flex flex-wrap items-center gap-1.5 p-1 rounded-2xl border text-xs font-black self-start lg:self-center ${
+          isDark ? 'bg-slate-900 border-slate-800' : 'bg-white/80 border-[#D2EBD7]'
+        }`}>
+          {[
+            { id: 'dashboard', label: 'Analytics Dashboard', icon: LayoutDashboard },
+            { id: 'reviewQueue', label: `Review Queue (${pendingCount})`, icon: FileSpreadsheet, badge: pendingCount > 0 ? `${pendingCount}` : null },
+            { id: 'riskMap', label: 'GIS Risk Radar', icon: MapIcon },
+            { id: 'advisories', label: 'Broadcast Alerts', icon: Bell },
+            { id: 'farmers', label: 'Farmer Registry', icon: Users }
+          ].map(tab => {
+            const Icon = tab.icon;
+            const isSel = officerTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setOfficerTab(tab.id)}
+                className={`px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                  isSel
+                    ? 'bg-[#047857] text-white shadow-md'
+                    : isDark 
+                    ? 'text-slate-400 hover:text-white' 
+                    : 'text-slate-700 hover:text-emerald-800 hover:bg-emerald-50'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-          <div className="flex items-center space-x-3">
-            {/* Date Range Selector matching mockup */}
-            <div className="flex items-center space-x-2 bg-slate-100 hover:bg-slate-200 border border-gray-300/80 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-700 cursor-pointer shadow-xs">
-              <Calendar className="w-3.5 h-3.5 text-gray-500" />
+      {/* VIEW 1: OUTCOME ANALYTICS DASHBOARD (6 Targeted Visible Metrics) */}
+      {officerTab === 'dashboard' && (
+        <div className="space-y-6 animate-fadeIn">
+          
+          {/* Interactive Filters Bar (Region, Crop, Date Range) */}
+          <div className={`p-4 sm:p-5 rounded-3xl border flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm ${
+            isDark ? 'bg-[#0a1120] border-slate-800' : 'bg-white border-slate-200'
+          }`}>
+            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+              <span className="text-xs font-black text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                <Filter className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span>Filters:</span>
+              </span>
+
+              {/* Region Filter */}
+              <select
+                value={selectedRegion}
+                onChange={(e) => setSelectedRegion(e.target.value)}
+                className={`p-2 rounded-xl text-xs font-bold border focus:outline-none cursor-pointer ${
+                  isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                }`}
+              >
+                <option value="all">All Tehsil Blocks (Sangli)</option>
+                <option value="miraj">Miraj Block</option>
+                <option value="kupwad">Kupwad Shivar</option>
+                <option value="tasgaon">Tasgaon Block</option>
+                <option value="walwa">Walwa Sector</option>
+                <option value="jath">Jath Drought Zone</option>
+              </select>
+
+              {/* Crop Filter */}
+              <select
+                value={selectedCrop}
+                onChange={(e) => setSelectedCrop(e.target.value)}
+                className={`p-2 rounded-xl text-xs font-bold border focus:outline-none cursor-pointer ${
+                  isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                }`}
+              >
+                <option value="all">All Crops (Cotton, Tomato, Rice, Cane)</option>
+                <option value="cotton">Cotton (Bt Hybrid)</option>
+                <option value="tomato">Tomato (Abhinav)</option>
+                <option value="rice">Rice / Paddy</option>
+                <option value="sugarcane">Sugarcane (Co 86032)</option>
+                <option value="soybean">Soybean (JS 335)</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
+              <Calendar className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span>{dateRange}</span>
-              <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
             </div>
-
-            <button
-              onClick={() => window.print()}
-              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Export Brief</span>
-            </button>
           </div>
-        </header>
 
-        {/* Content Body */}
-        <div className="p-4 sm:p-6 space-y-6">
-          {officerTab === 'dashboard' && (
-            <>
-              {/* 4 Top KPI Stat Cards matching mockup */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Total Reports: 1,248 (+18%) */}
-                <div className="bg-white border border-gray-200/90 rounded-2xl p-4 shadow-xs">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block">
-                    {t('totalReports')}
-                  </span>
-                  <div className="flex items-baseline justify-between mt-2">
-                    <span className="text-2xl sm:text-3xl font-black text-gray-900">1,248</span>
-                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center">
-                      ↑ 18%
-                    </span>
-                  </div>
-                </div>
-
-                {/* Diseases Detected: 7 (+12%) */}
-                <div className="bg-white border border-gray-200/90 rounded-2xl p-4 shadow-xs">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block">
-                    {t('diseasesDetected')}
-                  </span>
-                  <div className="flex items-baseline justify-between mt-2">
-                    <span className="text-2xl sm:text-3xl font-black text-gray-900">7</span>
-                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center">
-                      ↑ 12%
-                    </span>
-                  </div>
-                </div>
-
-                {/* High Risk Areas: 23 (+15%) */}
-                <div className="bg-white border border-gray-200/90 rounded-2xl p-4 shadow-xs">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block">
-                    {t('highRiskAreas')}
-                  </span>
-                  <div className="flex items-baseline justify-between mt-2">
-                    <span className="text-2xl sm:text-3xl font-black text-red-600">23</span>
-                    <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md flex items-center">
-                      ↑ 15%
-                    </span>
-                  </div>
-                </div>
-
-                {/* Farmers Active: 842 (+20%) */}
-                <div className="bg-white border border-gray-200/90 rounded-2xl p-4 shadow-xs">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block">
-                    {t('farmersActive')}
-                  </span>
-                  <div className="flex items-baseline justify-between mt-2">
-                    <span className="text-2xl sm:text-3xl font-black text-gray-900">842</span>
-                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center">
-                      ↑ 20%
-                    </span>
-                  </div>
-                </div>
+          {/* 6 KEY VISIBLE OUTCOME METRIC CARDS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            {/* Metric 1: Earlier Detection */}
+            <div className={`p-5 rounded-3xl border shadow-sm space-y-2 hover:-translate-y-0.5 transition-transform ${
+              isDark ? 'bg-[#0c1424] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400 font-mono">
+                  1. Early Outbreak Detection
+                </span>
+                <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               </div>
+              <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                3.2 Days Earlier
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                Time-to-detection reduced by <strong>68%</strong> vs manual field scouting
+              </p>
+            </div>
 
-              {/* Main Visualizations Grid */}
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                {/* 1. Disease Trend Line Chart (Matching mockup) */}
-                <div className="xl:col-span-2 bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between min-h-[360px]">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-extrabold text-gray-900 tracking-tight">
-                      {t('diseaseTrend')}
-                    </h3>
-                    <div className="flex items-center space-x-3 text-xs font-semibold">
-                      <span className="flex items-center gap-1.5 text-gray-700">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#dc2626]"></span> Early Blight
-                      </span>
-                      <span className="flex items-center gap-1.5 text-gray-700">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#16a34a]"></span> Leaf Spot
-                      </span>
-                      <span className="flex items-center gap-1.5 text-gray-700">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#eab308]"></span> Aphids
-                      </span>
-                    </div>
-                  </div>
+            {/* Metric 2: Reduced Crop Loss */}
+            <div className={`p-5 rounded-3xl border shadow-sm space-y-2 hover:-translate-y-0.5 transition-transform ${
+              isDark ? 'bg-[#0c1424] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400 font-mono">
+                  2. Reduced Crop Loss
+                </span>
+                <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                ₹24.8 Lakhs Saved
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                184+ Hectares protected with <strong>88.4%</strong> crop salvage rate
+              </p>
+            </div>
 
-                  <div className="h-64 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={diseaseTrendData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                        <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} domain={[0, 200]} />
-                        <Tooltip 
-                          contentStyle={{ backgroundColor: '#1e293b', color: '#fff', borderRadius: '12px', border: 'none', fontSize: '12px' }} 
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="earlyBlight" 
-                          stroke="#dc2626" 
-                          strokeWidth={2.5} 
-                          dot={{ r: 4, fill: '#dc2626' }} 
-                          activeDot={{ r: 6 }} 
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="leafSpot" 
-                          stroke="#16a34a" 
-                          strokeWidth={2.5} 
-                          dot={{ r: 4, fill: '#16a34a' }} 
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="aphids" 
-                          stroke="#eab308" 
-                          strokeWidth={2.5} 
-                          dot={{ r: 4, fill: '#eab308' }} 
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
+            {/* Metric 3: Targeted Chemical Recommendations */}
+            <div className={`p-5 rounded-3xl border shadow-sm space-y-2 hover:-translate-y-0.5 transition-transform ${
+              isDark ? 'bg-[#0c1424] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-cyan-700 dark:text-cyan-400 font-mono">
+                  3. Precision Pesticide Use
+                </span>
+                <Percent className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+              </div>
+              <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                -34% Chemical Load
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                Reduced blanket spraying via precision spot dosage prescriptions
+              </p>
+            </div>
 
-                {/* 2. Top Diseases Donut Chart (Matching mockup) */}
-                <div className="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between min-h-[360px]">
-                  <h3 className="text-sm font-extrabold text-gray-900 tracking-tight mb-2">
-                    {t('topDiseases')}
+            {/* Metric 4: Extension Response SLA */}
+            <div className={`p-5 rounded-3xl border shadow-sm space-y-2 hover:-translate-y-0.5 transition-transform ${
+              isDark ? 'bg-[#0c1424] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-400 font-mono">
+                  4. Officer Response SLA
+                </span>
+                <Timer className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                1.8 Hours Avg SLA
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                <strong>94.8%</strong> of farmer query scans resolved within 4-hour SLA
+              </p>
+            </div>
+
+            {/* Metric 5: Surveillance Coverage */}
+            <div className={`p-5 rounded-3xl border shadow-sm space-y-2 hover:-translate-y-0.5 transition-transform ${
+              isDark ? 'bg-[#0c1424] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-400 font-mono">
+                  5. Surveillance Coverage
+                </span>
+                <Globe className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              </div>
+              <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                82.4% District Covered
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                1,515 scanned plots across 5 tehsils in Sangli district
+              </p>
+            </div>
+
+            {/* Metric 6: Preventive Intervention Planning */}
+            <div className={`p-5 rounded-3xl border shadow-sm space-y-2 hover:-translate-y-0.5 transition-transform ${
+              isDark ? 'bg-[#0c1424] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-rose-700 dark:text-rose-400 font-mono">
+                  6. Preventive Risk Planning
+                </span>
+                <AlertOctagon className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+              </div>
+              <div className="text-2xl font-black text-rose-600 dark:text-rose-400 font-mono">
+                High Blight Risk (Miraj)
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                7-day moisture radar indicates imminent spore germination
+              </p>
+            </div>
+
+          </div>
+
+          {/* TWO ANALYTICS CHARTS (Earlier Detection Graph + Chemical Reduction Bar Chart) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            {/* Chart 1: Time-to-Detection Trend Graph (6 cols) */}
+            <div className={`lg:col-span-6 p-6 rounded-3xl border shadow-sm space-y-4 ${
+              isDark ? 'bg-[#0a1120] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-black text-base text-slate-900 dark:text-white">
+                    Earlier Disease Detection Trend (Days Lag)
                   </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">CropShield AI detection vs manual physical field scouting</p>
+                </div>
+                <span className="text-xs font-mono font-bold text-emerald-600">-68% Lag</span>
+              </div>
 
-                  <div className="h-52 w-full flex items-center justify-center relative">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={topDiseasesDistribution}
-                          innerRadius={55}
-                          outerRadius={80}
-                          paddingAngle={3}
-                          dataKey="value"
-                        >
-                          {topDiseasesDistribution.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip 
-                          formatter={(value) => `${value}%`}
-                          contentStyle={{ backgroundColor: '#1e293b', color: '#fff', borderRadius: '12px', border: 'none', fontSize: '12px' }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="absolute text-center pointer-events-none">
-                      <span className="text-xl font-black text-gray-900">7</span>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase">Diseases</p>
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={timeToDetectionData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#1e293b" : "#e2e8f0"} />
+                    <XAxis dataKey="week" stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={11} />
+                    <YAxis unit=" d" stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={11} />
+                    <Tooltip contentStyle={{ backgroundColor: isDark ? '#0f172a' : '#ffffff', borderRadius: '12px', border: '1px solid #cbd5e1' }} />
+                    <Legend />
+                    <Line type="monotone" dataKey="manualDays" name="Manual Scouting (Days)" stroke="#ef4444" strokeWidth={2.5} dot={{ r: 4 }} />
+                    <Line type="monotone" dataKey="cropshieldDays" name="CropShield AI (Days)" stroke="#10b981" strokeWidth={3} dot={{ r: 5 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Chart 2: Targeted Chemical Use Reductions by Crop (6 cols) */}
+            <div className={`lg:col-span-6 p-6 rounded-3xl border shadow-sm space-y-4 ${
+              isDark ? 'bg-[#0a1120] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-black text-base text-slate-900 dark:text-white">
+                    Targeted Chemical Load Reductions (Kg/Ha)
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Precision targeted prescription vs unguided blanket application</p>
+                </div>
+                <span className="text-xs font-mono font-bold text-cyan-600">-34% Avg Runoff</span>
+              </div>
+
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={pesticideReductionData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#1e293b" : "#e2e8f0"} />
+                    <XAxis dataKey="crop" stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={11} />
+                    <YAxis unit=" kg" stroke={isDark ? "#94a3b8" : "#64748b"} fontSize={11} />
+                    <Tooltip contentStyle={{ backgroundColor: isDark ? '#0f172a' : '#ffffff', borderRadius: '12px', border: '1px solid #cbd5e1' }} />
+                    <Legend />
+                    <Bar dataKey="standardSprayKg" name="Standard Spray (Kg/Ha)" fill="#94a3b8" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="targetedSprayKg" name="Targeted Dose (Kg/Ha)" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+          </div>
+
+          {/* 7-Day Preventive Risk Matrix & Surveillance Coverage List */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            {/* 7-Day Preventive Risk Matrix Table (7 cols) */}
+            <div className={`lg:col-span-7 p-6 rounded-3xl border shadow-sm space-y-4 ${
+              isDark ? 'bg-[#0a1120] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                <div>
+                  <h3 className="font-black text-base text-slate-900 dark:text-white">
+                    7-Day Preventive Intervention Risk Matrix
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Microclimate radar forecast with preventative chemical recommendations</p>
+                </div>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300">
+                  Live IMD Sync
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="border-b border-slate-200 dark:border-slate-800 font-black text-slate-500 font-mono">
+                      <th className="py-2.5 px-2">Tehsil Block</th>
+                      <th className="py-2.5 px-2">Crop</th>
+                      <th className="py-2.5 px-2">Vector Risk</th>
+                      <th className="py-2.5 px-2">Preventive Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                    {preventiveRiskMatrix.map((item, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                        <td className="py-3 px-2">
+                          <strong className="text-slate-900 dark:text-white block font-bold">{item.region}</strong>
+                          <span className="text-[10px] text-slate-500">{item.humidity} RH</span>
+                        </td>
+                        <td className="py-3 px-2 text-slate-700 dark:text-slate-300">{item.crop}</td>
+                        <td className="py-3 px-2">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-black ${
+                            item.vectorRisk.includes('High') 
+                              ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' 
+                              : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                          }`}>
+                            {item.vectorRisk}
+                          </span>
+                        </td>
+                        <td className="py-3 px-2 text-emerald-700 dark:text-emerald-400 font-bold text-[11px]">
+                          {item.action}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Regional Surveillance Coverage by Block (5 cols) */}
+            <div className={`lg:col-span-5 p-6 rounded-3xl border shadow-sm space-y-4 ${
+              isDark ? 'bg-[#0a1120] border-slate-800' : 'bg-white border-slate-200'
+            }`}>
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                <div>
+                  <h3 className="font-black text-base text-slate-900 dark:text-white">
+                    Surveillance Coverage by Block
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Scanned plots vs registered field blocks</p>
+                </div>
+              </div>
+
+              <div className="space-y-3.5">
+                {coverageData.map((cov, idx) => (
+                  <div key={idx} className="space-y-1.5 text-xs font-mono">
+                    <div className="flex justify-between font-bold">
+                      <span className="text-slate-900 dark:text-white">{cov.block}</span>
+                      <span className="text-emerald-700 dark:text-emerald-400">{cov.coveragePct}% ({cov.scannedPlots}/{cov.totalPlots})</span>
+                    </div>
+                    <div className="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full ${
+                          cov.coveragePct > 80 ? 'bg-emerald-500' : cov.coveragePct > 70 ? 'bg-amber-500' : 'bg-indigo-500'
+                        }`} 
+                        style={{ width: `${cov.coveragePct}%` }}
+                      />
                     </div>
                   </div>
-
-                  {/* Donut Legend with exact percentages matching mockup */}
-                  <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs font-semibold pt-2 border-t border-gray-100">
-                    {topDiseasesDistribution.map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between">
-                        <span className="flex items-center gap-1.5 text-gray-700 truncate">
-                          <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }}></span>
-                          <span className="truncate">{item.name}</span>
-                        </span>
-                        <strong className="text-gray-900 ml-1">{item.value}%</strong>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
 
-              {/* 3. Risk Map (Hotspots) Card matching mockup */}
-              <div className="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm font-extrabold text-gray-900 tracking-tight flex items-center gap-2">
-                      <MapIcon className="w-4 h-4 text-emerald-700" />
-                      {t('riskMapHotspots')} (Sangli Agricultural Clusters)
-                    </h3>
-                    <p className="text-xs text-gray-500 font-medium mt-0.5">
-                      Live micro-satellite & farm report heatmap overlay with active spore dispersal radiuses
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => setOfficerTab('advisories')}
-                    className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-xs flex items-center gap-1.5"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>Broadcast Hotspot Alert</span>
-                  </button>
-                </div>
-
-                <div className="h-96 w-full rounded-2xl overflow-hidden">
-                  <RiskMapLeaflet />
-                </div>
-              </div>
-            </>
-          )}
-
-          {officerTab === 'reportsQueue' && <ReportsReviewQueue />}
-          {officerTab === 'riskMap' && (
-            <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-xs space-y-4">
-              <h2 className="text-base font-extrabold text-gray-900">Geospatial Surveillance & Hotspot Clustering</h2>
-              <div className="h-[550px] w-full rounded-2xl overflow-hidden">
-                <RiskMapLeaflet />
-              </div>
+              <button
+                onClick={() => setOfficerTab('riskMap')}
+                className="w-full py-2.5 rounded-xl font-bold text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-cyan-700 dark:text-cyan-300 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+              >
+                <span>View Full GIS Outbreak Radar</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </button>
             </div>
-          )}
-          {officerTab === 'farmers' && <FarmerDirectory />}
-          {officerTab === 'advisories' && <AdvisoryBroadcaster />}
-          {officerTab === 'settings' && (
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-xl mx-auto space-y-4 text-xs">
-              <h3 className="text-base font-extrabold text-gray-900">Extension Officer System Configuration</h3>
-              <p className="text-gray-500">Configure alert thresholds, automated SMS triggers, and government Krishi Seva Kendra database integrations.</p>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-                  <div>
-                    <strong>Automated Outbreak SMS Alert</strong>
-                    <p className="text-[11px] text-gray-500">Send instant SMS when 5+ reports are confirmed in a 5km radius</p>
-                  </div>
-                  <input type="checkbox" defaultChecked className="w-4 h-4 text-emerald-600 rounded" />
-                </div>
-                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-                  <div>
-                    <strong>Subsidized Bio-Pesticide Auto-Authorization</strong>
-                    <p className="text-[11px] text-gray-500">Auto-issue 100% subsidy voucher to verified farmers</p>
-                  </div>
-                  <input type="checkbox" defaultChecked className="w-4 h-4 text-emerald-600 rounded" />
-                </div>
-              </div>
-            </div>
-          )}
+
+          </div>
+
         </div>
-      </main>
+      )}
+
+      {/* VIEW 2: REPORTS & FIELD REVIEW QUEUE */}
+      {officerTab === 'reviewQueue' && (
+        <ReportsReviewQueue />
+      )}
+
+      {/* VIEW 3: GIS RISK MAP RADAR */}
+      {officerTab === 'riskMap' && (
+        <RiskMapLeaflet />
+      )}
+
+      {/* VIEW 4: BROADCAST EMERGENCY ADVISORIES */}
+      {officerTab === 'advisories' && (
+        <AdvisoryBroadcaster />
+      )}
+
+      {/* VIEW 5: FARMER DIRECTORY */}
+      {officerTab === 'farmers' && (
+        <FarmerDirectory />
+      )}
+
     </div>
   );
 };

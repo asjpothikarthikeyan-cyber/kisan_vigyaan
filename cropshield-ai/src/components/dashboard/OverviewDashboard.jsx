@@ -449,7 +449,7 @@ export const OverviewDashboard = ({ onNavigate }) => {
   };
 
   return (
-    <div className={`flex flex-col h-[calc(100vh-68px)] select-none overflow-hidden font-sans transition-colors duration-200 ${
+    <div className={`flex flex-col h-[calc(100vh-68px)] overflow-hidden font-sans transition-colors duration-200 ${
       isDark ? 'bg-[#070c18] text-slate-100' : 'bg-[#F4F6F4] text-slate-900'
     }`}>
       {/* 1. Global High-Contrast Precision AgriTech KPI Top Strip */}

@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 export const TopHeader = ({ activeView, onOpenSidebar, onNavigate }) => {
-  const { lang, setLang, t, cart, theme, toggleTheme } = useApp();
+  const { lang, setLang, t, cart, theme, toggleTheme, setIsCartModalOpen } = useApp();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [searchQuery, setSearchQuery] = useState('');
   const isDark = theme === 'dark';
@@ -48,7 +48,7 @@ export const TopHeader = ({ activeView, onOpenSidebar, onNavigate }) => {
   };
 
   return (
-    <header className={`px-4 py-2.5 border-b sticky top-0 z-30 select-none shadow-xs transition-colors ${
+    <header className={`px-4 py-2.5 border-b sticky top-0 z-30 shadow-xs transition-colors ${
       isDark ? 'bg-[#090f1d] border-[#16233b] text-slate-100' : 'bg-white border-slate-200 text-slate-800'
     }`}>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -152,7 +152,7 @@ export const TopHeader = ({ activeView, onOpenSidebar, onNavigate }) => {
 
           {/* Cart Button */}
           <button 
-            onClick={() => onNavigate && onNavigate('marketplace')}
+            onClick={() => setIsCartModalOpen(true)}
             className={`relative p-1.5 rounded-[5px] border transition-colors cursor-pointer ${
               isDark ? 'bg-[#0e1629] hover:bg-[#152038] border-[#1e2f4f] text-slate-200' : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700'
             }`}

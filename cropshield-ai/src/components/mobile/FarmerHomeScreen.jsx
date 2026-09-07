@@ -178,7 +178,7 @@ export const FarmerHomeScreen = ({ onNavigate }) => {
   };
 
   return (
-    <div className="space-y-4 pb-24 max-w-lg mx-auto select-none px-3 pt-3">
+    <div className="space-y-4 pb-24 max-w-lg mx-auto px-3 pt-3">
       {/* 1. Persistent Urgent Alert Header Strip */}
       <div className="p-3 bg-rose-50 border-2 border-rose-500 rounded-[12px] flex items-center justify-between shadow-xs">
         <div className="flex items-center space-x-2.5">

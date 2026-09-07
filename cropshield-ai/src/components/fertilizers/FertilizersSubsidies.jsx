@@ -28,7 +28,7 @@ import {
 import confetti from 'canvas-confetti';
 
 export const FertilizersSubsidies = () => {
-  const { lang, t, addToCart, cart } = useApp();
+  const { lang, t, addToCart, cart, openDirectCheckout, setIsCartModalOpen } = useApp();
   const [activeTab, setActiveTab] = useState('commercial'); // 'commercial' | 'govt' | 'shops'
   const [searchQuery, setSearchQuery] = useState('');
   const [quantities, setQuantities] = useState({
@@ -39,8 +39,6 @@ export const FertilizersSubsidies = () => {
     'fert-5': 1,
     'fert-6': 1
   });
-  const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
-  const [directCheckoutItem, setDirectCheckoutItem] = useState(null);
   const [claimedVoucher, setClaimedVoucher] = useState(null);
 
   const handleQuantityChange = (id, delta) => {
@@ -63,6 +61,7 @@ export const FertilizersSubsidies = () => {
       packSize: product.priceUnit,
       nutrientComposition: product.type
     }, qty);
+    setIsCartModalOpen(true);
     confetti({ particleCount: 35, spread: 50, origin: { y: 0.8 } });
   };
 
@@ -76,11 +75,10 @@ export const FertilizersSubsidies = () => {
       mrp: product.mrp || product.subsidizedPrice + 200,
       image: product.image,
       packSize: product.priceUnit,
-      nutrientComposition: product.type
+      nutrientComposition: product.type,
+      quantity: qty
     };
-    addToCart(formatted, qty);
-    setDirectCheckoutItem(formatted);
-    setCheckoutModalOpen(true);
+    openDirectCheckout(formatted);
   };
 
   const totalCartItems = (cart || []).reduce((sum, item) => sum + item.quantity, 0);
@@ -94,7 +92,7 @@ export const FertilizersSubsidies = () => {
   });
 
   return (
-    <div className="space-y-6 pb-12 select-none">
+    <div className="space-y-6 pb-12">
       {/* Top Banner & Title matching Reference Image */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -168,7 +166,7 @@ export const FertilizersSubsidies = () => {
           </span>
 
           <button
-            onClick={() => { setDirectCheckoutItem(null); setCheckoutModalOpen(true); }}
+            onClick={() => setIsCartModalOpen(true)}
             className="relative px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500 hover:text-slate-950 border border-cyan-500/40 text-cyan-300 font-extrabold text-xs rounded-xl flex items-center gap-2 shadow-xs transition-colors"
           >
             <ShoppingCart className="w-4 h-4" />
@@ -488,12 +486,6 @@ export const FertilizersSubsidies = () => {
         </div>
       )}
 
-      {/* Global Interactive Checkout & Payment Modal */}
-      <CheckoutModal
-        isOpen={checkoutModalOpen}
-        onClose={() => setCheckoutModalOpen(false)}
-        directItem={directCheckoutItem}
-      />
     </div>
   );
 };

@@ -41,7 +41,7 @@ export const FarmerHome = () => {
   const isMediumRisk = riskValue >= 35 && riskValue < 60;
 
   return (
-    <div className="flex flex-col min-h-full bg-white pb-20 select-none">
+    <div className="flex flex-col min-h-full bg-white pb-20">
       {/* Top Mobile App Header */}
       <div className="px-5 pt-3 pb-3 border-b border-gray-100 flex items-center justify-between">
         <div className="flex items-center space-x-3">

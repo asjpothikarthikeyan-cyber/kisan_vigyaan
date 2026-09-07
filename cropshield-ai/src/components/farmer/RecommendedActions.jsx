@@ -63,7 +63,7 @@ export const RecommendedActions = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-full bg-white pb-20 select-none">
+    <div className="flex flex-col min-h-full bg-white pb-20">
       {/* Top Header matching mockup */}
       <div className="px-4 py-3.5 bg-[#165a3c] flex items-center justify-between shadow-md">
         <button 

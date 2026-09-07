@@ -22,7 +22,7 @@ export const MobileBottomNav = ({ activeTab, onTabChange }) => {
   ];
 
   return (
-    <nav className={`fixed bottom-0 left-0 right-0 z-40 border-t select-none transition-colors shadow-lg ${
+    <nav className={`fixed bottom-0 left-0 right-0 z-40 border-t transition-colors shadow-lg ${
       isDark ? 'bg-[#090f1d] border-[#16233b]' : 'bg-white border-slate-200'
     }`}>
       <div className="max-w-lg mx-auto flex items-center justify-around px-2 py-1.5">

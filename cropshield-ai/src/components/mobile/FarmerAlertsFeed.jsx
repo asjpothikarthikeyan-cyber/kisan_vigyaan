@@ -67,7 +67,7 @@ export const FarmerAlertsFeed = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="space-y-3.5 pb-24 max-w-lg mx-auto select-none px-3 pt-3">
+    <div className="space-y-3.5 pb-24 max-w-lg mx-auto px-3 pt-3">
       {/* Header */}
       <div className="flex items-center justify-between px-1">
         <h2 className="font-extrabold text-[16px] text-slate-900 flex items-center gap-2">

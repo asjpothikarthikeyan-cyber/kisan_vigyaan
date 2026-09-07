@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export const FarmerMarketDecisions = ({ onNavigate }) => {
-  const { lang, t, theme, cart, addToCart } = useApp();
+  const { lang, t, theme, cart, addToCart, setIsCartModalOpen } = useApp();
   const [selectedDecision, setSelectedDecision] = useState('spray'); // 'spray' | 'seeds' | 'mandi'
 
   // Plant Protection Kits
@@ -39,7 +39,7 @@ export const FarmerMarketDecisions = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="space-y-4 pb-24 max-w-lg mx-auto select-none px-3 pt-3">
+    <div className="space-y-4 pb-24 max-w-lg mx-auto px-3 pt-3">
       {/* Top Question Header */}
       <div className="px-1">
         <h2 className="font-extrabold text-[17px] text-slate-900">
@@ -119,7 +119,10 @@ export const FarmerMarketDecisions = ({ onNavigate }) => {
                 </div>
 
                 <button
-                  onClick={() => addToCart({ ...kit, quantity: 1, category: 'Protection' })}
+                  onClick={() => {
+                    addToCart({ ...kit, quantity: 1, category: 'Protection' });
+                    setIsCartModalOpen(true);
+                  }}
                   className="px-3 py-1.5 bg-[#1B5E20] hover:bg-[#154D1A] text-white rounded-[8px] font-bold text-xs shadow-xs cursor-pointer active:scale-95"
                 >
                   {lang === 'mr' ? 'मागवा' : 'Add +'}
@@ -159,7 +162,10 @@ export const FarmerMarketDecisions = ({ onNavigate }) => {
                 </div>
 
                 <button
-                  onClick={() => addToCart({ ...item, quantity: 1, category: 'Seeds' })}
+                  onClick={() => {
+                    addToCart({ ...item, quantity: 1, category: 'Seeds' });
+                    setIsCartModalOpen(true);
+                  }}
                   className="px-3 py-1.5 bg-[#1B5E20] hover:bg-[#154D1A] text-white rounded-[8px] font-bold text-xs shadow-xs cursor-pointer active:scale-95"
                 >
                   {lang === 'mr' ? 'मागवा' : 'Book'}

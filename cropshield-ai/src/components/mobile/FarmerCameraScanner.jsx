@@ -104,7 +104,7 @@ export const FarmerCameraScanner = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-[88vh] pb-24 max-w-lg mx-auto select-none px-3 pt-2">
+    <div className="min-h-[88vh] pb-24 max-w-lg mx-auto px-3 pt-2">
       {!scanResult ? (
         // 1. FULL-SCREEN CAMERA VIEWFINDER EXPERIENCE
         <div className="space-y-4">

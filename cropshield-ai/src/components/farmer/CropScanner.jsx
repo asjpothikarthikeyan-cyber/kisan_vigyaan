@@ -93,7 +93,7 @@ export const CropScanner = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-full bg-[#1b261e] text-white select-none">
+    <div className="flex flex-col min-h-full bg-[#1b261e] text-white">
       {/* Top Header matching mockup */}
       <div className="px-4 py-3.5 bg-[#165a3c] flex items-center justify-between shadow-md">
         <button 

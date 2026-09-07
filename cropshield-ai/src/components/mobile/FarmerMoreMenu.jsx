@@ -23,12 +23,11 @@ export const FarmerMoreMenu = ({ onNavigate }) => {
     { id: 'statistics', labelEn: 'Regional Pest & Disease Statistics', labelMr: 'विभागीय रोग आकडेवारी व कल', icon: BarChart3, color: 'text-purple-600 bg-purple-50' },
     { id: 'satelliteMapping', labelEn: 'ISRO Bhuvan / Sentinel-2 Satellite Map', labelMr: 'इस्रो भुवन / उपग्रह पीक नकाशा', icon: Satellite, color: 'text-cyan-600 bg-cyan-50' },
     { id: 'farmerCommunity', labelEn: 'Farmer Community & Question Forum', labelMr: 'शेतकरी मंच व तज्ज्ञ प्रश्नोत्तरे', icon: Users, color: 'text-emerald-600 bg-emerald-50' },
-    { id: 'reports', labelEn: 'My Field Reports & Soil Health Cards', labelMr: 'माझे शेत अहवाल व मृदा आरोग्य पत्रिका', icon: FileText, color: 'text-slate-700 bg-slate-100' },
-    { id: 'deviceManagement', labelEn: 'IoT Solar Traps & Sensor Telemetry', labelMr: 'सौर कीटक सापळे व सेन्सर्स', icon: Radio, color: 'text-indigo-600 bg-indigo-50' },
+    { id: 'reports', labelEn: 'My Field Reports & Soil Health Cards', labelMr: 'माझे शेत अहवाल व मृदा आरोग्य पत्रिका', icon: FileText, color: 'text-slate-700 bg-slate-100' }
   ];
 
   return (
-    <div className="space-y-4 pb-24 max-w-lg mx-auto select-none px-3 pt-3">
+    <div className="space-y-4 pb-24 max-w-lg mx-auto px-3 pt-3">
       <div className="px-1">
         <h2 className="font-extrabold text-[17px] text-slate-900">
           {lang === 'mr' ? 'अधिक संदर्भ व सुविधा' : 'More Tools & Reference'}
