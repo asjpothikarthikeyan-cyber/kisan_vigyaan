@@ -1,6 +1,16 @@
 // CropShield AI - Complete 10-Language Agricultural Translation Dictionary
 export const translations = {
   "en": {
+    "govtSchemesTitle": "Govt Schemes & DBT",
+    "govtSchemesSubtitle": "Government Schemes & Direct Benefit Transfers",
+    "searchPlaceholder": "Search schemes...",
+    "benefit": "Benefit",
+    "eligibility": "Eligibility",
+    "applyOnGovtPortal": "Apply on Govt Portal",
+    "officialGovtPortal": "Official Central / State Govt Portal",
+    "viewRequirements": "View Requirements",
+    "eligibilityMandatory": "ELIGIBILITY & MANDATORY DOCUMENTS",
+
     "catAll": "All Schemes",
     "catFinancial": "Financial Support",
     "catInsurance": "Crop Insurance",

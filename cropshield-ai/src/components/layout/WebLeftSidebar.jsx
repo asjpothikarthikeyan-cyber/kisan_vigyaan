@@ -99,21 +99,21 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
       <button
         onClick={() => handleNavClick(item.id)}
         className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer group active:scale-98 ${
-          isActive
-            ? 'bg-blue-50 text-blue-700'
-            : 'text-gray-600 hover:bg-gray-100'
+          isActive 
+            ? (isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-50 text-emerald-700') 
+            : (isDark ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' : 'text-gray-600 hover:bg-gray-100')
         }`}
       >
         <div className="flex items-center space-x-3 truncate">
           <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${
-            isActive ? 'text-blue-600' : 'text-gray-400'
+            isActive ? (isDark ? 'text-emerald-400' : 'text-emerald-600') : (isDark ? 'text-slate-500' : 'text-gray-400')
           }`} />
           <span className="tracking-tight truncate">{label}</span>
         </div>
 
         {item.badge && (
           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
-            isActive ? 'bg-blue-600 text-white' : 'bg-red-500 text-white'
+            isActive ? (isDark ? 'bg-emerald-500 text-white' : 'bg-emerald-600 text-white') : 'bg-red-500 text-white'
           }`}>
             {item.badge}
           </span>
@@ -127,24 +127,24 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
       {mobileOpen && (
         <div 
           onClick={() => setMobileOpen(false)}
-          className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 lg:hidden animate-fadeIn"
+          className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 lg:hidden animate-fadeIn"
         />
       )}
 
       <aside className={`
         fixed top-0 bottom-0 left-0 z-50 flex flex-col justify-between transition-transform duration-300 ease-in-out
-        w-64 border-r border-gray-200 bg-white
+        w-64 border-r ${isDark ? "border-slate-800 bg-[#0f172a]" : "border-gray-200 bg-white"}
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         
         {/* Top Branding Section */}
         <div>
-          <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+          <div className={`p-5 border-b flex items-center justify-between ${isDark ? "border-slate-800" : "border-gray-100"}`}>
             <div 
               onClick={() => handleNavClick(isPrivileged ? 'dashboard' : 'home')}
               className="flex items-center space-x-3 cursor-pointer group"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform shrink-0">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform shrink-0 ${isDark ? "bg-emerald-600 text-white" : "bg-emerald-600 text-white"}`}>
                 <Sprout className="w-6 h-6" />
               </div>
               <div className="truncate">
