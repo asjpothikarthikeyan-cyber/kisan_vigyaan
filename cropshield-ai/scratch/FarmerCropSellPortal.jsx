@@ -200,22 +200,24 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
 
       {/* Main Header Card (Light Green Theme) */}
       <div className={`p-6 sm:p-7 rounded-3xl border shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5 ${
-        'bg-white border-gray-100 text-gray-900 shadow-sm'
+        isDark 
+          ? 'bg-[#091325] border-[#182a4a] text-white' 
+          : 'bg-[#F0FDF4] border-emerald-200/90 text-slate-900 shadow-xs'
       }`}>
         <div className="flex items-center space-x-4">
-          <div className="w-14 h-14 rounded-2xl bg-gray-100 text-gray-900 text-white flex items-center justify-center text-2xl shadow-lg shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#047857] to-[#059669] text-white flex items-center justify-center text-2xl shadow-lg shrink-0">
             🌾
           </div>
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="text-lg sm:text-2xl font-black tracking-tight text-slate-900 ">
+              <h1 className="text-lg sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
                 {lang === 'ta' ? 'விவசாயிகள் பயிர் விற்பனை சந்தை' : lang === 'mr' ? 'शेतकरी धान्य व पीक विक्री केंद्र' : lang === 'hi' ? 'किसान फसल एवं उपज बिक्री केंद्र' : 'Farmer Crop Selling & Produce Portal'}
               </h1>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
                 Direct Farmer Trade
               </span>
             </div>
-            <p className="text-xs text-slate-600 dark:text-gray-500 mt-1 font-medium leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium leading-relaxed">
               {lang === 'ta' ? 'விவசாயிகள் தங்கள் அறுவடை செய்த பயிர்களை இடைத்தரகர்கள் இன்றி நேரடியாக வியாபாரிகளிடம் விற்கலாம்' : lang === 'mr' ? 'शेतकऱ्यांनी पिकवलेले धान्य, भाजीपाला व फळे थेट व्यापाऱ्यांना व ग्राहकांना विनादलाल विक्री करा' : 'Post your harvested crops for sale directly to traders across India with zero commission'}
             </p>
           </div>
@@ -224,7 +226,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
         {/* Primary Action Button (Single Clean Plus Icon!) */}
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 border border-amber-300/40 shrink-0"
+          className="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 hover:from-amber-600 hover:to-teal-700 text-white font-black text-xs shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 border border-amber-300/40 shrink-0"
         >
           <Plus className="w-4 h-4 text-white" />
           <span>{lang === 'ta' ? 'பயிர் விற்பனை பதிவு' : lang === 'mr' ? 'पीक विक्रीसाठी टाका' : lang === 'hi' ? 'फसल बेचने के लिए जोड़ें' : 'Post Crop for Sale'}</span>
@@ -232,14 +234,14 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
       </div>
 
       {/* Navigation Sub-Tabs: Browse Marketplace vs My Active Listings */}
-      <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-100 pb-3 gap-3">
+      <div className="flex items-center justify-between border-b border-emerald-200/60 dark:border-slate-800 pb-3 gap-3">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('browse')}
             className={`px-4 py-2.5 rounded-2xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'browse'
-                ? 'bg-gray-900 text-white shadow-md'
-                : 'bg-white border-gray-100 text-gray-900 shadow-sm'
+                ? 'bg-[#047857] text-white shadow-md'
+                : isDark ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
             }`}
           >
             <ShoppingBag className="w-4 h-4" />
@@ -251,7 +253,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
             className={`px-4 py-2.5 rounded-2xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'myListings'
                 ? 'bg-amber-600 text-white shadow-md'
-                : 'bg-white border-gray-100 text-gray-900 shadow-sm'
+                : isDark ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
             }`}
           >
             <Package className="w-4 h-4" />
@@ -260,7 +262,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
         </div>
 
         {/* Total Count Badge */}
-        <span className="text-xs font-bold text-gray-900 text-blue-600 hidden sm:inline-block">
+        <span className="text-xs font-bold text-emerald-800 dark:text-emerald-400 hidden sm:inline-block">
           Showing {filteredListings.length} of {displayListings.length} listings
         </span>
       </div>
@@ -276,7 +278,9 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                 selectedCategory === cat.id
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xs font-black'
-                  : 'bg-white border-gray-100 text-gray-900 shadow-sm'
+                  : isDark
+                  ? 'bg-[#0a1324] border border-[#182a4a] text-slate-300 hover:text-white'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:text-emerald-800 shadow-2xs'
               }`}
             >
               {lang === 'ta' ? cat.labelTa : lang === 'mr' ? cat.labelMr : cat.labelEn}
@@ -286,14 +290,16 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
 
         {/* Search Bar */}
         <div className="relative w-full lg:w-72 shrink-0">
-          <Search className="w-4 h-4 text-gray-500 absolute left-3.5 top-2.5" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
           <input
             type="text"
             placeholder={lang === 'ta' ? 'பயிர், ஊர் அல்லது விவசாயியை தேடவும்...' : 'Search crop, variety, or city...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={`w-full pl-9 pr-4 py-2 rounded-2xl text-xs font-medium focus:outline-none focus:border-emerald-500 transition-colors ${
-              'bg-white border-gray-100 text-gray-900 shadow-sm'
+              isDark 
+                ? 'bg-[#0a1324] border border-[#182a4a] text-white placeholder-slate-500' 
+                : 'bg-white border border-slate-300 text-slate-900 placeholder-slate-400 shadow-2xs'
             }`}
           />
         </div>
@@ -302,10 +308,10 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
       {/* Crop Cards Grid */}
       {filteredListings.length === 0 ? (
         <div className={`p-12 text-center rounded-3xl border ${
-          'bg-white border-gray-100 text-gray-900 shadow-sm'
+          isDark ? 'bg-[#0a1324] border-[#182a4a] text-slate-400' : 'bg-white border-slate-200 text-slate-600'
         }`}>
           <Sprout className="w-12 h-12 mx-auto text-emerald-500 mb-3 opacity-60" />
-          <h3 className="text-base font-black text-slate-900 ">No crop listings found</h3>
+          <h3 className="text-base font-black text-slate-900 dark:text-white">No crop listings found</h3>
           <p className="text-xs mt-1">Try adjusting your crop filter search or post a new crop listing!</p>
           <button
             onClick={() => setIsModalOpen(true)}
@@ -325,8 +331,10 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                 key={item.id}
                 className={`rounded-3xl border overflow-hidden flex flex-col justify-between hover:shadow-xl transition-all duration-300 group ${
                   isSold
-                    ? 'opacity-60 grayscale bg-slate-100 dark:bg-white border-slate-300 dark:border-gray-100'
-                    : 'bg-white border-gray-100 text-gray-900 shadow-sm'
+                    ? 'opacity-60 grayscale bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-800'
+                    : isDark
+                    ? 'bg-[#09152b] border-[#1a2d52] hover:border-amber-500/50 text-white'
+                    : 'bg-[#FFFBEB] hover:bg-[#FEF3C7] border-amber-200/90 text-slate-900 shadow-xs'
                 }`}
               >
                 <div>
@@ -362,7 +370,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                         </strong>
                       </div>
 
-                      <span className="px-2.5 py-1 rounded-xl text-xs font-black bg-blue-50/90 text-emerald-300 border border-emerald-500/40 backdrop-blur-sm shadow-md">
+                      <span className="px-2.5 py-1 rounded-xl text-xs font-black bg-emerald-950/90 text-emerald-300 border border-emerald-500/40 backdrop-blur-sm shadow-md">
                         Qty: {item.quantity}
                       </span>
                     </div>
@@ -371,27 +379,27 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                   {/* Card Body */}
                   <div className="p-5 space-y-3">
                     <div>
-                      <h3 className="font-black text-base leading-snug text-slate-900  group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                      <h3 className="font-black text-base leading-snug text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                         {item.name}
                       </h3>
-                      <p className="text-xs font-bold text-slate-600 dark:text-gray-600 flex items-center gap-1 mt-1">
+                      <p className="text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1 mt-1">
                         <MapPin className="w-3.5 h-3.5 text-amber-600" />
                         <span><strong>{item.sellerName}</strong> • {item.location}</span>
                       </p>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-gray-600 leading-relaxed line-clamp-2 font-medium">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2 font-medium">
                       {item.description}
                     </p>
 
-                    <div className="p-3 bg-white/80 dark:bg-white/60 rounded-2xl border border-amber-200/80 dark:border-gray-100 text-[11px] space-y-1">
-                      <div className="flex justify-between text-slate-600 dark:text-gray-500">
+                    <div className="p-3 bg-white/80 dark:bg-slate-900/60 rounded-2xl border border-amber-200/80 dark:border-slate-800 text-[11px] space-y-1">
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
                         <span>Harvest Status:</span>
                         <strong className="text-slate-900 dark:text-slate-200">{item.harvestDate || 'Fresh Harvest'}</strong>
                       </div>
-                      <div className="flex justify-between text-slate-600 dark:text-gray-500">
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
                         <span>Farmer Mobile:</span>
-                        <strong className="text-gray-700 text-blue-600 font-mono font-bold">{item.phone}</strong>
+                        <strong className="text-emerald-700 dark:text-emerald-400 font-mono font-bold">{item.phone}</strong>
                       </div>
                     </div>
                   </div>
@@ -400,7 +408,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                 {/* Footer Buttons */}
                 <div className="p-5 pt-0">
                   {item.isUserListing ? (
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-amber-200 dark:border-gray-100">
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-amber-200 dark:border-slate-800">
                       {!isSold && (
                         <button
                           onClick={() => handleMarkAsSold(item.id)}
@@ -420,7 +428,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                       </button>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-amber-200 dark:border-gray-100">
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-amber-200 dark:border-slate-800">
                       <a
                         href={`tel:${(item.phone || '').replace(/[^0-9]/g, '')}`}
                         className="py-2.5 px-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer active:scale-95"
@@ -451,7 +459,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
           <div className={`w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl border shadow-2xl p-6 relative ${
-            'bg-white border-gray-100 text-gray-900 shadow-sm'
+            isDark ? 'bg-[#0a1324] border-[#182a4a] text-white' : 'bg-white border-emerald-200 text-slate-900'
           }`}>
             <button
               onClick={() => setIsModalOpen(false)}
@@ -460,15 +468,15 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center space-x-3 mb-5 border-b pb-4 border-slate-200 dark:border-gray-100">
+            <div className="flex items-center space-x-3 mb-5 border-b pb-4 border-slate-200 dark:border-slate-800">
               <div className="w-11 h-11 rounded-2xl bg-amber-500/20 text-amber-600 flex items-center justify-center font-bold text-2xl">
                 🌾
               </div>
               <div>
-                <h2 className="text-lg font-black tracking-tight text-slate-900 ">
+                <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
                   {lang === 'mr' ? 'तुमचे पीक विक्रीसाठी टाका' : lang === 'ta' ? 'உங்கள் பயிரை விற்பனைக்கு சேர்க்க' : 'Post Crop Listing for Direct Sale'}
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-gray-500 font-medium">
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                   Direct Farmer-to-Buyer Marketplace • Zero Middlemen Commission
                 </p>
               </div>
@@ -477,7 +485,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
             <form onSubmit={handlePostListing} className="space-y-4 text-xs font-medium">
               {/* Crop Title */}
               <div>
-                <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                   Crop Listing Title *
                 </label>
                 <input
@@ -487,7 +495,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="e.g. Organic Phule Sangam Soybean (KDS-726)"
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                    'bg-white border-gray-100 text-gray-900 shadow-sm'
+                    isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                   }`}
                 />
               </div>
@@ -495,14 +503,14 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
               {/* Grid 2 Columns: Category & Quantity */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Crop Type / Category
                   </label>
                   <select
                     value={form.cropType}
                     onChange={(e) => setForm({ ...form, cropType: e.target.value })}
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   >
                     <option value="Soybean">Soybean (सोयाबीन)</option>
@@ -521,7 +529,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Available Quantity *
                   </label>
                   <input
@@ -531,7 +539,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                     onChange={(e) => setForm({ ...form, quantity: e.target.value })}
                     placeholder="e.g. 60 Quintals / 10 Tons / 150 Crates"
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
@@ -540,7 +548,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
               {/* Grid 2 Columns: Price & Unit */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Asking Price (₹) *
                   </label>
                   <input
@@ -550,20 +558,20 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                     onChange={(e) => setForm({ ...form, price: e.target.value })}
                     placeholder="e.g. 5200"
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Price Unit
                   </label>
                   <select
                     value={form.priceUnit}
                     onChange={(e) => setForm({ ...form, priceUnit: e.target.value })}
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   >
                     <option value="per Quintal">per Quintal (प्रति क्विंटल)</option>
@@ -578,7 +586,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
               {/* Grade & Location */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Quality Grade / Variety
                   </label>
                   <input
@@ -587,13 +595,13 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                     onChange={(e) => setForm({ ...form, grade: e.target.value })}
                     placeholder="e.g. Grade A Organic (98% Germination)"
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Farm Location / Mandi District *
                   </label>
                   <input
@@ -603,7 +611,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                     onChange={(e) => setForm({ ...form, location: e.target.value })}
                     placeholder="e.g. Sangli APMC, Maharashtra"
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
@@ -612,7 +620,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
               {/* Contact Phone & Seller Name */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Your Name (Seller) *
                   </label>
                   <input
@@ -622,13 +630,13 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                     onChange={(e) => setForm({ ...form, sellerName: e.target.value })}
                     placeholder="Ramesh Patil"
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     WhatsApp / Contact Number *
                   </label>
                   <input
@@ -638,7 +646,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     placeholder="+91 98224 55120"
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
@@ -646,7 +654,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
 
               {/* Sample Photo Selector */}
               <div>
-                <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                   Select Crop Sample Photo
                 </label>
                 <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
@@ -669,7 +677,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
               <div className="pt-3">
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 hover:from-amber-600 hover:to-teal-700 text-white font-black text-xs shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
                 >
                   <Sparkles className="w-4 h-4" />
                   <span>{lang === 'mr' ? '🚀 पीक विक्रीची जाहिरात प्रकाशित करा' : lang === 'ta' ? '🚀 பயிர் விற்பனை விளம்பரம் வெளியிடவும்' : '🚀 Publish Crop Sale Listing'}</span>
@@ -686,7 +694,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
       {offerModalItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
           <div className={`w-full max-w-md rounded-3xl border shadow-2xl p-6 relative ${
-            'bg-white border-gray-100 text-gray-900 shadow-sm'
+            isDark ? 'bg-[#0a1324] border-[#182a4a] text-white' : 'bg-white border-emerald-200 text-slate-900'
           }`}>
             <button
               onClick={() => setOfferModalItem(null)}
@@ -695,15 +703,15 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center space-x-3 mb-4 border-b pb-3 border-slate-200 dark:border-gray-100">
-              <div className="w-10 h-10 rounded-2xl bg-gray-500/20 text-emerald-600 flex items-center justify-center font-bold text-xl">
+            <div className="flex items-center space-x-3 mb-4 border-b pb-3 border-slate-200 dark:border-slate-800">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-600 flex items-center justify-center font-bold text-xl">
                 💬
               </div>
               <div>
-                <h2 className="text-base font-black tracking-tight text-slate-900 ">
+                <h2 className="text-base font-black tracking-tight text-slate-900 dark:text-white">
                   Send Buying Offer to Farmer
                 </h2>
-                <p className="text-[11px] text-slate-500 dark:text-gray-500 font-medium">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                   {offerModalItem.name} • {offerModalItem.sellerName}
                 </p>
               </div>
@@ -711,7 +719,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
 
             <form onSubmit={handleSendOffer} className="space-y-3 text-xs font-medium">
               <div>
-                <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                   Your Name / Trading Company *
                 </label>
                 <input
@@ -721,14 +729,14 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                   onChange={(e) => setOfferForm({ ...offerForm, buyerName: e.target.value })}
                   placeholder="e.g. Sangli Grain Traders Ltd."
                   className={`w-full px-3 py-2 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                    'bg-white border-gray-100 text-gray-900 shadow-sm'
+                    isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                   }`}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Offered Price (₹)
                   </label>
                   <input
@@ -736,13 +744,13 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                     value={offerForm.offeredPrice || offerModalItem.price}
                     onChange={(e) => setOfferForm({ ...offerForm, offeredPrice: e.target.value })}
                     className={`w-full px-3 py-2 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                     Your Mobile No *
                   </label>
                   <input
@@ -752,14 +760,14 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                     onChange={(e) => setOfferForm({ ...offerForm, buyerPhone: e.target.value })}
                     placeholder="+91 98230 00000"
                     className={`w-full px-3 py-2 rounded-xl border text-xs font-bold focus:outline-none focus:border-emerald-500 ${
-                      'bg-white border-gray-100 text-gray-900 shadow-sm'
+                      isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-gray-600 font-bold mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
                   Message / Requirements
                 </label>
                 <textarea
@@ -767,7 +775,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                   value={offerForm.note}
                   onChange={(e) => setOfferForm({ ...offerForm, note: e.target.value })}
                   className={`w-full px-3 py-2 rounded-xl border text-xs font-medium focus:outline-none focus:border-emerald-500 ${
-                    'bg-white border-gray-100 text-gray-900 shadow-sm'
+                    isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                   }`}
                 ></textarea>
               </div>

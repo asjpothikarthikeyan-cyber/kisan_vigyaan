@@ -2023,7 +2023,7 @@ export const initialFarmerCropListings = [
     description: 'Sun-dried, zero-moisture chemical-free organic soybean. Cleaned and graded at Sangli KVK.',
     category: 'farmerSell',
     icon: '🌱',
-    image: 'https://images.unsplash.com/photo-1599599810694-b5b37304c041?w=500&auto=format&fit=crop&q=60'
+    image: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?w=500&auto=format&fit=crop&q=60'
   },
   {
     id: 'farmer-crop-2',
@@ -2080,7 +2080,7 @@ export const initialFarmerCropListings = [
     description: 'Deep yellow aromatic turmeric fingers. Tested at Spices Board lab for zero lead chromate.',
     category: 'farmerSell',
     icon: '🟡',
-    image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500&auto=format&fit=crop&q=60'
+    image: 'https://images.unsplash.com/photo-1596199050105-6d5d32222916?w=500&auto=format&fit=crop&q=60'
   },
   {
     id: 'farmer-crop-5',
