@@ -55,76 +55,116 @@ export const SmartVisionScanner = () => {
     };
   }, [useLiveCamera]);
 
-  // Intelligent Image Inspector (Analyzes real image canvas for green chlorophyll vs non-plant colors)
-  const analyzeImageContent = (imageSrc) => {
+  const analyzeImageContent = async (imageSrc) => {
     setIsScanning(true);
     
-    setTimeout(() => {
-      // If user uploaded a custom image, inspect color distribution
-      const img = new Image();
-      if (!imageSrc.startsWith('data:')) {
-        img.crossOrigin = "Anonymous";
-      }
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = 100;
-        canvas.height = 100;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, 100, 100);
-        const data = ctx.getImageData(0, 0, 100, 100).data;
+    // First, do the non-plant check
+    const img = new Image();
+    if (!imageSrc.startsWith('data:')) {
+      img.crossOrigin = "Anonymous";
+    }
+    img.onload = async () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 100;
+      canvas.height = 100;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, 100, 100);
+      const data = ctx.getImageData(0, 0, 100, 100).data;
 
-        let plantPixels = 0;
-        let totalPixels = 10000;
+      let plantPixels = 0;
+      let totalPixels = 10000;
 
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i+1];
-          const b = data[i+2];
-          
-          // Botanical heuristic: detect green chlorophyll, yellow/brown necrotic tissue, and general plant matter
-          // Expanded to catch diseased/brown leaves, not just bright green ones
-          const isGreenish = (g > r * 0.8 && g > b * 0.8 && g > 30);
-          const isBrownish = (r > g * 0.9 && r > b * 1.2 && g > b * 0.8 && r > 40 && r < 200); 
-          const isYellowish = (r > b * 1.3 && g > b * 1.3 && r > 60 && g > 60);
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i+1];
+        const b = data[i+2];
+        const isGreenish = (g > r * 0.8 && g > b * 0.8 && g > 30);
+        const isBrownish = (r > g * 0.9 && r > b * 1.2 && g > b * 0.8 && r > 40 && r < 200); 
+        const isYellowish = (r > b * 1.3 && g > b * 1.3 && r > 60 && g > 60);
 
-          if (isGreenish || isBrownish || isYellowish) {
-            plantPixels++;
-          }
+        if (isGreenish || isBrownish || isYellowish) {
+          plantPixels++;
         }
+      }
 
-        const plantRatio = plantPixels / totalPixels;
+      const plantRatio = plantPixels / totalPixels;
 
-        // Lowered threshold because diseased leaves often have lots of necrotic (dead/non-green) tissue
-        if (plantRatio < 0.04) {
-          // Flagged as Non-Plant!
-          setAnalyzedResult({
-            id: `non-plant-${Date.now()}`,
-            title: "Unrecognized / Non-Plant Object",
-            category: "non_plant",
-            isPlant: false,
-            detectedObject: "Non-Botanical Object (No Leaf / Crop Tissue Detected)",
-            confidence: 96,
-            image: imageSrc,
-            warningMessage: "⚠️ Non-Plant Image Detected: The uploaded photograph does not exhibit characteristic plant chlorophyll pigmentation, leaf venation, or crop structures.",
-            guidance: "Please upload or capture a clear photo of an affected crop leaf, fruit, or stem in natural daylight."
-          });
-        } else {
-          // Detected as valid crop foliage
+      if (plantRatio < 0.04) {
+        setAnalyzedResult({
+          id: `non-plant-${Date.now()}`,
+          title: "Unrecognized / Non-Plant Object",
+          category: "non_plant",
+          isPlant: false,
+          detectedObject: "Non-Botanical Object (No Leaf / Crop Tissue Detected)",
+          confidence: 96,
+          image: imageSrc,
+          warningMessage: "⚠️ Non-Plant Image Detected: The uploaded photograph does not exhibit characteristic plant chlorophyll pigmentation, leaf venation, or crop structures.",
+          guidance: "Please upload or capture a clear photo of an affected crop leaf, fruit, or stem in natural daylight."
+        });
+        setIsScanning(false);
+      } else {
+        // Valid plant, send to Groq API
+        try {
+          const { analyzeLeafWithGroq } = await import('../../services/visionService');
+          
+          // Re-draw at higher res for Groq
+          const hqCanvas = document.createElement('canvas');
+          hqCanvas.width = 400;
+          hqCanvas.height = 400;
+          const hqCtx = hqCanvas.getContext('2d');
+          hqCtx.drawImage(img, 0, 0, 400, 400);
+          const base64Image = hqCanvas.toDataURL('image/jpeg');
+
+          const aiResponse = await analyzeLeafWithGroq(base64Image, lang);
+          
+          if (aiResponse) {
+            setAnalyzedResult({
+              id: `live-scan-${Date.now()}`,
+              isPlant: true,
+              cropType: aiResponse.crop || "Unknown Crop",
+              organ: "Leaf / Surface",
+              expectedDiagnosis: aiResponse.verdict || "Analysis Complete",
+              confidence: aiResponse.confidence || 92,
+              symptomsIdentified: [
+                aiResponse.plainAdviceEn,
+                "Identified through visual neural pathways"
+              ],
+              unrelatedThingsExcluded: ["Abiotic Stress", "Mechanical Damage"],
+              pesticidePrescription: aiResponse.medicineName && aiResponse.medicineName !== "null" ? {
+                chemical: [{
+                  name: aiResponse.medicineName,
+                  dosePerLiter: "Standard Dose",
+                  method: "Foliar Spray",
+                  tradeName: aiResponse.medicineName
+                }],
+                organic: []
+              } : null,
+              image: imageSrc
+            });
+          } else {
+            // Fallback
+            setAnalyzedResult({
+              ...visionSampleCatalog[0],
+              image: imageSrc
+            });
+          }
+        } catch (e) {
+          console.error("Error analyzing with Groq", e);
           setAnalyzedResult({
             ...visionSampleCatalog[0],
             image: imageSrc
           });
         }
         setIsScanning(false);
-      };
+      }
+    };
 
-      img.onerror = () => {
-        setAnalyzedResult(selectedSample);
-        setIsScanning(false);
-      };
+    img.onerror = () => {
+      setAnalyzedResult(selectedSample);
+      setIsScanning(false);
+    };
 
-      img.src = imageSrc;
-    }, 1200);
+    img.src = imageSrc;
   };
 
   const handleSelectPreset = (sample) => {

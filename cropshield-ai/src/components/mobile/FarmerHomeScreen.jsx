@@ -7,21 +7,15 @@ import {
   CheckCircle2, 
   Volume2, 
   Droplets, 
-  Zap, 
   Camera, 
   X, 
   ChevronRight, 
-  Sun, 
-  CloudRain, 
-  ArrowRight,
-  ShieldCheck
+  Sun
 } from 'lucide-react';
 
 export const FarmerHomeScreen = ({ onNavigate }) => {
-  const { lang, t, theme } = useApp();
-  const isDark = theme === 'dark';
+  const { lang } = useApp();
 
-  // 6 Plot Tiles Data (One Status Color, Crop Icon, Minimal Numbers)
   const [plots, setPlots] = useState([
     {
       id: 'plot-1',
@@ -156,10 +150,8 @@ export const FarmerHomeScreen = ({ onNavigate }) => {
     }
   ]);
 
-  // Selected Plot for focused bottom sheet
   const [selectedPlot, setSelectedPlot] = useState(null);
 
-  // Status Summary in Plain Language
   const heroTextEn = "2 of your 6 plots need attention today";
   const heroTextMr = "तुमच्या ६ पैकी २ शेतांवर आज लक्ष देण्याची गरज आहे";
   const heroTextHi = "आपके 6 में से 2 खेतों में आज ध्यान देने की जरूरत है";
@@ -178,188 +170,155 @@ export const FarmerHomeScreen = ({ onNavigate }) => {
   };
 
   return (
-    <div className="space-y-4 pb-24 max-w-lg mx-auto px-3 pt-3">
-      {/* 1. Persistent Urgent Alert Header Strip */}
-      <div className="p-3 bg-rose-50 border-2 border-rose-500 rounded-[12px] flex items-center justify-between shadow-xs">
-        <div className="flex items-center space-x-2.5">
-          <span className="w-3 h-3 rounded-full bg-rose-600 animate-ping shrink-0"></span>
-          <div className="text-xs">
-            <span className="font-bold text-rose-900 block">
-              {lang === 'mr' ? '🚨 तातडीचा इशारा: प्लॉट २ (कापूस)' : '🚨 URGENT: Plot 2 (Cotton)'}
+    <div className="space-y-6 pb-24 max-w-lg mx-auto px-4 pt-4 font-sans bg-gray-50 min-h-screen">
+      
+      {/* 1. Minimalist Top Bar / Hero */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 tracking-tight leading-tight">
+            {lang === 'mr' ? 'शुभ प्रभात, शेतकरी' : 'Good Morning,'}<br/>
+            <span className="text-gray-500 font-medium text-lg">Kisan One</span>
+          </h2>
+        </div>
+        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-100 text-sm font-medium text-gray-700">
+          <Sun className="w-4 h-4 text-orange-400" />
+          <span>29°C</span>
+        </div>
+      </div>
+
+      {/* 2. Clean Daily Status Card (Stitch Style) */}
+      <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-4">
+        <div className="flex items-start justify-between">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              {lang === 'mr' ? 'आजचा आढावा' : "Today's Overview"}
             </span>
-            <p className="text-[11px] text-rose-800">
-              {lang === 'mr' ? 'जिवाणू करप्यामुळे तातडीने फवारणी करा' : 'Bacterial Blight detected • Spray needed today'}
+            <p className="text-base font-semibold text-gray-900 mt-1 leading-snug">
+              {currentHeroText}
             </p>
           </div>
-        </div>
-
-        <button
-          onClick={() => {
-            const plot2 = plots.find(p => p.id === 'plot-2');
-            setSelectedPlot(plot2);
-          }}
-          className="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-[6px] text-xs font-bold shrink-0 shadow-xs cursor-pointer"
-        >
-          {lang === 'mr' ? 'पहा' : 'Fix Now'}
-        </button>
-      </div>
-
-      {/* 2. Single Large "Farm Status" Hero Card (One Traffic-Light Color + One Plain Sentence + 🔊 Read Aloud) */}
-      <div className={`p-4 rounded-[16px] border-2 shadow-sm relative overflow-hidden transition-colors ${
-        isDark ? 'bg-[#0e172a] border-amber-500/40 text-slate-100' : 'bg-amber-50/80 border-amber-500 text-slate-900'
-      }`}>
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-3">
-            {/* Big Traffic Light Indicator */}
-            <div className="w-12 h-12 rounded-full bg-amber-500/20 border-3 border-amber-500 flex items-center justify-center shrink-0">
-              <span className="w-5 h-5 rounded-full bg-amber-500 animate-pulse"></span>
-            </div>
-
-            <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-700 block">
-                {lang === 'mr' ? 'आजची शेती स्थिती' : lang === 'hi' ? 'आज की खेत स्थिति' : "Today's Farm Status"}
-              </span>
-              <h2 className="text-[17px] sm:text-[19px] font-extrabold leading-tight mt-0.5">
-                {currentHeroText}
-              </h2>
-            </div>
-          </div>
-
-          {/* Big Speaker Button */}
           <button
             onClick={handleReadStatusAloud}
-            className="p-2.5 rounded-full bg-white border border-amber-300 text-amber-800 hover:bg-amber-100 shadow-sm shrink-0 transition-transform active:scale-90"
-            title="Read Aloud"
-            aria-label="Read Aloud"
+            className="p-2.5 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors shrink-0"
           >
-            <Volume2 className="w-5 h-5 text-amber-700" />
+            <Volume2 className="w-5 h-5" />
           </button>
         </div>
-
-        {/* Quick Shortcut Row */}
-        <div className="mt-3 pt-2.5 border-t border-amber-200/60 flex items-center justify-between text-xs font-bold text-amber-900">
-          <span>Sangli • 6 Plots (14.5 Acres)</span>
-          <span className="flex items-center gap-1 text-[#1B5E20]">
-            <span>Weather: 29°C</span>
-            <Sun className="w-3.5 h-3.5 text-amber-500" />
-          </span>
+        
+        {/* Urgent Action Snippet inside the same card */}
+        <div className="bg-red-50 border border-red-100 rounded-xl p-3 flex items-center justify-between">
+           <div className="flex items-center gap-2">
+             <AlertOctagon className="w-4 h-4 text-red-500" />
+             <span className="text-sm font-medium text-red-800">
+               {lang === 'mr' ? 'प्लॉट २ - फवारणी आवश्यक' : 'Plot 2 - Spray Needed'}
+             </span>
+           </div>
+           <button
+             onClick={() => setSelectedPlot(plots.find(p => p.id === 'plot-2'))}
+             className="text-xs font-semibold text-red-700 px-3 py-1 bg-white rounded-full shadow-sm border border-red-100"
+           >
+             {lang === 'mr' ? 'पहा' : 'View'}
+           </button>
         </div>
       </div>
 
-      {/* 3. Section Title */}
-      <div className="flex items-center justify-between px-1">
-        <h3 className="font-extrabold text-[15px] text-slate-900 flex items-center gap-1.5">
-          <span>{lang === 'mr' ? 'तुमची शेतं (प्लॉट्स)' : lang === 'hi' ? 'आपके खेत (प्लॉट)' : 'Your Plots'}</span>
-          <span className="text-xs font-normal text-slate-500">(Tap to check)</span>
+      {/* 3. Section Title & Scanner Quick Action */}
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold text-lg text-gray-900">
+          {lang === 'mr' ? 'तुमची शेतं' : 'Your Fields'}
         </h3>
-
         <button
           onClick={() => onNavigate('scan')}
-          className="text-xs font-bold text-[#1B5E20] flex items-center gap-1 cursor-pointer"
+          className="text-sm font-medium text-blue-600 flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-full transition-colors active:bg-blue-100"
         >
-          <Camera className="w-3.5 h-3.5" />
-          <span>{lang === 'mr' ? 'फोटो काढा' : 'Scan Leaf'}</span>
+          <Camera className="w-4 h-4" />
+          <span>{lang === 'mr' ? 'स्कॅन करा' : 'Scan Leaf'}</span>
         </button>
       </div>
 
-      {/* 4. Big Tappable Plot Tiles (Like Mobile App Icons - No Jargon) */}
+      {/* 4. Minimalist Plot Grid */}
       <div className="grid grid-cols-2 gap-3">
         {plots.map(plot => {
           const isRed = plot.color === 'red';
           const isAmber = plot.color === 'amber';
-          const isGreen = plot.color === 'green';
-
-          const cardBorder = isRed 
-            ? 'border-2 border-rose-500 bg-rose-50/50' 
-            : isAmber 
-            ? 'border-2 border-amber-500 bg-amber-50/50' 
-            : 'border-2 border-emerald-500/80 bg-emerald-50/40';
-
-          const statusBadge = isRed 
-            ? 'bg-rose-600 text-white' 
-            : isAmber 
-            ? 'bg-amber-600 text-white' 
-            : 'bg-emerald-600 text-white';
-
+          
           return (
             <div
               key={plot.id}
               onClick={() => setSelectedPlot(plot)}
-              className={`p-3.5 rounded-[16px] shadow-xs cursor-pointer transition-all active:scale-96 flex flex-col justify-between min-h-[125px] ${cardBorder}`}
+              className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all active:scale-95 flex flex-col justify-between min-h-[130px] hover:shadow-md"
             >
-              <div>
-                <div className="flex items-start justify-between">
-                  <span className="text-2xl">{plot.cropIcon}</span>
-                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wide ${statusBadge}`}>
-                    {isRed ? 'Spray Needed' : isAmber ? 'Check Leaf' : 'Healthy'}
-                  </span>
-                </div>
-
-                <h4 className="font-extrabold text-[14px] text-slate-900 mt-2 leading-tight">
-                  {lang === 'mr' ? plot.nameMr : plot.name}
-                </h4>
-                <p className="text-[11px] text-slate-600 mt-0.5 truncate">
-                  {lang === 'mr' ? plot.cropNameMr : plot.cropName}
-                </p>
+              <div className="flex items-start justify-between">
+                <span className="text-3xl filter drop-shadow-sm">{plot.cropIcon}</span>
+                {isRed ? (
+                  <span className="w-2.5 h-2.5 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
+                ) : isAmber ? (
+                  <span className="w-2.5 h-2.5 bg-orange-400 rounded-full"></span>
+                ) : (
+                  <span className="w-2.5 h-2.5 bg-green-400 rounded-full"></span>
+                )}
               </div>
 
-              <div className="mt-2 pt-1.5 border-t border-slate-200/60 flex items-center justify-between text-[10px] font-bold text-slate-500">
-                <span>{isRed ? '⚠️ Action Required' : isAmber ? '⚠️ Caution' : '✅ Optimal'}</span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              <div className="mt-4">
+                <h4 className="font-semibold text-sm text-gray-900 leading-tight">
+                  {lang === 'mr' ? plot.nameMr : plot.name}
+                </h4>
+                <p className="text-[11px] text-gray-500 mt-1 truncate">
+                  {lang === 'mr' ? plot.cropNameMr : plot.cropName}
+                </p>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* 5. Focused Bottom Sheet Plot Detail (Opens smoothly on tap) */}
+      {/* 5. Clean Google Stitch Bottom Sheet */}
       {selectedPlot && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-xs animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-gray-900/40 backdrop-blur-sm animate-fadeIn">
           <div 
             onClick={() => setSelectedPlot(null)}
             className="flex-1"
           />
 
-          <div className="bg-white rounded-t-[24px] p-5 space-y-4 max-h-[85vh] overflow-y-auto shadow-2xl animate-slideUp text-slate-900 border-t border-slate-200">
-            {/* Header & Close */}
-            <div className="flex items-start justify-between border-b pb-3 border-slate-100">
-              <div className="flex items-center space-x-3">
-                <span className="text-3xl">{selectedPlot.cropIcon}</span>
+          <div className="bg-white rounded-t-3xl p-6 space-y-5 max-h-[85vh] overflow-y-auto shadow-2xl animate-slideUp">
+            
+            {/* Header */}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-4">
+                <span className="text-4xl">{selectedPlot.cropIcon}</span>
                 <div>
-                  <h3 className="text-[18px] font-extrabold text-slate-900">
+                  <h3 className="text-xl font-bold text-gray-900">
                     {lang === 'mr' ? selectedPlot.nameMr : selectedPlot.name}
                   </h3>
-                  <p className="text-xs text-slate-500 font-medium">
+                  <p className="text-sm text-gray-500 font-medium">
                     {lang === 'mr' ? selectedPlot.cropNameMr : selectedPlot.cropName}
                   </p>
                 </div>
               </div>
-
               <button
                 onClick={() => setSelectedPlot(null)}
-                className="p-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"
+                className="p-2 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Verdict Card with 🔊 Audio Read Aloud */}
-            <div className={`p-4 rounded-[14px] border-2 space-y-2 ${
+            {/* Verdict Card */}
+            <div className={`p-5 rounded-2xl border ${
               selectedPlot.color === 'red' 
-                ? 'bg-rose-50 border-rose-500 text-rose-950' 
+                ? 'bg-red-50 border-red-100' 
                 : selectedPlot.color === 'amber'
-                ? 'bg-amber-50 border-amber-500 text-amber-950'
-                : 'bg-emerald-50 border-emerald-500 text-emerald-950'
+                ? 'bg-orange-50 border-orange-100'
+                : 'bg-green-50 border-green-100'
             }`}>
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 font-extrabold text-[14px]">
-                  {selectedPlot.color === 'red' ? (
-                    <AlertOctagon className="w-5 h-5 text-rose-600" />
-                  ) : selectedPlot.color === 'amber' ? (
-                    <AlertTriangle className="w-5 h-5 text-amber-600" />
-                  ) : (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                  )}
+                <div className={`flex items-center gap-2 font-semibold text-sm ${
+                  selectedPlot.color === 'red' ? 'text-red-700' : 
+                  selectedPlot.color === 'amber' ? 'text-orange-700' : 'text-green-700'
+                }`}>
+                  {selectedPlot.color === 'red' ? <AlertOctagon className="w-5 h-5" /> : 
+                   selectedPlot.color === 'amber' ? <AlertTriangle className="w-5 h-5" /> : 
+                   <CheckCircle2 className="w-5 h-5" />}
                   <span>
                     {lang === 'mr' ? selectedPlot.statusTextMr : selectedPlot.statusTextEn}
                   </span>
@@ -367,60 +326,60 @@ export const FarmerHomeScreen = ({ onNavigate }) => {
 
                 <button
                   onClick={() => speakText(lang === 'mr' ? selectedPlot.adviceMr : selectedPlot.adviceEn, lang)}
-                  className="p-1.5 rounded-full bg-white shadow-xs border text-slate-700 active:scale-90"
-                  title="Listen to Advice"
+                  className="p-2 rounded-full bg-white shadow-sm border border-gray-100 text-gray-600"
                 >
-                  <Volume2 className="w-4 h-4 text-emerald-700" />
+                  <Volume2 className="w-4 h-4" />
                 </button>
               </div>
 
-              <p className="text-[13px] leading-relaxed font-medium">
+              <p className="text-sm text-gray-700 mt-3 font-medium leading-relaxed">
                 {lang === 'mr' ? selectedPlot.adviceMr : selectedPlot.adviceEn}
               </p>
 
               {selectedPlot.urgentAction && (
-                <div className="mt-2 p-2 bg-white/80 rounded-[8px] border border-rose-300 text-xs font-bold text-rose-900">
-                  <span>Recommended Medicine: <strong>{selectedPlot.urgentAction}</strong></span>
+                <div className="mt-4 p-3 bg-white rounded-xl border border-red-200 text-sm font-semibold text-red-800 shadow-sm">
+                   Treatment: {selectedPlot.urgentAction}
                 </div>
               )}
             </div>
 
-            {/* Quick 1-Tap Irrigation Switch */}
-            <div className="p-3.5 bg-slate-50 rounded-[14px] border border-slate-200 flex items-center justify-between">
-              <div className="flex items-center space-x-2.5">
-                <Droplets className="w-5 h-5 text-blue-600" />
+            {/* Drip Irrigation Card */}
+            <div className="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`p-2.5 rounded-full ${selectedPlot.dripOn ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-400'}`}>
+                  <Droplets className="w-5 h-5" />
+                </div>
                 <div>
-                  <h5 className="font-bold text-xs text-slate-800">
-                    {lang === 'mr' ? 'ठिबक सिंचन (Drip Water)' : 'Drip Irrigation'}
+                  <h5 className="font-semibold text-sm text-gray-900">
+                    {lang === 'mr' ? 'ठिबक सिंचन' : 'Drip Irrigation'}
                   </h5>
-                  <span className="text-[10px] text-slate-500">
-                    {selectedPlot.dripOn ? 'Water is Flowing' : 'Water is OFF'}
+                  <span className="text-xs text-gray-500 font-medium">
+                    {selectedPlot.dripOn ? 'Flowing naturally' : 'System is Off'}
                   </span>
                 </div>
               </div>
-
               <button
                 onClick={() => handleTogglePlotDrip(selectedPlot.id)}
-                className={`px-4 py-1.5 rounded-full text-xs font-extrabold shadow-xs transition-colors ${
+                className={`px-5 py-2 rounded-full text-sm font-bold transition-colors ${
                   selectedPlot.dripOn 
-                    ? 'bg-emerald-600 text-white' 
-                    : 'bg-slate-300 text-slate-700'
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
                 {selectedPlot.dripOn ? 'ON' : 'OFF'}
               </button>
             </div>
 
-            {/* Primary Action Button: Diagnose with Camera */}
+            {/* Scan Action */}
             <button
               onClick={() => {
                 setSelectedPlot(null);
                 onNavigate('scan');
               }}
-              className="w-full py-3.5 bg-[#1B5E20] hover:bg-[#154D1A] text-white font-extrabold text-sm rounded-[12px] shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+              className="w-full py-4 bg-gray-900 hover:bg-black text-white font-semibold text-base rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95"
             >
               <Camera className="w-5 h-5" />
-              <span>{lang === 'mr' ? 'या पिकाच्या पानाचा फोटो काढा' : 'Take Photo of this Leaf with Camera'}</span>
+              <span>{lang === 'mr' ? 'या पिकाचा फोटो काढा' : 'Diagnose Leaf with Camera'}</span>
             </button>
           </div>
         </div>
