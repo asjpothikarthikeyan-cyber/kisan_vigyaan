@@ -35,6 +35,8 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
   const { lang, t, theme, currentUser, setIsChotaKissanOpen } = useApp();
   const isDark = theme === 'dark';
 
+  const [kvkBookingStatus, setKvkBookingStatus] = useState('idle');
+
   // Helper to retrieve localized text for plots
   const getPlotLocalized = (plot, field) => {
     if (!plot) return '';
@@ -783,32 +785,32 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
                 ? 'bg-gradient-to-r from-[#1a0f2e] via-[#1a0f2e] to-[#0a1324] border-purple-500/50 text-white' 
                 : 'bg-gradient-to-r from-purple-50 via-fuchsia-50/50 to-white border-purple-400 text-slate-900'
             }`}>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5 min-w-0 flex-1">
+              <div className="flex flex-col xl:flex-row gap-4 xl:items-center justify-between">
+                <div className="flex items-start gap-3.5">
                   <div className="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-purple-900/50">
                     <span className="text-xl">🐛</span>
                   </div>
-                  <div className="space-y-1 min-w-0">
+                  <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-[10px] font-black uppercase tracking-wider text-purple-700 dark:text-purple-400 font-mono">
                         SOLAR IOT PHEROMONE TRAP
                       </span>
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-purple-500 text-white font-mono">
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-purple-500 text-white font-mono shrink-0">
                         Edge Processing
                       </span>
                     </div>
-                    <h3 className="font-black text-sm sm:text-base text-slate-900 dark:text-white leading-tight truncate">
+                    <h3 className="font-black text-sm sm:text-base text-slate-900 dark:text-white leading-tight">
                       Fall Armyworm Threat Detected
                     </h3>
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-purple-200 dark:border-purple-900/50">
-                  <div className="text-left sm:text-right">
+                <div className="flex items-center gap-4 shrink-0 pt-3 xl:pt-0 border-t xl:border-t-0 border-purple-200 dark:border-purple-900/50">
+                  <div>
                     <span className="block text-[10px] font-black uppercase text-purple-700 dark:text-purple-400 tracking-wider">Today's Catch</span>
                     <span className="text-base sm:text-lg font-black text-purple-700 dark:text-purple-300 font-mono">42 Moths</span>
                   </div>
-                  <div className="text-left sm:text-right border-l border-purple-300 dark:border-purple-800 pl-3 sm:pl-4">
+                  <div className="border-l border-purple-300 dark:border-purple-800 pl-4">
                     <span className="block text-[10px] font-black uppercase text-rose-700 dark:text-rose-400 tracking-wider">Risk Level</span>
                     <span className="text-base sm:text-lg font-black text-rose-600 dark:text-rose-500 font-mono">HIGH</span>
                   </div>
@@ -817,43 +819,64 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
             </div>
 
             {/* 2.7 KVK LABORATORY REFERRAL SENSOR/WIDGET */}
-            <div className={`p-4 sm:p-5 rounded-3xl border-2 transition-all shadow-sm hover:shadow-md mt-4 ${
+            <div className={`p-4 sm:p-5 rounded-3xl border-2 transition-all shadow-sm hover:shadow-md mt-4 relative overflow-hidden ${
               isDark 
                 ? 'bg-gradient-to-r from-[#0d1e36] via-[#0f2442] to-[#0a1324] border-blue-500/50 text-white' 
                 : 'bg-gradient-to-r from-blue-50 via-sky-50/50 to-white border-blue-400 text-slate-900'
             }`}>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-blue-900/50">
-                    <span className="text-xl">🔬</span>
+              {kvkBookingStatus === 'success' ? (
+                <div className="flex flex-col items-center justify-center py-2 text-center animate-in fade-in zoom-in duration-300">
+                  <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mb-3 shadow-lg shadow-emerald-500/30">
+                    <CheckCircle2 className="w-6 h-6" />
                   </div>
-                  <div className="space-y-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-blue-700 dark:text-blue-400 font-mono">
-                        KRISHI VIGYAN KENDRA (KVK)
-                      </span>
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-blue-500 text-white font-mono">
-                        Physical Lab Test
-                      </span>
-                    </div>
-                    <h3 className="font-black text-sm sm:text-base text-slate-900 dark:text-white leading-tight truncate">
-                      Request Expert Laboratory Diagnosis
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-blue-200 dark:border-blue-900/50">
-                  <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400 max-w-[130px] leading-snug hidden md:block">
-                    Is AI unsure? Courier sample for analysis.
+                  <h3 className="font-black text-lg text-emerald-700 dark:text-emerald-400">Lab Test ID: KVK-7829-XR</h3>
+                  <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mt-1 max-w-[300px]">
+                    Your request is confirmed. Please pack your sample and our collection agent will arrive by tomorrow 10:00 AM.
                   </p>
-                  <button 
-                    onClick={() => alert('Lab Test ID generated! Please mail your soil/leaf sample to your nearest KVK facility.')} 
-                    className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-md transition-colors cursor-pointer shrink-0"
-                  >
-                    Book Test
-                  </button>
                 </div>
-              </div>
+              ) : (
+                <div className="flex flex-col xl:flex-row gap-4 xl:items-center justify-between relative z-10">
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-blue-900/50">
+                      <span className="text-xl">🔬</span>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-blue-700 dark:text-blue-400 font-mono">
+                          KRISHI VIGYAN KENDRA (KVK)
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-blue-500 text-white font-mono shrink-0">
+                          Physical Lab Test
+                        </span>
+                      </div>
+                      <h3 className="font-black text-sm sm:text-base text-slate-900 dark:text-white leading-tight">
+                        Request Expert Laboratory Diagnosis
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 shrink-0 pt-3 xl:pt-0 border-t xl:border-t-0 border-blue-200 dark:border-blue-900/50">
+                    <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400 max-w-[130px] leading-snug hidden sm:block">
+                      Is AI unsure? Courier sample for analysis.
+                    </p>
+                    <button 
+                      onClick={() => {
+                        setKvkBookingStatus('booking');
+                        setTimeout(() => setKvkBookingStatus('success'), 1200);
+                      }} 
+                      disabled={kvkBookingStatus === 'booking'}
+                      className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-xs font-black shadow-md transition-colors cursor-pointer shrink-0 flex items-center gap-2 min-w-[110px] justify-center"
+                    >
+                      {kvkBookingStatus === 'booking' ? (
+                        <span className="flex items-center gap-2">
+                          <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                          Booking...
+                        </span>
+                      ) : 'Book Test'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
           </div>
