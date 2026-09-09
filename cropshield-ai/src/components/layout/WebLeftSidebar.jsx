@@ -232,30 +232,31 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
 
         {/* Bottom Profile / Quick Settings */}
         <div className={`p-4 border-t space-y-2 ${isDark ? "border-slate-800 bg-[#060c18]" : "border-gray-100 bg-gray-50"}`}>
-          <div className="flex items-center justify-around">
+          <div className="flex flex-col space-y-1">
             <button 
               onClick={() => setIsLanguageModalOpen(true)}
-              className={`p-2.5 rounded-full transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-500 hover:bg-gray-200 hover:text-gray-700"}`}
-              title="Change Language"
+              className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-600 hover:bg-gray-200 hover:text-gray-900"}`}
             >
-              <Globe className="w-4 h-4" />
+              <Globe className="w-4 h-4 shrink-0" />
+              <span className="truncate">{t('navLanguage', 'Language / மொழி')}</span>
             </button>
 
             <button 
               onClick={toggleTheme}
-              className={`p-2.5 rounded-full transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-500 hover:bg-gray-200 hover:text-gray-700"}`}
-              title="Toggle Theme"
+              className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-600 hover:bg-gray-200 hover:text-gray-900"}`}
             >
-              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {isDark ? <Sun className="w-4 h-4 shrink-0" /> : <Moon className="w-4 h-4 shrink-0" />}
+              <span className="truncate">{isDark ? t('navThemeLight', 'Light Mode') : t('navThemeDark', 'Dark Mode')}</span>
             </button>
 
             <button 
               onClick={() => setIsAccountSwitcherOpen(true)}
-              className={`p-2.5 rounded-full transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-500 hover:bg-gray-200 hover:text-gray-700"}`}
-              title="Switch Account"
+              className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-600 hover:bg-gray-200 hover:text-gray-900"}`}
             >
-              <User className="w-4 h-4" />
+              <User className="w-4 h-4 shrink-0" />
+              <span className="truncate">{t('navAccount', 'Profile & Account')}</span>
             </button>
+          </div>
           </div>
         </div>
       </aside>

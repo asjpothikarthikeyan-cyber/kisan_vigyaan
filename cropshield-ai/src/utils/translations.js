@@ -1,6 +1,11 @@
 // CropShield AI - Complete 10-Language Agricultural Translation Dictionary
 export const translations = {
   "en": {
+    "navLanguage": "Language / மொழி",
+    "navThemeLight": "Light Mode",
+    "navThemeDark": "Dark Mode",
+    "navAccount": "Profile & Account",
+
     "navSellCrop": "Sell Crop & Produce",
     "navZoneMonitoring": "Zone Monitoring",
     "navVoiceAI": "Kisan One (Voice AI)",
@@ -345,6 +350,11 @@ export const translations = {
     "orderPrescribedMedicine": "Order Prescribed Medicine"
   },
   "mr": {
+    "navLanguage": "भाषा बदला",
+    "navThemeLight": "लाइट मोड",
+    "navThemeDark": "डार्क मोड",
+    "navAccount": "प्रोफाइल आणि खाते",
+
     "navSellCrop": "पीक आणि उत्पादने विका",
     "navZoneMonitoring": "झोन मॉनिटरिंग",
     "navVoiceAI": "किसान वन (व्हॉइस एआय)",
@@ -677,6 +687,11 @@ export const translations = {
     "viewWeatherAndSat": "हवामान व उपग्रह नकाशा पहा"
   },
   "hi": {
+    "navLanguage": "भाषा बदलें",
+    "navThemeLight": "लाइट मोड",
+    "navThemeDark": "डार्क मोड",
+    "navAccount": "प्रोफ़ाइल और खाता",
+
     "navSellCrop": "फसल और उपज बेचें",
     "navZoneMonitoring": "ज़ोन मॉनिटरिंग",
     "navVoiceAI": "किसान वन (वॉयस एआई)",
@@ -1009,6 +1024,11 @@ export const translations = {
     "viewWeatherAndSat": "मौसम व उपग्रह मानचित्र देखें"
   },
   "ta": {
+    "navLanguage": "மொழியை மாற்று",
+    "navThemeLight": "ஒளி முறை (Light)",
+    "navThemeDark": "இருள் முறை (Dark)",
+    "navAccount": "சுயவிவரம் & கணக்கு",
+
     "navSellCrop": "பயிர் & விளைபொருட்களை விற்கவும்",
     "navZoneMonitoring": "மண்டல கண்காணிப்பு",
     "navVoiceAI": "கிசான் ஒன் (Voice AI)",
