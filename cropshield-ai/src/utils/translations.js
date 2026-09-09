@@ -11,7 +11,7 @@ export const translations = {
     "catMarketing": "Marketing & Mandi",
     "catLivestock": "Livestock & Dairy",
 
-    "appName": "CropShield AI",
+    "appName": "Kisan Vigyaan",
     "kisanWeb": "Kisan Web",
     "tagline": "AI Precision Agronomy & Telemetry Platform",
     "farmerPartner": "Farmer Friend • Smart Agriculture",

@@ -76,10 +76,10 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
     },
     { 
       id: 'chotaKissan', 
-      labelEn: '🌱 Chota Kissan (Voice AI)', 
-      labelTa: '🌱 சோட்டா கிசான் (குரல் AI)', 
-      labelMr: '🌱 छोटा किसान (आवाज AI)', 
-      labelHi: '🌱 छोटा किसान (वॉयस AI)', 
+      labelEn: '🌱 Kisan One (Voice AI)', 
+      labelTa: '🌱 கிசான் ஒன் (குரல் AI)', 
+      labelMr: '🌱 किसान वन (आवाज AI)', 
+      labelHi: '🌱 किसान वन (वॉयस AI)', 
       icon: Mic
     },
     { 
@@ -204,10 +204,10 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
   const officerToolsNavItems = [
     { 
       id: 'chotaKissan', 
-      labelEn: '🌱 Chota Kissan (Voice AI)', 
-      labelTa: '🌱 சோட்டா கிசான் (குரல் AI)', 
-      labelMr: '🌱 छोटा किसान (आवाज AI)', 
-      labelHi: '🌱 छोटा किसान (वॉयस AI)', 
+      labelEn: '🌱 Kisan One (Voice AI)', 
+      labelTa: '🌱 கிசான் ஒன் (குரல் AI)', 
+      labelMr: '🌱 किसान वन (आवाज AI)', 
+      labelHi: '🌱 किसान वन (वॉयस AI)', 
       icon: Mic 
     },
     { 
@@ -337,7 +337,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
               <div className="truncate">
                 <div className="flex items-center gap-1.5">
                   <span className="font-black text-base tracking-tight text-white dark:text-emerald-400">
-                    {t('appName', 'CropShield AI')}
+                    {t('appName', 'Kisan Vigyaan')}
                   </span>
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-emerald-300 dark:text-slate-400 block font-mono">

@@ -504,7 +504,7 @@ export const ChotaKissanModal = ({ isOpen, onClose, onNavigate }) => {
             <div>
               <h2 className="text-base sm:text-lg font-black tracking-tight flex items-center gap-1.5">
                 <span>{ui.name}</span>
-                <span className="text-xs text-emerald-300 font-mono font-bold">(Chota Kissan)</span>
+                <span className="text-xs text-emerald-300 font-mono font-bold">(Kisan One)</span>
               </h2>
               <p className="text-[10px] text-emerald-100/80 font-medium pb-1.5">
                 {ui.title} • Google Assistant + Siri for Indian Farmers

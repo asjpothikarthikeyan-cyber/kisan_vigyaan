@@ -45,7 +45,7 @@ export const WebTopHeader = ({ activeTab, onNavigate, onOpenMobileMenu }) => {
       case 'farmerCommunity': return lang === 'ta' ? 'விவசாயிகள் மன்றம்' : lang === 'mr' ? 'शेतकरी मंच' : 'Farmer Community';
       case 'reports': return lang === 'ta' ? 'கள அறிக்கைகள்' : lang === 'mr' ? 'शेत अहवाल' : 'My Reports';
       case 'deviceManagement': return lang === 'ta' ? 'சூரியசக்தி பூச்சி பொறிகள்' : lang === 'mr' ? 'सौर कीटक सापळे' : 'IoT Solar Traps';
-      default: return 'CropShield AI';
+      default: return 'Kisan Vigyaan';
     }
   };
 
@@ -88,14 +88,14 @@ export const WebTopHeader = ({ activeTab, onNavigate, onOpenMobileMenu }) => {
         {/* Right: Weather Telemetry Chip & Quick Actions */}
         <div className="flex items-center space-x-2 sm:space-x-3">
 
-          {/* Quick Voice Assistant Trigger (Chota Kissan) */}
+          {/* Quick Voice Assistant Trigger (Kisan One) */}
           <button
             onClick={() => setIsChotaKissanOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black shadow-md border border-emerald-300/40 transition-all cursor-pointer hover:scale-105 active:scale-95"
-            title="Talk to Chota Kissan AI Voice Assistant"
+            title="Talk to Kisan One AI Voice Assistant"
           >
             <span>🌱</span>
-            <span className="hidden sm:inline font-mono">Chota Kissan</span>
+            <span className="hidden sm:inline font-mono">Kisan One</span>
             <Mic className="w-3.5 h-3.5 text-emerald-100 animate-pulse" />
           </button>
 

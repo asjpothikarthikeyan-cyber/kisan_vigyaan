@@ -430,7 +430,7 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
               className="px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all active:scale-95 cursor-pointer border border-emerald-300/30"
             >
               <span>🌱</span>
-              <span>Ask Chota Kissan</span>
+              <span>Ask Kisan One</span>
               <Mic className="w-4 h-4 text-emerald-200 animate-pulse" />
             </button>
 

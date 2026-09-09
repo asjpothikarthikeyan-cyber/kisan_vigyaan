@@ -48,7 +48,7 @@ function MainAppShell() {
   const getSubViewTitle = () => {
     switch (activeTab) {
       case 'roiCalculator': return lang === 'ta' ? 'வருவாய் மற்றும் லாப கால்குலேட்டர்' : lang === 'mr' ? 'उत्पन्न आणि नफा कॅल्क्युलेटर' : 'Dynamic Yield & ROI Calculator';
-      case 'chotaKissan': return lang === 'ta' ? 'சோட்டா கிசான் (AI குரல் உதவியாளர்)' : lang === 'mr' ? 'छोटा किसान (एआय आवाज सहाय्यक)' : '🌱 Chota Kissan AI Voice Assistant';
+      case 'chotaKissan': return lang === 'ta' ? 'கிசான் ஒன் (AI குரல் உதவியாளர்)' : lang === 'mr' ? 'किसान वन (एआय आवाज सहाय्यक)' : '🌱 Kisan One AI Voice Assistant';
       case 'environmentalPrediction': return lang === 'ta' ? 'சுற்றுச்சூழல் நோய் முன்கணிப்பு இயந்திரம்' : lang === 'mr' ? 'हवामान आधारित पीक रोग अंदाज प्रणाली' : 'AI Environmental Disease Prediction Engine';
       case 'riskConsequences': return lang === 'ta' ? 'அபாயங்கள் & பயிர் பாதிப்பு விளைவுகள்' : lang === 'mr' ? 'जोखीम, मर्यादा काळ व पिकांवरील परिणाम' : 'Risk & Threats Consequences Matrix';
       case 'satelliteMapping': return lang === 'ta' ? 'இஸ்ரோ செயற்கைக்கோள் வரைபடம்' : lang === 'mr' ? 'इस्रो / सेंटिनेल-२ उपग्रह पीक नकाशा' : 'Sentinel-2 GIS Satellite Command Center';
@@ -170,7 +170,7 @@ function MainAppShell() {
           <button
             onClick={() => setIsChotaKissanOpen(true)}
             className="group relative flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-[#047857] to-[#065F46] hover:from-[#065F46] hover:to-[#047857] text-white rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-emerald-300/40 cursor-pointer"
-            aria-label="Open Chota Kissan AI Voice Assistant"
+            aria-label="Open Kisan One AI Voice Assistant"
           >
             {/* Glowing Pulsating Outer Ring */}
             <span className="absolute -inset-1 rounded-full bg-emerald-400/30 blur-xs animate-ping group-hover:opacity-100 opacity-60" />
@@ -180,7 +180,7 @@ function MainAppShell() {
             </div>
             
             <span className="text-xs font-black tracking-tight flex items-center gap-1.5 pr-1">
-              <span>Chota Kissan</span>
+              <span>Kisan One</span>
               <Mic className="w-3.5 h-3.5 text-emerald-200 animate-pulse" />
             </span>
           </button>
