@@ -17,7 +17,7 @@ export const translations = {
     "cropPotato": "Potato",
     "cropOther": "Other Produce",
 
-    "navLanguage": "Language / மொழி",
+    "navLanguage": "Language",
     "navThemeLight": "Light Mode",
     "navThemeDark": "Dark Mode",
     "navAccount": "Profile & Account",
