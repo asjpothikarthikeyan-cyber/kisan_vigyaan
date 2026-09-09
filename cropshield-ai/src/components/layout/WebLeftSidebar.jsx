@@ -101,7 +101,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
         className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer group active:scale-98 ${
           isActive 
             ? (isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-50 text-emerald-700') 
-            : (isDark ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' : 'text-gray-600 hover:bg-gray-100')
+            : (isDark ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' : '${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-600 hover:bg-gray-100"}')
         }`}
       >
         <div className="flex items-center space-x-3 truncate">
@@ -148,7 +148,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
                 <Sprout className="w-6 h-6" />
               </div>
               <div className="truncate">
-                <span className="font-bold text-base tracking-tight text-gray-900 block">
+                <span className={`font-bold text-base tracking-tight block ${isDark ? "text-slate-100" : "text-gray-900"}`}>
                   {t('appName', 'Kisan Vigyaan')}
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 block">
@@ -160,7 +160,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
             {setMobileOpen && (
               <button 
                 onClick={() => setMobileOpen(false)}
-                className="p-1.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 lg:hidden cursor-pointer"
+                className={`p-1.5 rounded-full lg:hidden cursor-pointer ${isDark ? "text-slate-400 hover:text-slate-200 hover:bg-slate-800" : "text-gray-400 hover:${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-600 hover:bg-gray-100"}"}`}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -175,7 +175,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
             <>
               {/* Officer Operations */}
               <div className="space-y-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 px-4 py-1 block">
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>
                   Operations
                 </span>
                 <nav className="space-y-1">
@@ -190,8 +190,8 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
               </div>
 
               {/* Officer Tools */}
-              <div className="space-y-1 pt-4 border-t border-gray-100">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 px-4 py-1 block">
+              <div className={`space-y-1 pt-4 border-t ${isDark ? "border-slate-800" : "border-gray-100"}`}>
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>
                   GIS & Tools
                 </span>
                 <nav className="space-y-1">
@@ -205,7 +205,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
             <>
               {/* Farmer Primary */}
               <div className="space-y-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 px-4 py-1 block">
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>
                   Main Menu
                 </span>
                 <nav className="space-y-1">
@@ -224,8 +224,8 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
               </div>
 
               {/* Farmer Tools */}
-              <div className="space-y-1 pt-4 border-t border-gray-100">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 px-4 py-1 block">
+              <div className={`space-y-1 pt-4 border-t ${isDark ? "border-slate-800" : "border-gray-100"}`}>
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>
                   Tools & Knowledge
                 </span>
                 <nav className="space-y-1">
@@ -239,11 +239,11 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
         </div>
 
         {/* Bottom Profile / Quick Settings */}
-        <div className="p-4 border-t border-gray-100 space-y-2 bg-gray-50">
+        <div className={`p-4 border-t space-y-2 ${isDark ? "border-slate-800 bg-[#060c18]" : "border-gray-100 bg-gray-50"}`}>
           <div className="flex items-center justify-around">
             <button 
               onClick={() => setIsLanguageModalOpen(true)}
-              className="p-2.5 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors cursor-pointer"
+              className={`p-2.5 rounded-full transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-500 hover:bg-gray-200 hover:text-gray-700"}`}
               title="Change Language"
             >
               <Globe className="w-4 h-4" />
@@ -251,7 +251,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
 
             <button 
               onClick={toggleTheme}
-              className="p-2.5 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors cursor-pointer"
+              className={`p-2.5 rounded-full transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-500 hover:bg-gray-200 hover:text-gray-700"}`}
               title="Toggle Theme"
             >
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -259,7 +259,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
 
             <button 
               onClick={() => setIsAccountSwitcherOpen(true)}
-              className="p-2.5 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors cursor-pointer"
+              className={`p-2.5 rounded-full transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-500 hover:bg-gray-200 hover:text-gray-700"}`}
               title="Switch Account"
             >
               <User className="w-4 h-4" />
