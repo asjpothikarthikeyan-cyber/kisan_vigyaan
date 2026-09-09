@@ -238,7 +238,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
               className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-600 hover:bg-gray-200 hover:text-gray-900"}`}
             >
               <Globe className="w-4 h-4 shrink-0" />
-              <span className="truncate">{t('navLanguage', 'Language / மொழி')}</span>
+              <span className="truncate">{t('navLanguage', 'Change Language')}</span>
             </button>
 
             <button 
@@ -256,7 +256,6 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
               <User className="w-4 h-4 shrink-0" />
               <span className="truncate">{t('navAccount', 'Profile & Account')}</span>
             </button>
-          </div>
           </div>
         </div>
       </aside>
