@@ -852,6 +852,67 @@ export const WebFarmerScanner = ({ onNavigate }) => {
                   </button>
                 </div>
 
+                
+                {/* 1. Safe Input Usage (PHI / Residue Warning) */}
+                {scanResult.medicineName && (
+                  <div className="mt-4 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <span className="text-amber-600 dark:text-amber-400 font-bold text-xs">⚠️</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-500 block mb-0.5">
+                        Food Safety & Residue Warning (PHI)
+                      </span>
+                      <p className="text-[11px] font-medium text-slate-700 dark:text-slate-300">
+                        <strong>Pre-Harvest Interval:</strong> Do not harvest crops for at least <strong className="text-amber-600 dark:text-amber-400">{scanResult.waitingPeriod || '14 Days'}</strong> after spraying to prevent dangerous chemical residues.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. Laboratory Referral & Expert Extension */}
+                <div className="mt-3 p-3.5 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
+                      <span className="text-blue-600 dark:text-blue-400 font-bold text-xs">🔬</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-500 block mb-0.5">
+                        KVK Laboratory Referral
+                      </span>
+                      <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400">
+                        Inconclusive? Send physical soil/tissue sample to lab.
+                      </p>
+                    </div>
+                  </div>
+                  <button onClick={() => alert('Lab Test ID generated! Courier your leaf sample to nearest Krishi Vigyan Kendra.')} className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black shadow-sm transition-colors cursor-pointer shrink-0">
+                    Book Lab Test
+                  </button>
+                </div>
+
+                {/* 3. Follow-up Monitoring */}
+                {scanResult.medicineName && (
+                  <div className="mt-3 p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0">
+                        <span className="text-indigo-600 dark:text-indigo-400 font-bold text-xs">📅</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-500 block mb-0.5">
+                          Follow-up Monitoring
+                        </span>
+                        <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400">
+                          Schedule a re-scan in 5 days to track recovery.
+                        </p>
+                      </div>
+                    </div>
+                    <button onClick={() => alert('Reminder set! We will SMS you in 5 days to scan this plot again.')} className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black shadow-sm transition-colors cursor-pointer shrink-0">
+                      Schedule Scan
+                    </button>
+                  </div>
+                )}
+
+
                 {/* Dual Action CTAs: Add to Cart + Direct Order */}
                 {scanResult.medicineName && (
                   <div className="grid grid-cols-2 gap-3 pt-2">

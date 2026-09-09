@@ -780,6 +780,46 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
           </div>
         </div>
 
+        
+      {/* 2.6 SMART PEST TRAP / IOT CAMERA SENSOR */}
+      <div className={`p-5.5 rounded-3xl border-2 transition-all cursor-pointer shadow-sm hover:shadow-md group ${
+        isDark 
+          ? 'bg-gradient-to-r from-[#1a0f2e] via-[#1a0f2e] to-[#0a1324] border-purple-500/50 text-white' 
+          : 'bg-gradient-to-r from-purple-50 via-fuchsia-50/50 to-white border-purple-400 text-slate-900'
+      }`}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4 w-full">
+            <div className="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-purple-900/50 relative overflow-hidden">
+              <span className="text-xl font-bold">🐛</span>
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-black uppercase tracking-wider text-purple-800 dark:text-purple-400 font-mono">
+                  SOLAR IOT PHEROMONE TRAP
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-purple-500 text-white font-mono animate-pulse">
+                  AI Image Edge Processing
+                </span>
+              </div>
+              <h3 className="font-black text-sm sm:text-base text-slate-900 dark:text-white leading-tight">
+                Fall Armyworm Threat Detected
+              </h3>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 shrink-0 w-full sm:w-auto mt-2 sm:mt-0 justify-between sm:justify-end">
+            <div className="text-left sm:text-right">
+              <span className="block text-[10px] font-black uppercase text-purple-800 dark:text-purple-400 tracking-wider">Today's Catch</span>
+              <span className="text-lg font-black text-purple-700 dark:text-purple-300 font-mono">42 Moths</span>
+            </div>
+            <div className="text-left sm:text-right border-l border-purple-300 dark:border-purple-800 pl-4">
+              <span className="block text-[10px] font-black uppercase text-rose-800 dark:text-rose-400 tracking-wider">Risk Level</span>
+              <span className="text-lg font-black text-rose-600 dark:text-rose-500 font-mono">HIGH</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
         {/* RIGHT COLUMN (5 cols): Live Advisories & GIS Radar */}
         <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between px-1">
