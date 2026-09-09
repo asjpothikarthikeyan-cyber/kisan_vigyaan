@@ -780,7 +780,7 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
               );
             })}
             {/* 2.6 SMART PEST TRAP / IOT CAMERA SENSOR */}
-            <div className={`p-4 sm:p-5 rounded-3xl border-2 transition-all shadow-sm hover:shadow-md mt-4 ${
+            <div className={`p-4 sm:p-5 rounded-3xl border-2 transition-all shadow-sm hover:shadow-md mt-4 md:col-span-2 ${
               isDark 
                 ? 'bg-gradient-to-r from-[#1a0f2e] via-[#1a0f2e] to-[#0a1324] border-purple-500/50 text-white' 
                 : 'bg-gradient-to-r from-purple-50 via-fuchsia-50/50 to-white border-purple-400 text-slate-900'
@@ -819,7 +819,7 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
             </div>
 
             {/* 2.7 KVK LABORATORY REFERRAL SENSOR/WIDGET */}
-            <div className={`p-4 sm:p-5 rounded-3xl border-2 transition-all shadow-sm hover:shadow-md mt-4 relative overflow-hidden ${
+            <div className={`p-4 sm:p-5 rounded-3xl border-2 transition-all shadow-sm hover:shadow-md mt-4 relative overflow-hidden md:col-span-2 ${
               isDark 
                 ? 'bg-gradient-to-r from-[#0d1e36] via-[#0f2442] to-[#0a1324] border-blue-500/50 text-white' 
                 : 'bg-gradient-to-r from-blue-50 via-sky-50/50 to-white border-blue-400 text-slate-900'
