@@ -76,19 +76,19 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
   });
 
   const cropCategories = [
-    { id: 'All', labelEn: 'All Crops', labelMr: 'सर्व पिके', labelTa: 'அனைத்து பயிர்கள்' },
-    { id: 'Soybean', labelEn: 'Soybean', labelMr: 'सोयाबीन', labelTa: 'சோயாபீன்' },
-    { id: 'Rice', labelEn: 'Rice / Paddy', labelMr: 'तांदूळ / धान', labelTa: 'நெல்' },
-    { id: 'Cotton', labelEn: 'Bt Cotton', labelMr: 'कापूस', labelTa: 'பருத்தி' },
-    { id: 'Turmeric', labelEn: 'Turmeric', labelMr: 'हळद', labelTa: 'மஞ்சள்' },
-    { id: 'Grapes', labelEn: 'Grapes', labelMr: 'द्राक्षे', labelTa: 'திராட்சை' },
-    { id: 'Tomato', labelEn: 'Tomato', labelMr: 'टोमॅटो', labelTa: 'தக்காளி' },
-    { id: 'Wheat', labelEn: 'Wheat', labelMr: 'गहू', labelTa: 'கோதுமை' },
-    { id: 'Sugarcane', labelEn: 'Sugarcane', labelMr: 'ऊस', labelTa: 'கரும்பு' },
-    { id: 'Chilli', labelEn: 'Chilli', labelMr: 'मिरची', labelTa: 'மிளகாய்' },
-    { id: 'Onion', labelEn: 'Onion', labelMr: 'कांदा', labelTa: 'வெங்காயம்' },
-    { id: 'Potato', labelEn: 'Potato', labelMr: 'बटाटा', labelTa: 'உருளைக்கிழங்கு' },
-    { id: 'Other', labelEn: 'Other Produce', labelMr: 'इतर पिके', labelTa: 'இதர பயிர்கள்' }
+    { id: 'All', labelKey: 'cropAll' },
+    { id: 'Soybean', labelKey: 'cropSoybean' },
+    { id: 'Rice', labelKey: 'cropRice' },
+    { id: 'Cotton', labelKey: 'cropCotton' },
+    { id: 'Turmeric', labelKey: 'cropTurmeric' },
+    { id: 'Grapes', labelKey: 'cropGrapes' },
+    { id: 'Tomato', labelKey: 'cropTomato' },
+    { id: 'Wheat', labelKey: 'cropWheat' },
+    { id: 'Sugarcane', labelKey: 'cropSugarcane' },
+    { id: 'Chilli', labelKey: 'cropChilli' },
+    { id: 'Onion', labelKey: 'cropOnion' },
+    { id: 'Potato', labelKey: 'cropPotato' },
+    { id: 'Other', labelKey: 'cropOther' }
   ];
 
   const presetPhotos = [
@@ -243,7 +243,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
             }`}
           >
             <ShoppingBag className="w-4 h-4" />
-            <span>{lang === 'ta' ? `விற்பனை பயிர்கள் (${listings.length})` : lang === 'mr' ? `विक्रीसाठी उपलब्ध पिके (${listings.length})` : `All Crops for Sale (${listings.length})`}</span>
+            <span>{t('marketAllCropsForSale')} ({listings.length})</span>
           </button>
 
           <button
@@ -255,7 +255,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
             }`}
           >
             <Package className="w-4 h-4" />
-            <span>{lang === 'ta' ? `என் விற்பனைகள் (${userListings.length})` : lang === 'mr' ? `माझ्या पोस्ट केलेल्या जाहिराती (${userListings.length})` : `My Active Listings (${userListings.length})`}</span>
+            <span>{t('marketMyActiveListings')} ({userListings.length})</span>
           </button>
         </div>
 
@@ -279,7 +279,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
                   : 'bg-white border-gray-100 text-gray-900 shadow-sm'
               }`}
             >
-              {lang === 'ta' ? cat.labelTa : lang === 'mr' ? cat.labelMr : cat.labelEn}
+              {t(cat.labelKey)}
             </button>
           ))}
         </div>
