@@ -235,7 +235,7 @@ export const marketplaceCropMedicines = [
     price: 790,
     mrp: 980,
     subsidyDiscount: 190,
-    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1529312261453-6bb3a0d5fc2b?auto=format&fit=crop&w=600&q=80",
     icon: "🍄",
     unit: "250 ml Bottle",
     unitTa: "250 மி.லி பாட்டில்",
@@ -505,7 +505,7 @@ export const marketplaceSeedsAndFertilizers = [
     price: 2650,
     mrp: 3200,
     subsidyDiscount: 550,
-    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1529312261453-6bb3a0d5fc2b?auto=format&fit=crop&w=600&q=80",
     icon: "🌾",
     unit: "30 kg Sealed Bag",
     unitTa: "30 கிலோ மூட்டை",
@@ -1548,7 +1548,7 @@ export const liveMandiRatesComprehensive = [
     msp: "₹4,892 / Qtl",
     trend: "▼ -₹40",
     trendStatus: "down",
-    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1529312261453-6bb3a0d5fc2b?auto=format&fit=crop&w=600&q=80",
     arrivals: "8,500 Qtl",
     buyers: 34,
     status: "Oil Mills Active Bidding"
@@ -1890,7 +1890,7 @@ export const liveMandiRatesComprehensive = [
     msp: "₹8,558 / Qtl",
     trend: "▲ +₹85",
     trendStatus: "up",
-    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1529312261453-6bb3a0d5fc2b?auto=format&fit=crop&w=600&q=80",
     arrivals: "2,400 Qtl",
     buyers: 20,
     status: "Govt MSP Buying Counters Open"
@@ -1986,7 +1986,7 @@ export const seedCropListings = [
     status: "Offers Received",
     bidsReceived: 4,
     highestBid: 4800,
-    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80"
+    image: "https://images.unsplash.com/photo-1529312261453-6bb3a0d5fc2b?auto=format&fit=crop&w=600&q=80"
   }
 ];
 
@@ -2023,7 +2023,7 @@ export const initialFarmerCropListings = [
     description: 'Sun-dried, zero-moisture chemical-free organic soybean. Cleaned and graded at Sangli KVK.',
     category: 'farmerSell',
     icon: '🌱',
-    image: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?w=500&auto=format&fit=crop&q=60'
+    image: 'https://images.unsplash.com/photo-1529312261453-6bb3a0d5fc2b?w=500&auto=format&fit=crop&q=60'
   },
   {
     id: 'farmer-crop-2',

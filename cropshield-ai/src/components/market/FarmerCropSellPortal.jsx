@@ -62,7 +62,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
     phone: '+91 98224 55120',
     harvestDate: 'Harvested 2 days ago',
     description: 'Cleaned, sun-dried, chemical-free premium crop ready for immediate farm pickup or mandi transport.',
-    image: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?w=500&auto=format&fit=crop&q=60'
+    image: 'https://images.unsplash.com/photo-1529312261453-6bb3a0d5fc2b?w=500&auto=format&fit=crop&q=60'
   });
 
   // Buying Offer Modal State (Trader/Buyer contacting Farmer)
@@ -92,7 +92,7 @@ export const FarmerCropSellPortal = ({ onNavigate }) => {
   ];
 
   const presetPhotos = [
-    { type: 'Soybean', url: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?w=500&auto=format&fit=crop&q=60' },
+    { type: 'Soybean', url: 'https://images.unsplash.com/photo-1529312261453-6bb3a0d5fc2b?w=500&auto=format&fit=crop&q=60' },
     { type: 'Rice', url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=60' },
     { type: 'Cotton', url: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=500&auto=format&fit=crop&q=60' },
     { type: 'Turmeric', url: 'https://images.unsplash.com/photo-1596199050105-6d5d32222916?w=500&auto=format&fit=crop&q=60' },
