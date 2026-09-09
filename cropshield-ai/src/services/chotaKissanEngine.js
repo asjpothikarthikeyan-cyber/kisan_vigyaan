@@ -453,27 +453,26 @@ export function classifyAgriculturalIntent(query = '', context = {}) {
   }
   // --- 5. COMPREHENSIVE APP NAVIGATION INTENT ---
   const navTargets = [
-    { target: 'scan', label: 'Leaf Scanner', keywords: ['scan', 'camera', 'photo', 'இலை', 'படம்', 'கண்', 'फोटो', 'स्कॅन', 'स्कैनर', 'ఫోటో', 'ಸ್ಕ್ಯಾನ್'] },
-    { target: 'market', label: 'Mandi Market', keywords: ['market', 'mandi', 'விலை', 'சந்தை', 'भाव', 'बाजार', 'मंडी', 'ధరలు', 'ಮಾರುಕಟ್ಟೆ'] },
-    { target: 'alerts', label: 'Field Alerts', keywords: ['alert', 'எச்சரிக்கை', 'இடர்', 'इशारे', 'सूचना', 'चेतावनी', 'హెచ్చరికలు', 'ಎಚ್ಚರಿಕೆ'] },
-    { target: 'satelliteMapping', label: 'Satellite GIS Map', keywords: ['satellite', 'map', 'gis', 'isro', 'வரைபடம்', 'नकाशा', 'मानचित्र', 'పటం', 'ನಕ್ಷೆ'] },
-    { target: 'environmentalPrediction', label: 'Disease Prediction Engine', keywords: ['prediction', 'radar', 'suitability', 'முன்கணிப்பு', 'அபாயம்', 'अंदाज', 'पूर्वानुमान', 'ముందస్తు'] },
-    { target: 'govtSchemes', label: 'Govt Schemes', keywords: ['scheme', 'subsidy', 'dbt', 'திட்டம்', 'மானியம்', 'காப்பீடு', 'योजना', 'अनुदान', 'विमा', 'పథకాలు', 'ಯೋಜನೆ'] },
-    { target: 'roiCalculator', label: 'ROI Calculator', keywords: ['roi', 'calculator', 'yield', 'லாபம்', 'நஷ்டம்', 'கணக்கீடு', 'கணக்கிடு', 'கேல்குலேட்டர்', 'मुनाफा', 'कॅल्क्युलेटर'] },
-    { target: 'proTips', label: 'Pro Agronomy Tips', keywords: ['tips', 'advice', 'pro', 'குறிப்புகள்', 'ஆலோசனை', 'सल्ले', 'सुझाव', 'సలహాలు'] },
-    { target: 'statistics', label: 'Yield Statistics', keywords: ['statistics', 'stats', 'graph', 'chart', 'புள்ளிவிவரம்', 'கிராஃப்', 'आकडेवारी', 'सांख्यिकी', 'గణాంకాలు'] },
-    { target: 'farmerCommunity', label: 'Farmer Community', keywords: ['community', 'forum', 'farmers', 'சமூகம்', 'விவசாயிகள்', 'समुदाय', 'मंच', 'సంఘం'] },
-    { target: 'reports', label: 'Soil & Reports', keywords: ['report', 'soil', 'test', 'அறிக்கை', 'மண்', 'अहवाल', 'माती', 'रिपोर्ट', 'రిపోర్టు'] },
-    { target: 'riskConsequences', label: 'Disease Spread Risk', keywords: ['spread', 'consequence', 'பரவல்', 'விளைவு', 'प्रसार', 'परिणाम'] },
-    { target: 'home', label: 'Farm Dashboard', keywords: ['home', 'dashboard', 'plots', 'பண்ணை', 'தோட்டம்', 'शेती', 'खेत', 'పొలం', 'டேஷ்போர்டு', 'डॅशबोर्ड'] }
+    { target: 'scan', label: 'Leaf Scanner', keywords: ['scan', 'camera', 'photo', 'இலை', 'படம்', 'கண்', 'फोटो', 'स्कॅन', 'स्कैनर', 'ఫోటో', 'ಸ್ಕ್ಯಾನ್', 'कैमरा', 'स्कैन'] },
+    { target: 'market', label: 'Mandi Market', keywords: ['market', 'mandi', 'விலை', 'சந்தை', 'भाव', 'बाजार', 'मंडी', 'ధరలు', 'ಮಾರುಕಟ್ಟೆ', 'मार्केट'] },
+    { target: 'alerts', label: 'Field Alerts', keywords: ['alert', 'எச்சரிக்கை', 'இடர்', 'इशारे', 'सूचना', 'चेतावनी', 'హెచ్చరికలు', 'ಎಚ್ಚರಿಕೆ', 'अलर्ट'] },
+    { target: 'satelliteMapping', label: 'Satellite GIS Map', keywords: ['satellite', 'map', 'gis', 'isro', 'வரைபடம்', 'नकाशा', 'मानचित्र', 'పటం', 'ನಕ್ಷೆ', 'मैप', 'सैटेलाइट', 'नक्शा'] },
+    { target: 'environmentalPrediction', label: 'Disease Prediction Engine', keywords: ['prediction', 'radar', 'suitability', 'முன்கணிப்பு', 'அபாயம்', 'अंदाज', 'पूर्वानुमान', 'ముందస్తు', 'भविष्यवाणी', 'रडार'] },
+    { target: 'govtSchemes', label: 'Govt Schemes', keywords: ['scheme', 'subsidy', 'dbt', 'திட்டம்', 'மானியம்', 'காப்பீடு', 'योजना', 'अनुदान', 'विमा', 'పథకాలు', 'ಯೋಜನೆ', 'स्कीम', 'सब्सिडी', 'गवर्नमेंट'] },
+    { target: 'roiCalculator', label: 'ROI Calculator', keywords: ['roi', 'calculator', 'yield', 'லாபம்', 'நஷ்டம்', 'கணக்கீடு', 'கணக்கிடு', 'கேல்குலேட்டர்', 'मुनाफा', 'कॅल्क्युलेटर', 'कैलकुलेटर', 'कैलक्यूलेटर', 'आर ओ आई'] },
+    { target: 'proTips', label: 'Pro Agronomy Tips', keywords: ['tips', 'advice', 'pro', 'குறிப்புகள்', 'ஆலோசனை', 'सल्ले', 'सुझाव', 'సలహాలు', 'टिप्स', 'सलाह'] },
+    { target: 'statistics', label: 'Yield Statistics', keywords: ['statistics', 'stats', 'graph', 'chart', 'புள்ளிவிவரம்', 'கிராஃப்', 'आकडेवारी', 'सांख्यिकी', 'గణాంకాలు', 'ग्राफ', 'स्टैटिस्टिक्स', 'आंकड़े'] },
+    { target: 'farmerCommunity', label: 'Farmer Community', keywords: ['community', 'forum', 'farmers', 'சமூகம்', 'விவசாயிகள்', 'समुदाय', 'मंच', 'సంఘం', 'कम्युनिटी', 'फोरम'] },
+    { target: 'reports', label: 'Soil & Reports', keywords: ['report', 'soil', 'test', 'அறிக்கை', 'மண்', 'अहवाल', 'माती', 'रिपोर्ट', 'రిపోర్టు', 'मिट्टी'] },
+    { target: 'riskConsequences', label: 'Disease Spread Risk', keywords: ['spread', 'consequence', 'பரவல்', 'விளைவு', 'प्रसार', 'परिणाम', 'फैलाव', 'रिस्क'] },
+    { target: 'home', label: 'Farm Dashboard', keywords: ['home', 'dashboard', 'plots', 'பண்ணை', 'தோட்டம்', 'शेती', 'खेत', 'పొలం', 'டேஷ்போர்டு', 'डॅशबोर्ड', 'डैशबोर्ड', 'होम'] }
   ];
 
-  const hasNavVerb = textMatchesAny(q, ['open', 'show', 'go to', 'navigate', 'take me', 'திற', 'காட்டு', 'போ', 'அழைத்துச் செல்', 'உள்ளே', 'उघड', 'दाखवा', 'खोलो', 'दिखाओ', 'ले चलो', 'తెరువు', 'చూపించు', 'ತೆರೆ', 'ತೋರಿಸು']);
+  const hasNavVerb = textMatchesAny(q, ['open', 'show', 'go to', 'navigate', 'take me', 'திற', 'காட்டு', 'போ', 'அழைத்துச் செல்', 'உள்ளே', 'उघड', 'दाखवा', 'खोलो', 'दिखाओ', 'ले चलो', 'తెరువు', 'చూపించు', 'ತೆರೆ', 'ತೋರಿಸು', 'लेके जाइए', 'ले जाइए', 'ले जाओ', 'जाना है', 'चलो', 'खोलिए', 'बताओ', 'दिखाइए', 'दिखाए', 'ले जा']);
 
   for (const nav of navTargets) {
     if (textMatchesAny(q, nav.keywords)) {
-      // If it has a navigation verb OR it uniquely matches a strong noun, route it!
-      if (hasNavVerb || textMatchesAny(q, nav.keywords.filter(k => k.length > 3))) {
+      if (hasNavVerb || textMatchesAny(q, nav.keywords.filter(k => k.length >= 3))) {
         return { intent: 'app_navigation', target: nav.target, label: nav.label, targetCrop };
       }
     }
