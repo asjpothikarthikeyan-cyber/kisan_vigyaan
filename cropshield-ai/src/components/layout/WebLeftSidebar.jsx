@@ -29,23 +29,23 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
   const primaryNavItems = [
     { id: 'home', labelKey: 'navHome', defaultLabel: 'Home Dashboard', labelTa: 'முகப்பு', labelMr: 'मुख्यपृष्ठ', labelHi: 'डैशबोर्ड', icon: Home },
     { id: 'scan', labelKey: 'navScan', defaultLabel: 'AI Leaf Scanner', labelTa: 'ஸ்கேனர்', labelMr: 'स्कॅनर', labelHi: 'स्कैनर', icon: Camera },
-    { id: 'cropSell', labelEn: 'Sell Crop & Produce', defaultLabel: 'Sell Crop & Produce', icon: Sprout },
+    { id: 'cropSell', labelKey: 'navSellCrop', defaultLabel: 'Sell Crop & Produce', icon: Sprout },
     { id: 'market', labelKey: 'navMarket', defaultLabel: 'Kisan Market', icon: ShoppingBag },
     { id: 'alerts', labelKey: 'navAlerts', defaultLabel: 'Outbreak Alerts', icon: Bell, badge: '3' }
   ];
 
   const knowledgeNavItems = [
-    { id: 'esp32LiveData', labelEn: 'Zone Monitoring', icon: Cpu },
+    { id: 'esp32LiveData', labelKey: 'navZoneMonitoring', defaultLabel: 'Zone Monitoring', icon: Cpu },
     { id: 'chotaKissan', labelEn: 'Kisan One (Voice AI)', icon: Mic },
-    { id: 'roiCalculator', labelEn: 'Yield & ROI Calculator', icon: Calculator },
-    { id: 'environmentalPrediction', labelEn: 'AI Disease Prediction', icon: Activity },
-    { id: 'riskConsequences', labelEn: 'Risk & Consequences', icon: ShieldAlert },
-    { id: 'satelliteMapping', labelEn: 'Satellite GIS Map', icon: Satellite },
-    { id: 'proTips', labelEn: 'Agronomy Tips & Dosage', icon: Lightbulb },
-    { id: 'govtSchemes', labelEn: 'Govt Schemes & PM-KISAN', icon: Landmark },
-    { id: 'statistics', labelEn: 'Disease Surveillance', icon: BarChart3 },
-    { id: 'farmerCommunity', labelEn: 'Farmer Forum & Q&A', icon: Users },
-    { id: 'reports', labelEn: 'Field Reports & Soil Health', icon: FileText }
+    { id: 'roiCalculator', labelKey: 'navRoiCalculator', defaultLabel: 'Yield & ROI Calculator', icon: Calculator },
+    { id: 'environmentalPrediction', labelKey: 'navDiseasePrediction', defaultLabel: 'AI Disease Prediction', icon: Activity },
+    { id: 'riskConsequences', labelKey: 'navRiskConsequences', defaultLabel: 'Risk & Consequences', icon: ShieldAlert },
+    { id: 'satelliteMapping', labelKey: 'navSatelliteMap', defaultLabel: 'Satellite GIS Map', icon: Satellite },
+    { id: 'proTips', labelKey: 'navProTips', defaultLabel: 'Agronomy Tips & Dosage', icon: Lightbulb },
+    { id: 'govtSchemes', labelKey: 'navGovtSchemes', defaultLabel: 'Govt Schemes & PM-KISAN', icon: Landmark },
+    { id: 'statistics', labelKey: 'navStatistics', defaultLabel: 'Disease Surveillance', icon: BarChart3 },
+    { id: 'farmerCommunity', labelKey: 'navFarmerCommunity', defaultLabel: 'Farmer Forum & Q&A', icon: Users },
+    { id: 'reports', labelKey: 'navReports', defaultLabel: 'Field Reports & Soil Health', icon: FileText }
   ];
 
   const officerPrimaryNavItems = [
@@ -58,12 +58,12 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
 
   const officerToolsNavItems = [
     { id: 'chotaKissan', labelEn: 'Kisan One (Voice AI)', icon: Mic },
-    { id: 'roiCalculator', labelEn: 'Yield & ROI Calculator', icon: Calculator },
-    { id: 'environmentalPrediction', labelEn: 'AI Disease Prediction', icon: Activity },
-    { id: 'riskConsequences', labelEn: 'Risk & Consequences', icon: ShieldAlert },
-    { id: 'satelliteMapping', labelEn: 'Satellite GIS Map', icon: Satellite },
-    { id: 'statistics', labelEn: 'Disease Surveillance', icon: BarChart3 },
-    { id: 'farmerCommunity', labelEn: 'Farmer Forum & Q&A', icon: Users }
+    { id: 'roiCalculator', labelKey: 'navRoiCalculator', defaultLabel: 'Yield & ROI Calculator', icon: Calculator },
+    { id: 'environmentalPrediction', labelKey: 'navDiseasePrediction', defaultLabel: 'AI Disease Prediction', icon: Activity },
+    { id: 'riskConsequences', labelKey: 'navRiskConsequences', defaultLabel: 'Risk & Consequences', icon: ShieldAlert },
+    { id: 'satelliteMapping', labelKey: 'navSatelliteMap', defaultLabel: 'Satellite GIS Map', icon: Satellite },
+    { id: 'statistics', labelKey: 'navStatistics', defaultLabel: 'Disease Surveillance', icon: BarChart3 },
+    { id: 'farmerCommunity', labelKey: 'navFarmerCommunity', defaultLabel: 'Farmer Forum & Q&A', icon: Users }
   ];
 
   const totalCartCount = (cart || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -74,7 +74,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
     if (lang === 'ta' && item.labelTa) return item.labelTa;
     if (lang === 'mr' && item.labelMr) return item.labelMr;
     if (lang === 'hi' && item.labelHi) return item.labelHi;
-    return item.labelEn || item.defaultLabel || t(item.labelKey, item.defaultLabel);
+    return item.labelKey ? t(item.labelKey, item.defaultLabel) : (item.labelEn || item.defaultLabel);
   };
 
   const handleNavClick = (id) => {
@@ -175,9 +175,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
             <>
               {/* Officer Operations */}
               <div className="space-y-1">
-                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>
-                  Operations
-                </span>
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>{t('sectionOperations', 'Operations')}</span>
                 <nav className="space-y-1">
                   {officerPrimaryNavItems.map(item => (
                     <NavButton 
@@ -191,9 +189,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
 
               {/* Officer Tools */}
               <div className={`space-y-1 pt-4 border-t ${isDark ? "border-slate-800" : "border-gray-100"}`}>
-                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>
-                  GIS & Tools
-                </span>
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>{t('sectionGisTools', 'GIS & Tools')}</span>
                 <nav className="space-y-1">
                   {officerToolsNavItems.map(item => (
                     <NavButton key={item.id} item={item} isActive={activeTab === item.id} />
@@ -205,9 +201,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
             <>
               {/* Farmer Primary */}
               <div className="space-y-1">
-                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>
-                  Main Menu
-                </span>
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>{t('sectionMainMenu', 'Main Menu')}</span>
                 <nav className="space-y-1">
                   {primaryNavItems.map((item) => {
                     const isMarketRoute = item.id === 'market';
@@ -225,9 +219,7 @@ export const WebLeftSidebar = ({ activeTab, onNavigate, mobileOpen, setMobileOpe
 
               {/* Farmer Tools */}
               <div className={`space-y-1 pt-4 border-t ${isDark ? "border-slate-800" : "border-gray-100"}`}>
-                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>
-                  Tools & Knowledge
-                </span>
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-4 py-1 block ${isDark ? "text-slate-500" : "text-gray-400"}`}>{t('sectionToolsKnowledge', 'Tools & Knowledge')}</span>
                 <nav className="space-y-1">
                   {knowledgeNavItems.map(item => (
                     <NavButton key={item.id} item={item} isActive={activeTab === item.id} />
