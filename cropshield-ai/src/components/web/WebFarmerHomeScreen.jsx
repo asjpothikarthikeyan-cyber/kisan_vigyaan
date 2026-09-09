@@ -777,11 +777,7 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
                 </div>
               );
             })}
-          </div>
-        </div>
-
-        
-      {/* 2.6 SMART PEST TRAP / IOT CAMERA SENSOR */}
+            {/* 2.6 SMART PEST TRAP / IOT CAMERA SENSOR */}
       <div className={`p-5.5 rounded-3xl border-2 transition-all cursor-pointer shadow-sm hover:shadow-md group ${
         isDark 
           ? 'bg-gradient-to-r from-[#1a0f2e] via-[#1a0f2e] to-[#0a1324] border-purple-500/50 text-white' 
@@ -818,9 +814,12 @@ export const WebFarmerHomeScreen = ({ onNavigate }) => {
           </div>
         </div>
       </div>
+          </div>
 
+        </div>
 
-        {/* RIGHT COLUMN (5 cols): Live Advisories & GIS Radar */}
+        
+      {/* RIGHT COLUMN (5 cols): Live Advisories & GIS Radar */}
         <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
