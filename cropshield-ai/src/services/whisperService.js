@@ -36,7 +36,8 @@ export function getGroqApiKey() {
  * Check if Whisper transcription is available (API key configured).
  */
 export function isWhisperAvailable() {
-  return !!getGroqApiKey();
+  // FORCE Web Speech API for hackathon stability and bypassing Groq API transcription errors
+  return false; 
 }
 
 // ─── Audio Recorder Class ───
